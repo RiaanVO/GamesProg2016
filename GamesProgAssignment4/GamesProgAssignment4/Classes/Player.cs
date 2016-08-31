@@ -15,7 +15,10 @@ namespace GamesProgAssignment4.Classes
         BasicCamera camera;
 
         Vector3 lookDirection;
-        BasicMovement movement;
+
+        //Physics stuff
+        Vector3 movementDirection;
+
 
         //Limited constructor
         public Player(Vector3 startPos, Game game) :
@@ -30,9 +33,8 @@ namespace GamesProgAssignment4.Classes
             Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
 
-            //Quick initialize on forward
+            //Quick initialize to look forward
             lookDirection = startPos + Vector3.Forward;
-            movement = new BasicMovement(ref position);
         }
 
 

@@ -38,6 +38,7 @@ namespace GamesProgAssignment4
             //ObjectManager = new ObjectManager(camera, this);
 
             ObjectManager = new ObjectManager(this);
+            Components.Add(ObjectManager);
 
             base.Initialize();
         }

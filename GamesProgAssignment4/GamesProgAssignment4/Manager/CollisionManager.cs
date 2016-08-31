@@ -13,7 +13,7 @@ namespace GamesProgAssignment4
 
         static CollisionManager()
         {
-
+            colliders = new List<Collider>();
         }
 
         /// <summary>

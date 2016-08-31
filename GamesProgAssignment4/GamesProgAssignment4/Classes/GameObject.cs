@@ -10,7 +10,7 @@ namespace GamesProgAssignment4
 {
     abstract class GameObject
     {
-        protected Vector3 position; //{ get; set; }
+        public Vector3 position { get; protected set; }
         protected ObjectManager manager;
         protected Game game;
 

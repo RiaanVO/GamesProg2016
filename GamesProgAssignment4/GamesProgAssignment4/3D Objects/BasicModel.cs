@@ -10,16 +10,25 @@ namespace GamesProgAssignment4
 {
     class BasicModel : GameObject
     {
-        Model model { get; set; }
-        BasicCamera camera;
+        protected Model model { get; set; }
+        protected BasicCamera camera;
         //Override if not needed
-        bool hasLighting = true;
-        protected Matrix world = Matrix.Identity;
+        protected bool hasLighting = true;
+        protected Matrix world;
+        protected Matrix scale, rotate, translate;
 
         public BasicModel(Vector3 startPos, Game game, Model m, BasicCamera camera) : base(startPos, game)
         {
             model = m;
             this.camera = camera;
+
+            //Sets up world matrices
+            scale = rotate = translate = Matrix.Identity;
+
+            //Set up any matrices that need to be set up here
+            translate = Matrix.CreateTranslation(startPos);
+
+            world = scale * rotate * translate;
         }
 
         public override void Update(GameTime gameTime)

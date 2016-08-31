@@ -89,6 +89,7 @@ namespace GamesProgAssignment4
         }
         */ 
 
+        //Redundant, not called as it's not a game component lels
         public void Update(GameTime gameTime)
         {
             CreateLookAt();

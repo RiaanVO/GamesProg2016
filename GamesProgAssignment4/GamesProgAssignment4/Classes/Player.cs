@@ -7,17 +7,18 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GamesProgAssignment4.Classes
+namespace GamesProgAssignment4
 {
     class Player : GameObject
     {
         MouseState prevMouseState;
-        BasicCamera camera;
-
+        protected BasicCamera camera;
         Vector3 lookDirection;
 
         //Physics stuff
         Vector3 movementDirection;
+
+        BoxCollider box;
 
 
         //Limited constructor
@@ -34,15 +35,19 @@ namespace GamesProgAssignment4.Classes
             prevMouseState = Mouse.GetState();
 
             //Quick initialize to look forward
+            this.camera = camera;
             lookDirection = startPos + Vector3.Forward;
+
+            box = new BoxCollider();
         }
 
 
         public override void Update(GameTime gameTime)
         {
             //Update player position / look direction according to mouse input
-            
 
+            //NOTE: NEEDS TESTING (and almost certainly debugging)
+            CollisionManager.checkCollision(box);
 
             camera.CreateLookAt(position, lookDirection);
 

@@ -38,15 +38,19 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\SphereCollider.cs" />
+    <Compile Include="Classes\BoxCollider.cs" />
+    <Compile Include="Classes\Collider.cs" />
     <Compile Include="Classes\GameObject.cs" />
     <Compile Include="3D Objects\BasicModel.cs" />
     <Compile Include="Classes\BasicCamera.cs" />
-    <Compile Include="Classes\ObjectManager.cs" />
-    <Compile Include="Classes\BasicMovement.cs" />
+    <Compile Include="Manager\CollisionManager.cs" />
+    <Compile Include="Manager\ObjectManager.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Skybox.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

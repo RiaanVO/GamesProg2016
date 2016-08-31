@@ -12,6 +12,9 @@ namespace GamesProgAssignment4
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Camera camera;
+        ModelManager modelManager;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -27,6 +30,8 @@ namespace GamesProgAssignment4
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            camera = new Camera(this, Vector3.Zero, Vector3.Left, Vector3.Up);
+            modelManager = new ModelManager(camera, this);
 
             base.Initialize();
         }

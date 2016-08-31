@@ -8,23 +8,28 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GamesProgAssignment4
 {
-    class BasicModel
+    class BasicModel : GameObject
     {
-        public Model model { get; protected set; }
+        Model model { get; set; }
+        BasicCamera camera;
+        //Override if not needed
+        bool hasLighting = true;
         protected Matrix world = Matrix.Identity;
-        public Vector3 position;
 
-        public BasicModel(Model m, Vector3 startPos)
+        public BasicModel(Vector3 startPos, Game game, Model m, BasicCamera camera) : base(startPos, game)
         {
             model = m;
-            position = startPos;
+            this.camera = camera;
         }
 
-        public virtual void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
+
         }
 
-        public virtual void Draw(Camera cam, bool basicLighting)
+        //BasicCamera cam, bool hasLighting
+
+        public override void Draw(GameTime gameTime)
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
@@ -33,9 +38,9 @@ namespace GamesProgAssignment4
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.View = cam.viewMatrix;
-                    effect.Projection = cam.projectionMatrix;
-                    if (basicLighting)
+                    effect.View = camera.viewMatrix;
+                    effect.Projection = camera.projectionMatrix;
+                    if (hasLighting)
                         effect.EnableDefaultLighting();
 
                     effect.World = transforms[mesh.ParentBone.Index] * GetWorld(); //* mesh.ParentBone.Transform;

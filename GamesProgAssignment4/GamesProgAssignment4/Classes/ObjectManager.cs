@@ -9,20 +9,22 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GamesProgAssignment4
 {
-    class ModelManager : DrawableGameComponent
+    class ObjectManager : DrawableGameComponent
     {
-        List<BasicModel> models = new List<BasicModel>();
+        //List<BasicModel> models = new List<BasicModel>();
         //List<TexturedPrimitives> primitives = new List<TexturedPrimitives>();
         //Skybox skybox;
 
         Game game;
-        Camera camera;
+        BasicCamera camera;
+
         //Graphics device.sampler state (first element is to specify how the textures are wrapped (wrap or clamp))
         //Basic constructor
-        public ModelManager(Camera cam, Game game) : base(game)
+        public ObjectManager(Game game) : base(game)
         {
             this.game = game;
-            camera = cam;
+            //NOTE: Camera is set up by player, needs to be passed back
+            //camera = cam;
             //Shouldn't have to call LoadContent??
             LoadContent();
         }
@@ -45,11 +47,12 @@ namespace GamesProgAssignment4
         {
             //Add update here
             //skybox.Update(gameTime);
-
+            /*
             foreach (BasicModel model in models)
             {
                 model.Update(gameTime);
             }
+            */
 
             /*
             foreach (TexturedPrimitives primitive in primitives)
@@ -70,10 +73,12 @@ namespace GamesProgAssignment4
             //skybox.Draw(camera, false);
 
             //Draw the list of models
+            /*
             foreach (BasicModel model in models)
             {
                 model.Draw(camera, true);
             }
+            */
 
             //Draw the list of primitives
             /*

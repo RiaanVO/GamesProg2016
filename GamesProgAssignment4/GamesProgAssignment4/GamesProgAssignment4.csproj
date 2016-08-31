@@ -38,9 +38,12 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\GameObject.cs" />
     <Compile Include="3D Objects\BasicModel.cs" />
-    <Compile Include="Classes\Camera.cs" />
-    <Compile Include="Classes\ModelManager.cs" />
+    <Compile Include="Classes\BasicCamera.cs" />
+    <Compile Include="Classes\ObjectManager.cs" />
+    <Compile Include="Classes\BasicMovement.cs" />
+    <Compile Include="Classes\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,26 +9,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GamesProgAssignment4
 {
-    class Camera : GameComponent
+    //Simple camera = only for creating 'look ats'
+    //WIP splitting old camera funcionality among multiple classes
+    class BasicCamera
     {
         public Matrix viewMatrix;
         public Matrix projectionMatrix;
 
         public Vector3 camPos;
-        public Vector3 headPos;
         public Vector3 camDirection;
         public Vector3 camUp;
-        public Vector3 camSide;
         
         //Simple constructor
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up) 
+        public BasicCamera(Game game, Vector3 pos, Vector3 target, Vector3 up) 
             : this(game, pos, target, up, MathHelper.PiOver2, 
                   (float)game.Window.ClientBounds.Width / game.Window.ClientBounds.Height, 1f, 500f)
         {
         }
 
         //Main constructor
-        public Camera(Game game, Vector3 pos, Vector3 target, Vector3 up, float fov, float aspectRatio, float nearPlane, float farPlane) : base(game)
+        public BasicCamera(Game game, Vector3 pos, Vector3 target, Vector3 up, float fov, float aspectRatio, float nearPlane, float farPlane)
         {
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(fov, aspectRatio, nearPlane, farPlane);
 
@@ -40,23 +40,26 @@ namespace GamesProgAssignment4
             CreateLookAt();
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
         }
 
         private void CreateLookAt()
         {
-            headPos = camPos;
-            //headPos.Y += playerHeight;
-            //viewMatrix = Matrix.CreateLookAt(headPos, headPos + camDirection, Vector3.Up);
             viewMatrix = Matrix.CreateLookAt(camPos, camPos + camDirection, camUp);
         }
-        /*
-        private void CreateLookAt()
+
+        public void CreateLookAt(Vector3 position, Vector3 direction)
         {
-            viewMatrix = Matrix.CreateLookAt(camPos, camPos + camDirection, camUp);
-        }*/
+            viewMatrix = Matrix.CreateLookAt(position, position + direction, camUp);
+        }
+
+        public void CreateLookAt(Vector3 position, Vector3 direction, Vector3 up)
+        {
+            viewMatrix = Matrix.CreateLookAt(position, position + direction, up);
+        }
+
+        /* Ray picking stuff
 
         //Adapted from http://rbwhitaker.wikidot.com/picking
         public Ray calculateRay(Vector2 mouseLocation, Matrix view, Matrix projection, Matrix world, Viewport viewport)
@@ -84,14 +87,11 @@ namespace GamesProgAssignment4
             float? distance = ray.Intersects(plane);
             return distance.HasValue ?  ray.Position + ray.Direction * distance.Value : (Vector3?)null;
         }
-        
-        public override void Update(GameTime gameTime)
+        */ 
+
+        public void Update(GameTime gameTime)
         {
-            //updatePhysics(gameTime);
-
             CreateLookAt();
-
-            base.Update(gameTime);
         }
 
         /*

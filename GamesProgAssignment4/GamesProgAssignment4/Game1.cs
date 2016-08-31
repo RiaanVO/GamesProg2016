@@ -12,8 +12,8 @@ namespace GamesProgAssignment4
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Camera camera;
-        ModelManager modelManager;
+        BasicCamera camera;
+        ObjectManager ObjectManager;
 
         public Game1()
         {
@@ -30,8 +30,14 @@ namespace GamesProgAssignment4
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(this, Vector3.Zero, Vector3.Left, Vector3.Up);
-            modelManager = new ModelManager(camera, this);
+            //camera = new BasicCamera(this, Vector3.Zero, Vector3.Left, Vector3.Up);
+            
+            //Could create camera here and pass it down through to the player (and whatever else needs it)
+            //Pros of doing this: Everything that needs the camera can have it
+            //Otherwise - player would need to get camera?
+            //ObjectManager = new ObjectManager(camera, this);
+
+            ObjectManager = new ObjectManager(this);
 
             base.Initialize();
         }

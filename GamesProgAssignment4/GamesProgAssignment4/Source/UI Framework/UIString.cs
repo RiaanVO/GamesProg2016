@@ -26,8 +26,9 @@ namespace GamesProgAssignment4
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(font, str, position, color);
-            spriteBatch.DrawString(font, str, position, color, rotation, origin, scale, effect, layerDepth);
-
+            
+            //Uncomment when fixed
+            //spriteBatch.DrawString(font, str, position, color, rotation, origin, scale, effect, layerDepth);
         }
 
         public virtual void SetPosition(Vector2 position)

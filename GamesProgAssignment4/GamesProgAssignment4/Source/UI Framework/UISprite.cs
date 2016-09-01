@@ -15,6 +15,8 @@ namespace GamesProgAssignment4
         public UISprite(Game game, Vector2 startPos, Texture2D sprite, Color color) : base(startPos, game, color)
         {
             this.sprite = sprite;
+
+            //Need to add constructor with scale
         }
 
         /// <summary>

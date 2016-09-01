@@ -15,7 +15,7 @@ namespace GamesProgAssignment4
         public Vector2 position { get; protected set; }
 
         //Additional parameters
-        protected Color? color;
+        protected Color color;
         protected Vector2? scale;
         protected float rotation;
         protected Vector2? origin;
@@ -29,7 +29,7 @@ namespace GamesProgAssignment4
         /// <param name="startPos">Position starting from top left of object.</param>
         /// <param name="game"></param>
         /// <param name="scale"></param>
-        public UIObject(Vector2 startPos, Game game) : this (startPos, game, null, null, 0f, null, SpriteEffects.None, 0)
+        public UIObject(Vector2 startPos, Game game) : this (startPos, game, Color.White, null, 0f, null, SpriteEffects.None, 0)
         {
         }
 
@@ -39,7 +39,7 @@ namespace GamesProgAssignment4
         /// <param name="startPos">Position starting from top left of object.</param>
         /// <param name="game"></param>
         /// <param name="scale"></param>
-        public UIObject(Vector2 startPos, Game game, Color? color) : this(startPos, game, color, null, 0f, null, SpriteEffects.None, 0)
+        public UIObject(Vector2 startPos, Game game, Color color) : this(startPos, game, color, null, 0f, null, SpriteEffects.None, 0)
         {
             //NOTE: NOT IMPLEMENTED YET
         }
@@ -50,7 +50,7 @@ namespace GamesProgAssignment4
         /// <param name="startPos">Position starting from top left of object.</param>
         /// <param name="game"></param>
         /// <param name="scale"></param>
-        public UIObject(Vector2 startPos, Game game, Color? color, Vector2? scale, float rotation, Vector2? origin, SpriteEffects effect, float layerDepth)
+        public UIObject(Vector2 startPos, Game game, Color color, Vector2? scale, float rotation, Vector2? origin, SpriteEffects effect, float layerDepth)
         {
             this.game = game;
             position = startPos;

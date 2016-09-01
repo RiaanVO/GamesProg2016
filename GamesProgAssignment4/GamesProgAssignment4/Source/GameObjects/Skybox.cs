@@ -11,21 +11,32 @@ namespace GamesProgAssignment4
     class Skybox : BasicModel
     {
         Player player;
+        Vector3 skyboxAnchor;
 
-        public Skybox(Vector3 startPos, Game game, Model model, BasicCamera camera, Player player) : base(startPos, game, model, camera)
+        public Skybox(Game game, Vector3 startPos, Model model, BasicCamera camera, Player player) : base(game, startPos, model, camera)
         {
             this.player = player;
             hasLighting = false;
-            scale = Matrix.CreateScale(100f);
+            scale = Matrix.CreateScale(10000f);
+        }
+
+        public override void Initialize()
+        {
+            position = player.position;
+            skyboxAnchor = position;
+            translate = Matrix.CreateTranslation(position);
+            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
             //Update position according to player
             position = player.position;
-
+            skyboxAnchor = position;
+            skyboxAnchor.Y = 0;
+            
             //Updates world matrix
-            translate = Matrix.CreateTranslation(position);
+            translate = Matrix.CreateTranslation(skyboxAnchor);
 
             base.Update(gameTime);
         }
@@ -38,6 +49,7 @@ namespace GamesProgAssignment4
         public override void Draw(GameTime gameTime)
         {
             //world = cam.viewMatrix;
+            /*
             SamplerState ss = new SamplerState();
             ss.AddressU = TextureAddressMode.Clamp;
             ss.AddressV = TextureAddressMode.Clamp;
@@ -46,9 +58,10 @@ namespace GamesProgAssignment4
             DepthStencilState dss = new DepthStencilState();
             dss.DepthBufferEnable = false;
             game.GraphicsDevice.DepthStencilState = dss;
-            
+            */
+            System.Console.WriteLine("Drawing");
             base.Draw(gameTime);
-
+            /*
             dss = new DepthStencilState();
             dss.DepthBufferEnable = true;
             game.GraphicsDevice.DepthStencilState = dss;
@@ -57,6 +70,7 @@ namespace GamesProgAssignment4
             ss.AddressU = TextureAddressMode.Wrap;
             ss.AddressV = TextureAddressMode.Wrap;
             game.GraphicsDevice.SamplerStates[0] = ss;
+            */
         }
     }
 }

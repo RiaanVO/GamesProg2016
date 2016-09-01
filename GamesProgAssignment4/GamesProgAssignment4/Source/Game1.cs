@@ -12,13 +12,13 @@ namespace GamesProgAssignment4
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        BasicCamera camera;
         ObjectManager ObjectManager;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -30,13 +30,7 @@ namespace GamesProgAssignment4
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            //camera = new BasicCamera(this, Vector3.Zero, Vector3.Left, Vector3.Up);
             
-            //Could create camera here and pass it down through to the player (and whatever else needs it)
-            //Pros of doing this: Everything that needs the camera can have it
-            //Otherwise - player would need to get camera?
-            //ObjectManager = new ObjectManager(camera, this);
-
             ObjectManager = new ObjectManager(this);
             Components.Add(ObjectManager);
 

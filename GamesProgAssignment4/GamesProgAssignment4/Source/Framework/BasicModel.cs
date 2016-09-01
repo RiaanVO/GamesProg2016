@@ -12,12 +12,12 @@ namespace GamesProgAssignment4
     {
         protected Model model { get; set; }
         protected BasicCamera camera;
-        //Override if not needed
-        protected bool hasLighting = true;
         protected Matrix world;
         protected Matrix scale, rotate, translate;
+        //Override if not needed
+        protected bool hasLighting = true;
 
-        public BasicModel(Vector3 startPos, Game game, Model m, BasicCamera camera) : base(startPos, game)
+        public BasicModel(Game game, Vector3 startPos, Model m, BasicCamera camera) : base(startPos, game)
         {
             model = m;
             this.camera = camera;
@@ -31,13 +31,10 @@ namespace GamesProgAssignment4
             world = scale * rotate * translate;
         }
 
-        public override void Update(GameTime gameTime)
-        {
-
-        }
-
-        //BasicCamera cam, bool hasLighting
-
+        /// <summary>
+        /// Draws all the meshes in the model
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];
@@ -52,9 +49,7 @@ namespace GamesProgAssignment4
                     if (hasLighting)
                         effect.EnableDefaultLighting();
 
-                    effect.World = transforms[mesh.ParentBone.Index] * GetWorld(); //* mesh.ParentBone.Transform;
-                    
-
+                    effect.World = transforms[mesh.ParentBone.Index] * GetWorld();
                 }
                 mesh.Draw();
             }

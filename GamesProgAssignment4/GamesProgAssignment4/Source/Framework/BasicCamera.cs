@@ -13,19 +13,17 @@ namespace GamesProgAssignment4
     //WIP splitting old camera funcionality among multiple classes
     class BasicCamera
     {
-        public Matrix viewMatrix;
-        public Matrix projectionMatrix;
+        public Matrix viewMatrix { get; protected set; }
+        public Matrix projectionMatrix { get; protected set;}
 
-        public Vector3 camPos;
-        public Vector3 camDirection;
-        public Vector3 camUp;
+        public Vector3 camPos { get; set; }
+        public Vector3 camDirection { get; set; }
+        public Vector3 camUp { get; set; }
         
         //Simple constructor
-        public BasicCamera(Game game, Vector3 pos, Vector3 target, Vector3 up) 
-            : this(game, pos, target, up, MathHelper.PiOver2, 
-                  (float)game.Window.ClientBounds.Width / game.Window.ClientBounds.Height, 1f, 500f)
-        {
-        }
+        public BasicCamera(Game game, Vector3 pos, Vector3 target, Vector3 up) : 
+            this(game, pos, target, up, MathHelper.PiOver2, (float)game.Window.ClientBounds.Width / game.Window.ClientBounds.Height, 1f, 500f)
+        {}
 
         //Main constructor
         public BasicCamera(Game game, Vector3 pos, Vector3 target, Vector3 up, float fov, float aspectRatio, float nearPlane, float farPlane)
@@ -36,7 +34,6 @@ namespace GamesProgAssignment4
             camDirection = target - camPos;
             camDirection.Normalize();
             camUp = up;
-
             CreateLookAt();
         }
 
@@ -44,19 +41,38 @@ namespace GamesProgAssignment4
         {
         }
 
+        /// <summary>
+        /// Creates camera look at using the values set at the creation of the camera
+        /// </summary>
         private void CreateLookAt()
         {
+            camDirection.Normalize();
             viewMatrix = Matrix.CreateLookAt(camPos, camPos + camDirection, camUp);
         }
 
+        /// <summary>
+        /// Creates the camera look at using two param, Up is alread set at start
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="direction"></param>
         public void CreateLookAt(Vector3 position, Vector3 direction)
         {
-            viewMatrix = Matrix.CreateLookAt(position, position + direction, camUp);
+            camPos = position;
+            camDirection = direction;
+            CreateLookAt();
         }
 
+        /// <summary>
+        /// Creates the camera look at using the three param
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="direction"></param>
+        /// <param name="up"></param>
         public void CreateLookAt(Vector3 position, Vector3 direction, Vector3 up)
         {
-            viewMatrix = Matrix.CreateLookAt(position, position + direction, up);
+            //Calls other look at to reduce code duplication
+            camUp = up;
+            CreateLookAt(position, direction);
         }
 
         /* Ray picking stuff
@@ -87,13 +103,13 @@ namespace GamesProgAssignment4
             float? distance = ray.Intersects(plane);
             return distance.HasValue ?  ray.Position + ray.Direction * distance.Value : (Vector3?)null;
         }
-        */ 
+        */
 
         //Redundant, not called as it's not a game component lels
-        public void Update(GameTime gameTime)
+        /*public void Update(GameTime gameTime)
         {
             CreateLookAt();
-        }
+        }*/
 
         /*
         private void updatePhysics(GameTime gameTime)

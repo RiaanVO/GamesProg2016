@@ -267,3 +267,9 @@
 /processorParam:TextureFormat=Color
 /build:Models/Ground Model/TedO.png
 
+#begin SpriteFonts/Arial.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:SpriteFonts/Arial.spritefont
+

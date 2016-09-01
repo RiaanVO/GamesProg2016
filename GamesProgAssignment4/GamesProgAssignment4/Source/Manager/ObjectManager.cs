@@ -15,6 +15,10 @@ namespace GamesProgAssignment4
         //Master list of all game objects
         List<GameObject> objects = new List<GameObject>();
 
+        //2D & UI drawing
+        SpriteBatch spriteBatch;
+        List<UIObject> ui = new List<UIObject>();
+
         //Camera that will be passed into all game objects 
         BasicCamera camera;
         Player player;
@@ -28,9 +32,16 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            foreach(GameObject obj in objects) {
+            foreach(GameObject obj in objects)
+            {
                 obj.Initialize();
             }
+
+            foreach (UIObject obj in ui)
+            {
+                obj.Initialize();
+            }
+
             base.Initialize();
         }
 
@@ -41,7 +52,7 @@ namespace GamesProgAssignment4
         {
             float aspectRatio = game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
             Vector3 camPos = new Vector3(0, 70, 0);
-            camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
+            camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver2, aspectRatio, 1f, 3000F);
 
             //Create player and add to the object list
             player = new Player(game, camera.camPos, camera);
@@ -52,7 +63,13 @@ namespace GamesProgAssignment4
 
             objects.Add(new Ground(game, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
-            
+
+            //Test UI
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            ui.Add(new UIString(game, Vector2.Zero, game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White));
+            ui.Add(new UISprite(game, Vector2.Zero, game.Content.Load<Texture2D>(@"Textures\Crate"), Color.Red));
+
             base.LoadContent();
             Initialize();
         }
@@ -80,10 +97,21 @@ namespace GamesProgAssignment4
             //Test to fix draw order problem
             //GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
+            //Draw all 3D objects
             foreach (GameObject obj in objects)
             {
                 obj.Draw(gameTime);
             }
+
+            //Draw all UI / 2D objects with same settings (same spritebatch)
+            //System needs changing if you want different sprite batches with different settings
+            spriteBatch.Begin();
+            foreach (UIObject uiobj in ui)
+            {
+                uiobj.Draw(gameTime, spriteBatch);
+            }
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
 

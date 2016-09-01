@@ -55,6 +55,10 @@ namespace GamesProgAssignment4
             }
         }
 
+        /// <summary>
+        /// Returns the world matrix for drawing. Overload if need to modify world at draw time.
+        /// </summary>
+        /// <returns></returns>
         public virtual Matrix GetWorld()
         {
             return world;

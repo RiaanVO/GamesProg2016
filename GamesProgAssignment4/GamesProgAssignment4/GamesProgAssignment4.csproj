@@ -52,6 +52,9 @@
     <Compile Include="Source\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\GameObjects\Skybox.cs" />
+    <Compile Include="Source\UI Framework\UISprite.cs" />
+    <Compile Include="Source\UI Framework\UIString.cs" />
+    <Compile Include="Source\UI Framework\UIObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

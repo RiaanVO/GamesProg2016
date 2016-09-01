@@ -22,7 +22,7 @@ namespace GamesProgAssignment4
         
         //Simple constructor
         public BasicCamera(Game game, Vector3 pos, Vector3 target, Vector3 up) : 
-            this(game, pos, target, up, MathHelper.PiOver2, (float)game.Window.ClientBounds.Width / game.Window.ClientBounds.Height, 1f, 500f)
+            this(game, pos, target, up, MathHelper.PiOver2, (float)game.Window.ClientBounds.Width / game.Window.ClientBounds.Height, 1f, 1000f)
         {}
 
         //Main constructor
@@ -50,6 +50,19 @@ namespace GamesProgAssignment4
             viewMatrix = Matrix.CreateLookAt(camPos, camPos + camDirection, camUp);
         }
 
+        public void setCameraDirection(Vector3 newDirection) {
+            if (newDirection.X == 0 && newDirection.Z == 0 && newDirection.Y == 0)
+            {
+                return;
+            }
+            camDirection = newDirection;
+        }
+
+        public void setCameraPositionDirection(Vector3 position, Vector3 direction) {
+            this.camPos = position;
+            setCameraDirection(direction);
+        }
+        /*
         /// <summary>
         /// Creates the camera look at using two param, Up is alread set at start
         /// </summary>
@@ -74,7 +87,7 @@ namespace GamesProgAssignment4
             camUp = up;
             CreateLookAt(position, direction);
         }
-
+        */
         /* Ray picking stuff
 
         //Adapted from http://rbwhitaker.wikidot.com/picking
@@ -106,10 +119,10 @@ namespace GamesProgAssignment4
         */
 
         //Redundant, not called as it's not a game component lels
-        /*public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             CreateLookAt();
-        }*/
+        }
 
         /*
         private void updatePhysics(GameTime gameTime)

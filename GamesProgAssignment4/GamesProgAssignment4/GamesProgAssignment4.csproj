@@ -44,6 +44,7 @@
     <Compile Include="Source\Framework\GameObject.cs" />
     <Compile Include="Source\Framework\BasicModel.cs" />
     <Compile Include="Source\Framework\BasicCamera.cs" />
+    <Compile Include="Source\GameObjects\Ground.cs" />
     <Compile Include="Source\Manager\CollisionManager.cs" />
     <Compile Include="Source\Manager\ObjectManager.cs" />
     <Compile Include="Source\GameObjects\Player.cs" />

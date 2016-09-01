@@ -17,7 +17,7 @@ namespace GamesProgAssignment4
         {
             this.player = player;
             hasLighting = false;
-            scale = Matrix.CreateScale(10000f);
+            scale = Matrix.CreateScale(1000f);
         }
 
         public override void Initialize()
@@ -49,7 +49,7 @@ namespace GamesProgAssignment4
         public override void Draw(GameTime gameTime)
         {
             //world = cam.viewMatrix;
-            /*
+            
             SamplerState ss = new SamplerState();
             ss.AddressU = TextureAddressMode.Clamp;
             ss.AddressV = TextureAddressMode.Clamp;
@@ -58,10 +58,9 @@ namespace GamesProgAssignment4
             DepthStencilState dss = new DepthStencilState();
             dss.DepthBufferEnable = false;
             game.GraphicsDevice.DepthStencilState = dss;
-            */
-            System.Console.WriteLine("Drawing");
+            
             base.Draw(gameTime);
-            /*
+            
             dss = new DepthStencilState();
             dss.DepthBufferEnable = true;
             game.GraphicsDevice.DepthStencilState = dss;
@@ -70,7 +69,8 @@ namespace GamesProgAssignment4
             ss.AddressU = TextureAddressMode.Wrap;
             ss.AddressV = TextureAddressMode.Wrap;
             game.GraphicsDevice.SamplerStates[0] = ss;
-            */
+            
+            
         }
     }
 }

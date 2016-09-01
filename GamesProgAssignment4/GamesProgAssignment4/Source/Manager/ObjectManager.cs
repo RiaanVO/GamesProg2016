@@ -40,18 +40,21 @@ namespace GamesProgAssignment4
         protected override void LoadContent()
         {
             float aspectRatio = game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
-            camera = new BasicCamera(game, new Vector3(0,10,0), Vector3.Left, Vector3.Up, MathHelper.PiOver2, aspectRatio, 1f, 2000F);
+            Vector3 camPos = new Vector3(0, 70, 0);
+            camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
 
             //Create player and add to the object list
             player = new Player(game, camera.camPos, camera);
             objects.Add(player);
-        
+
             //Add objects for the player to interact with
-            objects.Add(new BasicModel(game, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
             objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
+
+            objects.Add(new Ground(game, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
             
             base.LoadContent();
+            Initialize();
         }
 
         /// <summary>

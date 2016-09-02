@@ -56,6 +56,7 @@ namespace GamesProgAssignment4
                 return;
             }
             camDirection = newDirection;
+            CreateLookAt();
         }
 
         public void setCameraPositionDirection(Vector3 position, Vector3 direction) {

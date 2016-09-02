@@ -24,14 +24,14 @@ namespace GamesProgAssignment4
         //Physics stuff
         Vector3 movementDirection;
         Vector3 velocity, acceleration;
-        float maxVelocity = 100f; 
+        float maxVelocity = 20f; 
         //float gravity = 0.1f;
-        float accerationRate = 10;
-        float drag = 0.01f;
+        float accerationRate = 2f;
+        float drag = 0.1f;
         float slowestSpeed = 0.5f;
         bool jumped = false;
 
-        BoxCollider box;
+        //BoxCollider box;
 
 
         //Limited constructor
@@ -51,10 +51,17 @@ namespace GamesProgAssignment4
         {
             //Set up cameras' values and create a look at
             lookDirection = Vector3.Forward;
-            
             //Initilise the movement varibles
-            velocity = acceleration = Vector3.Zero;
-            
+            velocity = Vector3.Zero;
+            movementDirection = Vector3.Zero;
+            acceleration = Vector3.Zero;
+
+
+            //System.Console.WriteLine("Acc: " + acceleration);
+            //System.Console.WriteLine("Vel: " + velocity);
+            //System.Console.WriteLine("Pos: " + position);
+            //System.Console.WriteLine("Loo: " + lookDirection);
+
             //Set up the collider
             //box = new BoxCollider();
 
@@ -70,13 +77,17 @@ namespace GamesProgAssignment4
             //lookDirection = new Vector3(0, 0, -3);//position + Vector3.Forward;
             //lookDirection.Normalize();
             handleInput();
-            //handleMovement();
+            handleMovement();
 
             //NOTE: NEEDS TESTING (and almost certainly debugging)
             //CollisionManager.checkCollision(box);
+            //System.Console.WriteLine("Acc: " + acceleration);
+            //System.Console.WriteLine("Vel: " + velocity);
+            //System.Console.WriteLine("Pos: " + position);
+            //System.Console.WriteLine("Loo: " + lookDirection);
 
             camera.setCameraPositionDirection(position, lookDirection);
-            camera.Update(gameTime);
+            //camera.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -84,13 +95,15 @@ namespace GamesProgAssignment4
         //Without collision detection at the moment
         private void handleMovement() {
             //applying acceretion to the player
-            movementDirection.Normalize();
-            acceleration = movementDirection * accerationRate;
+            acceleration = Vector3.Zero;
+            acceleration = Vector3.Multiply(movementDirection, accerationRate);
+            
             //Application of gravity - does not include collision with the floor yet
             /*
             acceleration.Y = -gravity;
             if (position.Y < 10) {
                 acceleration.Y = 0;
+                position.Y = 10;
             }
 
             if (jumped)
@@ -98,21 +111,22 @@ namespace GamesProgAssignment4
                 acceleration.Y = 10;
                 jumped = false;
             }*/
+            velocity -= Vector3.Multiply(velocity, drag);
 
-            if ((velocity -= velocity * drag).Length() < slowestSpeed) {
-                velocity *= 0;
+            if ((velocity).Length() < slowestSpeed) {
+                velocity = Vector3.Zero;
             }
-            if ((velocity += acceleration).Length() > maxVelocity) {
+
+            velocity += acceleration;
+
+            if ((velocity).Length() > maxVelocity) {
                 velocity.Normalize();
-                velocity *= maxVelocity;
+                velocity = Vector3.Multiply(velocity, maxVelocity);
             }
 
             //Collision code goes here to determine if the player should move.
 
             position += velocity;
-
-            //Reset the accerelation to zero
-            acceleration *= 0;
         }
 
         private void handleInput() {
@@ -120,27 +134,29 @@ namespace GamesProgAssignment4
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();
 
-
             //Resets the movement direction to zero, then checks which keys are pressed to create a new movement direction.
-            lookDirection.Normalize();
-            movementDirection *= 0;
+            if(lookDirection != Vector3.Zero)
+                lookDirection.Normalize();
+            movementDirection = Vector3.Zero;
+
             if (keyboardState.IsKeyDown(Keys.W))
                 movementDirection += lookDirection;
             if (keyboardState.IsKeyDown(Keys.S))
                 movementDirection -= lookDirection;
             if (keyboardState.IsKeyDown(Keys.A))
-                movementDirection -= Vector3.Cross(Vector3.Up, lookDirection);
-            if (keyboardState.IsKeyDown(Keys.D))
                 movementDirection += Vector3.Cross(Vector3.Up, lookDirection);
+            if (keyboardState.IsKeyDown(Keys.D))
+                movementDirection -= Vector3.Cross(Vector3.Up, lookDirection);
             //Set jumped to true if the condition is correct
             jumped = (keyboardState.IsKeyDown(Keys.Space) && !jumped);
-            
+
+            if (movementDirection != Vector3.Zero)
+                movementDirection.Normalize();
 
             //Sets the yaw rotation of the cameras' look direction
             lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X)));
 
             //Sets the pitch rotation of the cameras look direction, maxes out so that the player cant look directly up or down
-            
             float pitchAngle = (pitchRotationRate) * (mouseState.Y - prevMouseState.Y);
             if (Math.Abs(currentPitch + pitchAngle) < maxPitch)
             {
@@ -148,14 +164,9 @@ namespace GamesProgAssignment4
                 currentPitch += pitchAngle;
             }
             
-            camera.setCameraDirection(lookDirection);
-
             //Resets the mouses position to the center of the screen, also resets the prevouse mouse state so the camera wont jump around
             Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
         }
-
-
-
     }
 }

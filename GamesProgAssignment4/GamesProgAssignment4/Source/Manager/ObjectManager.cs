@@ -52,7 +52,7 @@ namespace GamesProgAssignment4
         {
             float aspectRatio = game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
             Vector3 camPos = new Vector3(0, 70, 0);
-            camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver2, aspectRatio, 1f, 3000F);
+            camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
 
             //Create player and add to the object list
             player = new Player(game, camera.camPos, camera);
@@ -67,8 +67,8 @@ namespace GamesProgAssignment4
             //Test UI
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ui.Add(new UIString(game, Vector2.Zero, game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White));
-            ui.Add(new UISprite(game, Vector2.Zero, game.Content.Load<Texture2D>(@"Textures\Crate"), Color.Red));
+            ui.Add(new UIString(game, Vector2.Zero, game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White, 0.01f));
+            //ui.Add(new UISprite(game, Vector2.Zero, game.Content.Load<Texture2D>(@"Textures\Crate"), Color.Red));
 
             base.LoadContent();
             Initialize();

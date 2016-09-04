@@ -19,7 +19,7 @@ namespace GamesProgAssignment4 {
         //public static string LEVEL_PREFIX = "level_";
         //public static string LEVEL_SUFFIX = ".json";
 
-        public static float TILE_SIZE = 10.0f;
+        public static float TILE_SIZE = 20.0f;
 
         private short[,] levelData = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -87,8 +87,9 @@ namespace GamesProgAssignment4 {
                 for (int k = 0; k <= data.GetUpperBound(1); k++) {
                     switch (data[j, k]) {
                         case 1:
-                            //tiles.Add(new Box(game, 10, new Vector3(21f * (j + 1), 50, 21f * (k + 1)), Game.Content.Load<Texture2D>(@"Textures\crate"), camera));
-                            tiles.Add(new GroundPrimitive(game, objectManager, new Vector3(TILE_SIZE * (j + 1), 0, TILE_SIZE * (k + 1)), camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), (int)TILE_SIZE, 1, false));
+                            tiles.Add(new GroundPrimitive(game, objectManager, new Vector3(TILE_SIZE * (j + 1), 0, TILE_SIZE * (k + 1)), camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), (int)TILE_SIZE, 1, true));
+
+    
                             break;
                         default:
                             break;

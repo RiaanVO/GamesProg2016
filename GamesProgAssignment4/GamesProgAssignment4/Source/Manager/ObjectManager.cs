@@ -76,7 +76,7 @@ namespace GamesProgAssignment4
 
             //addGameObject(new GroundModel(Game, this, Vector3.Zero, Game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
             //addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 100));
-            addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 1, true));
+            //addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 1, true));
 
 
             addGameObject(new Enemy(Game, this, new Vector3(200f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
@@ -126,14 +126,14 @@ namespace GamesProgAssignment4
             //Test to fix draw order problem
             //GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            tileManager.Draw(gameTime);
+
 
             //Draw all 3D objects
             foreach (GameObject obj in objectsCurrent)
             {
                 obj.Draw(gameTime);
             }
-
+            tileManager.Draw(gameTime);
             //Draw all UI / 2D objects with same settings (same spritebatch)
             //System needs changing if you want different sprite batches with different settings
             spriteBatch.Begin();

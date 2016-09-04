@@ -23,7 +23,8 @@ namespace GamesProgAssignment4
             this.numTilesAcross = numTilesAcross;
             totalSize = tileSize * numTilesAcross;
             hasLighting = false;
-            centredPosition = new Vector3(position.X / 2, 0, position.Z / 2);
+            //centredPosition = new Vector3(position.X / 2, 0, position.Z / 2);
+            centredPosition = new Vector3(-tileSize / 2, 0, -tileSize / 2);
 
             translation = Matrix.CreateTranslation(centredPosition);
             //translation = Matrix.CreateTranslation(position);

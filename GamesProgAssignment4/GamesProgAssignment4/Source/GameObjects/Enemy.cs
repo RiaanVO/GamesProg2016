@@ -16,7 +16,6 @@ namespace GamesProgAssignment4
         Vector3 velocity, acceleration;
         float rotation;
 
-        float radian = MathHelper.Pi / 180.0f;
         float maxVelocity = 5f; //temporary test value
         float accelerationRate = 1f;
         float drag = 0.1f;
@@ -37,6 +36,7 @@ namespace GamesProgAssignment4
             velocity = Vector3.Zero;
             movementDirection = Vector3.Zero;
             acceleration = Vector3.Zero;
+            rotation = 0f;
 
             translate = Matrix.CreateTranslation(position);
             base.Initialize();
@@ -44,16 +44,50 @@ namespace GamesProgAssignment4
 
         public override void Update(GameTime gameTime)
         {
-            //update position:
-            //set movementDirection vector to the vector between the enemy and player.position
-            //rotate model depending on which way it needs to face as per movementDirection vector
-            //apply incremental movement speed etc.
-
-            //going to use this for getting pursuit code:
-            //http://xnafan.net/2012/12/pointing-and-moving-towards-a-target-in-xna-2d/
-            //will work for this as the enemy cannot move in one plane anyway
+            if (player.position != position)
+            {
+                Vector3 difference = player.position - position;
+                difference.Normalize();
+                handleMovement(difference);
+            }
 
             base.Update(gameTime);
+        }
+
+        private void handleMovement(Vector3 difference)
+        {
+            //handles XYZ movement (translate)
+
+            acceleration = Vector3.Zero;
+            acceleration = Vector3.Multiply(difference, accelerationRate);
+
+            velocity -= Vector3.Multiply(velocity, drag);
+
+            if ((velocity).Length() < slowestSpeed)
+            {
+                velocity = Vector3.Zero;
+            }
+
+            velocity += acceleration;
+
+            if ((velocity).Length() > maxVelocity)
+            {
+                velocity.Normalize();
+                velocity = Vector3.Multiply(velocity, maxVelocity);
+            }
+
+            position += velocity;
+            translate = Matrix.CreateTranslation(position);
+
+            //handle rotation (on Y axis) (no other axes needed at this stage)
+
+            rotation = Vector3ToRadian(difference);
+            rotate = Matrix.CreateRotationY(rotation);
+        }
+
+        private float Vector3ToRadian (Vector3 direction)
+        {
+            return (float)Math.Atan2(direction.X, -direction.Y);
         }
 
         public override Matrix GetWorld()

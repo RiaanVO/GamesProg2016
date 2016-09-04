@@ -64,7 +64,7 @@ namespace GamesProgAssignment4
 
             objects.Add(new Ground(game, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
 
-            objects.Add(new Enemy(game, new Vector3(100f, 0f, 0f), game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
+            objects.Add(new Enemy(game, new Vector3(200f, 0f, 0f), game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
 
             //Test UI

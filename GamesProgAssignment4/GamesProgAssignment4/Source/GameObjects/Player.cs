@@ -32,7 +32,8 @@ namespace GamesProgAssignment4
         bool jumped = false;
 
         //BoxCollider box;
-
+        SphereCollider col;
+        float colliderRadius = 5f;
 
         //Limited constructor
         public Player(Game game, Vector3 startPos) :
@@ -64,6 +65,7 @@ namespace GamesProgAssignment4
 
             //Set up the collider
             //box = new BoxCollider();
+            col = new SphereCollider(game, position, colliderRadius);
 
             base.Initialize();
         }

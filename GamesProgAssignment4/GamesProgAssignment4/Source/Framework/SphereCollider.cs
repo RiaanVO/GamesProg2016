@@ -10,10 +10,24 @@ namespace GamesProgAssignment4
     class SphereCollider : Collider
     {
         public BoundingSphere collider;
+        float radius;
 
-        public SphereCollider() : base()
+        public SphereCollider(Game game, Vector3 position, float radius) : base(game, position)
         {
-            
+            collider = new BoundingSphere(position, radius);
+        }
+
+        public SphereCollider(Game game, Vector3 position) : base(game, position)
+        {
+            collider = new BoundingSphere();
+        }
+
+        /// <summary>
+        /// Updates the BoundingSphere's position.
+        /// </summary>
+        public override void updateColliderPos()
+        {
+            collider = new BoundingSphere(position, radius);
         }
 
         //Pass in collider to compare

@@ -68,6 +68,9 @@ namespace GamesProgAssignment4
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            if (vertexData == null || indexData == null)
+                return;
+
             basicEffect.World = getWorld();
             basicEffect.View = camera.viewMatrix;
             basicEffect.Projection = camera.projectionMatrix;

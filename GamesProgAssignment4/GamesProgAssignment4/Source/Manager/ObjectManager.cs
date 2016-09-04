@@ -11,7 +11,6 @@ namespace GamesProgAssignment4
 {
     class ObjectManager : DrawableGameComponent
     {
-        Game game;
         //Master list of all game objects
         List<GameObject> objectsMaster = new List<GameObject>();
         //Used for the current update and draw cycles - avoid deleting objects that need to be updated.
@@ -28,7 +27,6 @@ namespace GamesProgAssignment4
         //Basic constructor
         public ObjectManager(Game game) : base(game)
         {
-            this.game = game;
             //Graphics device.sampler state (first element is to specify how the textures are wrapped (wrap or clamp))???
         }
 
@@ -52,27 +50,36 @@ namespace GamesProgAssignment4
         /// </summary>
         protected override void LoadContent()
         {
-            float aspectRatio = game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
+            float aspectRatio = 16f / 9f;//Game.Window.ClientBounds.Width / Game.Window.ClientBounds.Height;
             Vector3 camPos = new Vector3(0, 0, 0);
-            camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
+            camera = new BasicCamera(Game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
 
             //Create player and add to the object list
-            player = new Player(game, this, camera.camPos, camera);
-            objectsMaster.Add(player);
+            player = new Player(Game, this, camera.camPos, camera);
+            addGameObject(player);
 
             //Add objects for the player to interact with
-            //objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
-            objectsMaster.Add(new Skybox(game, this, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
+            //objects.Add(new Skybox(Game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
+            addGameObject(new Skybox(Game, this, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
 
-            objectsMaster.Add(new GroundModel(game, this, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
+            //addGameObject(new GroundModel(Game, this, Vector3.Zero, Game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
+            addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 100));
 
-            objectsMaster.Add(new Enemy(game, this, new Vector3(200f, 0f, 0f), game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
+            addGameObject(new Enemy(Game, this, new Vector3(200f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
+
+            //Add some Cubes
+            int seperationDistance = 30;
+            float crateSize = 5;
+            addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, -seperationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            addGameObject(new CubePrimitive(Game, this, new Vector3(seperationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, seperationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            addGameObject(new CubePrimitive(Game, this, new Vector3(-seperationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
 
             //Test UI
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ui.Add(new UIString(game, Vector2.Zero, game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White, 0.01f));
+            ui.Add(new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White, 0.01f));
             //ui.Add(new UISprite(game, Vector2.Zero, game.Content.Load<Texture2D>(@"Textures\Crate"), Color.Red));
 
             base.LoadContent();

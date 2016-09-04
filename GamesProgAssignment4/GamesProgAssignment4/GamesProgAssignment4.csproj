@@ -38,6 +38,9 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Source\Framework\Audio\AudioComponent.cs" />
+    <Compile Include="Source\Framework\Audio\AudioEmitterComponent.cs" />
+    <Compile Include="Source\Framework\Audio\AudioListenerComponet.cs" />
     <Compile Include="Source\Framework\Collision\SphereCollider.cs" />
     <Compile Include="Source\Framework\Collision\BoxCollider.cs" />
     <Compile Include="Source\Framework\Collision\Collider.cs" />
@@ -49,7 +52,9 @@
     <Compile Include="Source\GameObjects\Enemy.cs" />
     <Compile Include="Source\GameObjects\GroundModel.cs" />
     <Compile Include="Source\GameObjects\GroundPrimitive.cs" />
+    <Compile Include="Source\GameObjects\Key.cs" />
     <Compile Include="Source\GameObjects\Player.cs" />
+    <Compile Include="Source\Manager\AudioManager.cs" />
     <Compile Include="Source\Manager\CollisionManager.cs" />
     <Compile Include="Source\Manager\ObjectManager.cs" />
     <Compile Include="Source\Game1.cs" />

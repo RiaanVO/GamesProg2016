@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Design;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GamesProgAssignment4
 {
@@ -15,6 +16,7 @@ namespace GamesProgAssignment4
 
         ObjectManager objectManager;
         CollisionManager collisionManager;
+        AudioManager audioManager;
 
         public Game1()
         {
@@ -37,6 +39,9 @@ namespace GamesProgAssignment4
             collisionManager = new CollisionManager(this);
             Services.AddService(collisionManager);
 
+            audioManager = new AudioManager(this);
+            Services.AddService(audioManager);
+
             Components.Add(objectManager);
 
             base.Initialize();
@@ -50,6 +55,9 @@ namespace GamesProgAssignment4
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            SoundEffect footsteps = Content.Load<SoundEffect>(@"Sounds/footsteps");
+            //footsteps.Play();
 
             // TODO: use this.Content to load your game content here
         }
@@ -74,7 +82,8 @@ namespace GamesProgAssignment4
                 Exit();
 
             // TODO: Add your update logic here
-
+            collisionManager.Update(gameTime);
+            audioManager.Update(gameTime);
             base.Update(gameTime);
         }
 

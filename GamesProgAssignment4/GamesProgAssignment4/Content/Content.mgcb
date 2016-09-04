@@ -407,6 +407,7 @@
 /processorParam:TextureFormat=Color
 /build:Models/Skyboxes/envmap_miramar/miramar_up.png
 
+<<<<<<< HEAD
 #begin Models/Structure Models/Iron_Door_01.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -463,4 +464,29 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Structure Models/Wood_Wall_01.fbx
+=======
+#begin Sounds/footsteps.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/footsteps.wav
+
+#begin Sounds/key.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/key.wav
+
+#begin Sounds/scarybgm.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/scarybgm.wav
+
+#begin Sounds/scaryscream.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/scaryscream.wav
+>>>>>>> d55670af4448353b920ddb4d94e9fa9fa51e4400
 

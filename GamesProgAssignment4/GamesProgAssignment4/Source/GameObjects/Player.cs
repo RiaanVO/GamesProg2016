@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GamesProgAssignment4
 {
@@ -38,13 +39,22 @@ namespace GamesProgAssignment4
         SphereCollider collider;
         float colliderRadius = 5f;
 
+        AudioListenerComponet audioListenerComponent;
+        AudioEmitterComponent audioEmitterComponent;
+
         public Player(Game game, ObjectManager objectManager, Vector3 position, BasicCamera camera) : base(game, objectManager, position)
         {
             this.camera = camera;
+            audioListenerComponent = new AudioListenerComponet(game, this);
+            audioEmitterComponent = new AudioEmitterComponent(game, this);
+            audioEmitterComponent.createSoundEffectInstance("Footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"));
+            audioEmitterComponent.setInstanceLoop("Footsteps", true);
+            audioEmitterComponent.setInstancePlayback("Footsteps", false);
         }
 
         public override void Initialize()
         {
+            collider = new SphereCollider(game, this, false, colliderRadius);
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
@@ -57,6 +67,16 @@ namespace GamesProgAssignment4
             handleInput();
             handleMovement(gameTime);
             camera.setCameraPositionDirection(position + headHeightOffset, lookDirection);
+
+            if (velocity.Length() > 0)
+            {
+                audioEmitterComponent.setInstancePlayback("Footsteps", true);
+            }
+            else
+            {
+                audioEmitterComponent.setInstancePlayback("Footsteps", false);
+            }
+
             base.Update(gameTime);
         }
 
@@ -113,7 +133,15 @@ namespace GamesProgAssignment4
             }
 
             //Collision code goes here to determine if the player should move.
-            position += velocity * deltaTime;
+            if (collider.collidingWith.Count != 0)
+            {
+                
+            }
+            else
+            {
+                position += velocity * deltaTime;
+            }
+
         }
 
         private void handleInput()

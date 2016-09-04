@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Design;
 
 namespace GamesProgAssignment4
 {
@@ -12,7 +13,8 @@ namespace GamesProgAssignment4
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        ObjectManager ObjectManager;
+        ObjectManager objectManager;
+        CollisionManager collisionManager;
 
         public Game1()
         {
@@ -31,8 +33,11 @@ namespace GamesProgAssignment4
         {
             // TODO: Add your initialization logic here
             
-            ObjectManager = new ObjectManager(this);
-            Components.Add(ObjectManager);
+            objectManager = new ObjectManager(this);
+            collisionManager = new CollisionManager(this);
+            Services.AddService(collisionManager);
+
+            Components.Add(objectManager);
 
             base.Initialize();
         }

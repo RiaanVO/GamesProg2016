@@ -23,10 +23,10 @@ namespace GamesProgAssignment4
 
         //BoxCollider box;
 
-        public Enemy(Game game, Vector3 startPos, Model model, BasicCamera camera, Player player) : base(game, startPos, model, camera)
+        public Enemy(Game game, ObjectManager objectManager,Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(game, objectManager, startPosition, model, camera)
         {
             this.player = player; //so it can get the player's position for pursuing
-            position = startPos;
+            position = startPosition;
             hasLighting = true;
             scale = Matrix.CreateScale(15f); //vary depending on size of ghost model (haven't been able to get one to work yet :/)
         }
@@ -38,7 +38,7 @@ namespace GamesProgAssignment4
             acceleration = Vector3.Zero;
             rotation = 0f;
 
-            translate = Matrix.CreateTranslation(position);
+            translation = Matrix.CreateTranslation(position);
             base.Initialize();
         }
 
@@ -77,12 +77,12 @@ namespace GamesProgAssignment4
             }
 
             position += velocity;
-            translate = Matrix.CreateTranslation(position);
+            translation = Matrix.CreateTranslation(position);
 
             //handle rotation (on Y axis) (no other axes needed at this stage)
 
             rotation = Vector3ToRadian(difference);
-            rotate = Matrix.CreateRotationY(rotation);
+            base.rotation = Matrix.CreateRotationY(rotation);
         }
 
         private float Vector3ToRadian (Vector3 direction)
@@ -92,7 +92,7 @@ namespace GamesProgAssignment4
 
         public override Matrix GetWorld()
         {
-            return scale * rotate * translate;
+            return scale * base.rotation * translation;
         }
 
         public override void Draw(GameTime gameTime)

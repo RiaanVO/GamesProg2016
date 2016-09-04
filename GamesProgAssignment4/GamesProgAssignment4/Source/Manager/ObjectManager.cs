@@ -13,7 +13,9 @@ namespace GamesProgAssignment4
     {
         Game game;
         //Master list of all game objects
-        List<GameObject> objects = new List<GameObject>();
+        List<GameObject> objectsMaster = new List<GameObject>();
+        //Used for the current update and draw cycles - avoid deleting objects that need to be updated.
+        List<GameObject> objectsCurrent = new List<GameObject>();
 
         //2D & UI drawing
         SpriteBatch spriteBatch;
@@ -32,7 +34,7 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            foreach(GameObject obj in objects)
+            foreach(GameObject obj in objectsMaster)
             {
                 obj.Initialize();
             }
@@ -51,20 +53,20 @@ namespace GamesProgAssignment4
         protected override void LoadContent()
         {
             float aspectRatio = game.Window.ClientBounds.Width / game.Window.ClientBounds.Height;
-            Vector3 camPos = new Vector3(0, 70, 0);
+            Vector3 camPos = new Vector3(0, 0, 0);
             camera = new BasicCamera(game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
 
             //Create player and add to the object list
-            player = new Player(game, camera.camPos, camera);
-            objects.Add(player);
+            player = new Player(game, this, camera.camPos, camera);
+            objectsMaster.Add(player);
 
             //Add objects for the player to interact with
             //objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
-            objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
+            objectsMaster.Add(new Skybox(game, this, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
 
-            objects.Add(new Ground(game, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
+            objectsMaster.Add(new GroundModel(game, this, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
 
-            objects.Add(new Enemy(game, new Vector3(200f, 0f, 0f), game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
+            objectsMaster.Add(new Enemy(game, this, new Vector3(200f, 0f, 0f), game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
 
             //Test UI
@@ -83,7 +85,10 @@ namespace GamesProgAssignment4
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            foreach (GameObject obj in objects)
+            objectsCurrent.Clear();
+            objectsCurrent.AddRange(objectsMaster);
+
+            foreach (GameObject obj in objectsCurrent)
             {
                 obj.Update(gameTime);
             }
@@ -101,7 +106,7 @@ namespace GamesProgAssignment4
             //GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             //Draw all 3D objects
-            foreach (GameObject obj in objects)
+            foreach (GameObject obj in objectsCurrent)
             {
                 obj.Draw(gameTime);
             }
@@ -116,6 +121,10 @@ namespace GamesProgAssignment4
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void addGameObject(GameObject gameObject) {
+            objectsMaster.Add(gameObject);
         }
 
     }

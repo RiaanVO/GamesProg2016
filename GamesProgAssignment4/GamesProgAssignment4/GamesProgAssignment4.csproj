@@ -38,14 +38,15 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Source\Framework\SphereCollider.cs" />
-    <Compile Include="Source\Framework\BoxCollider.cs" />
-    <Compile Include="Source\Framework\Collider.cs" />
-    <Compile Include="Source\Framework\GameObject.cs" />
-    <Compile Include="Source\Framework\BasicModel.cs" />
+    <Compile Include="Source\Framework\Collision\SphereCollider.cs" />
+    <Compile Include="Source\Framework\Collision\BoxCollider.cs" />
+    <Compile Include="Source\Framework\Collision\Collider.cs" />
+    <Compile Include="Source\Framework\Objects\BasicTexturePrimitive.cs" />
+    <Compile Include="Source\Framework\Objects\GameObject.cs" />
+    <Compile Include="Source\Framework\Objects\BasicModel.cs" />
     <Compile Include="Source\Framework\BasicCamera.cs" />
     <Compile Include="Source\GameObjects\Enemy.cs" />
-    <Compile Include="Source\GameObjects\Ground.cs" />
+    <Compile Include="Source\GameObjects\GroundModel.cs" />
     <Compile Include="Source\Manager\CollisionManager.cs" />
     <Compile Include="Source\Manager\ObjectManager.cs" />
     <Compile Include="Source\GameObjects\Player.cs" />

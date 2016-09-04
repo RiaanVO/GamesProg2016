@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GamesProgAssignment4
 {
-    class Ground : BasicModel
+    class GroundModel : BasicModel
     {
-        public Ground(Game game, Vector3 startPos, Model m, BasicCamera camera) : base(game, startPos, m, camera)
+        public GroundModel(Game game, ObjectManager objectManager,Vector3 startPos, Model m, BasicCamera camera) : base(game, objectManager, startPos, m, camera)
         {
             this.position = startPos;
             hasLighting = false;

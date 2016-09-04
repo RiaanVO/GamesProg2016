@@ -11,7 +11,7 @@ namespace GamesProgAssignment4
     abstract class GameObject
     {
         protected Game game;
-        protected ObjectManager manager;
+        protected ObjectManager objectManager;
         public Vector3 position { get; protected set; }
         
         /// <summary>
@@ -19,10 +19,11 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="startPos"></param>
         /// <param name="game"></param>
-        public GameObject(Vector3 startPos, Game game)
+        public GameObject(Game game, ObjectManager objectManager, Vector3 startPosition)
         {
             this.game = game;
-            position = startPos;
+            this.objectManager = objectManager;
+            position = startPosition;
         }
 
         /// <summary>

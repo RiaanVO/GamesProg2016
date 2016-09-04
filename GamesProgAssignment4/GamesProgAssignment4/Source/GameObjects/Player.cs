@@ -13,58 +13,52 @@ namespace GamesProgAssignment4
     {
         protected BasicCamera camera;
 
+        //Looking varibles
         Vector3 lookDirection;
+        Vector3 headHeightOffset = new Vector3(0, 5, 0);
         MouseState prevMouseState;
-        //float yawRotationRate = ;
         float pitchRotationRate = MathHelper.PiOver4 / 150;
         float currentPitch;// = MathHelper.PiOver2;
         float maxPitch = MathHelper.PiOver2 * (19 / 20f);
 
-
-        //Physics stuff
+        //Movement varibles
         Vector3 movementDirection;
-        Vector3 velocity, acceleration;
-        float maxVelocity = 20f; 
-        //float gravity = 0.1f;
-        float accerationRate = 2f;
-        float drag = 0.1f;
-        float slowestSpeed = 0.5f;
+        float accelerationRate = 200f;
+        float decelerationRate = 300f;
+        Vector3 acceleration;
+        float maxVelocity = 50f;
+        Vector3 velocity;
+        float minVelocity = 2f;
+
+
         bool jumped = false;
+        bool grounded = true;
+        float jumpVelocity = 50f;
+        float fallRate = 200f; // Is gravity
 
         //BoxCollider box;
 
 
         //Limited constructor
-        public Player(Game game, Vector3 startPos) :
-            this(game, startPos, new BasicCamera(game, startPos, Vector3.Forward, Vector3.Up))
-        {
-
-        }
+        public Player(Game game, ObjectManager objectManager, Vector3 startPosition) :
+            this(game, objectManager, startPosition, new BasicCamera(game, startPosition, Vector3.Forward, Vector3.Up))
+        {}
 
         //Main Constructor
-        public Player(Game game, Vector3 startPos, BasicCamera camera) : base(startPos, game)
+        public Player(Game game, ObjectManager objectManager,Vector3 startPosition, BasicCamera camera) : base(game, objectManager, startPosition)
         {
             this.camera = camera;
         }
 
         public override void Initialize()
         {
-            //Set up cameras' values and create a look at
-            lookDirection = Vector3.Forward;
-            //Initilise the movement varibles
-            velocity = Vector3.Zero;
-            movementDirection = Vector3.Zero;
-            acceleration = Vector3.Zero;
-
-
-            //System.Console.WriteLine("Acc: " + acceleration);
-            //System.Console.WriteLine("Vel: " + velocity);
-            //System.Console.WriteLine("Pos: " + position);
-            //System.Console.WriteLine("Loo: " + lookDirection);
-
             //Set up the collider
             //box = new BoxCollider();
-
+            lookDirection = Vector3.Forward;
+            velocity = Vector3.Zero;
+            acceleration = Vector3.Zero;
+            currentPitch = 0;
+            lookDirection = Vector3.Forward;
             base.Initialize();
         }
 
@@ -74,59 +68,65 @@ namespace GamesProgAssignment4
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            //lookDirection = new Vector3(0, 0, -3);//position + Vector3.Forward;
-            //lookDirection.Normalize();
             handleInput();
-            handleMovement();
+            handleMovement(gameTime);
 
-            //NOTE: NEEDS TESTING (and almost certainly debugging)
-            //CollisionManager.checkCollision(box);
-            //System.Console.WriteLine("Acc: " + acceleration);
-            //System.Console.WriteLine("Vel: " + velocity);
-            //System.Console.WriteLine("Pos: " + position);
-            //System.Console.WriteLine("Loo: " + lookDirection);
-
-            camera.setCameraPositionDirection(position, lookDirection);
-            //camera.Update(gameTime);
-
+            camera.setCameraPositionDirection(position + headHeightOffset, lookDirection);
             base.Update(gameTime);
         }
 
         //Without collision detection at the moment
-        private void handleMovement() {
-            //applying acceretion to the player
-            acceleration = Vector3.Zero;
-            acceleration = Vector3.Multiply(movementDirection, accerationRate);
-            
-            //Application of gravity - does not include collision with the floor yet
-            /*
-            acceleration.Y = -gravity;
-            if (position.Y < 10) {
-                acceleration.Y = 0;
-                position.Y = 10;
-            }
+        private void handleMovement(GameTime gameTime) {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
 
-            if (jumped)
+            if (movementDirection != Vector3.Zero)
+                movementDirection.Normalize();
+
+            //Acceleration and deceleration if the player is moving or not
+            acceleration = movementDirection * accelerationRate;
+            Vector2 horizontalVelocity = new Vector2(velocity.X, velocity.Z);
+
+            if (acceleration == Vector3.Zero && horizontalVelocity != Vector2.Zero)
             {
-                acceleration.Y = 10;
-                jumped = false;
-            }*/
-            velocity -= Vector3.Multiply(velocity, drag);
-
-            if ((velocity).Length() < slowestSpeed) {
-                velocity = Vector3.Zero;
+                Vector2 horizontalDeceleration = Vector2.Normalize(horizontalVelocity) * -decelerationRate;
+                acceleration = new Vector3(horizontalDeceleration.X, acceleration.Y, horizontalDeceleration.Y);
+                if (horizontalVelocity.Length() < minVelocity)
+                {
+                    velocity = Vector3.Zero;
+                }
             }
 
-            velocity += acceleration;
+            //Remove y component to be calculated seperatly;
+            acceleration.Y = 0;
+            velocity += acceleration * deltaTime;
+            if (horizontalVelocity.Length() > maxVelocity)
+            {
+                horizontalVelocity = Vector2.Normalize(horizontalVelocity) * maxVelocity;
+                velocity = new Vector3(horizontalVelocity.X, velocity.Y, horizontalVelocity.Y);
+            }
 
-            if ((velocity).Length() > maxVelocity) {
-                velocity.Normalize();
-                velocity = Vector3.Multiply(velocity, maxVelocity);
+            acceleration = Vector3.Zero;
+            if (!grounded)
+                acceleration = Vector3.Down * fallRate;
+
+            if (grounded && jumped)
+            {
+                velocity += Vector3.Up * jumpVelocity;
+                grounded = jumped = false;
+            }
+
+            velocity += acceleration * deltaTime;
+
+            if (position.Y < 0)
+            {
+                velocity.Y = 0;
+                acceleration.Y = 0;
+                grounded = true;
+                position = new Vector3(position.X, 0, position.Z);
             }
 
             //Collision code goes here to determine if the player should move.
-
-            position += velocity;
+            position += velocity * deltaTime;
         }
 
         private void handleInput() {
@@ -135,8 +135,9 @@ namespace GamesProgAssignment4
             KeyboardState keyboardState = Keyboard.GetState();
 
             //Resets the movement direction to zero, then checks which keys are pressed to create a new movement direction.
-            if(lookDirection != Vector3.Zero)
+            if (lookDirection != Vector3.Zero)
                 lookDirection.Normalize();
+
             movementDirection = Vector3.Zero;
 
             if (keyboardState.IsKeyDown(Keys.W))
@@ -150,9 +151,6 @@ namespace GamesProgAssignment4
             //Set jumped to true if the condition is correct
             jumped = (keyboardState.IsKeyDown(Keys.Space) && !jumped);
 
-            if (movementDirection != Vector3.Zero)
-                movementDirection.Normalize();
-
             //Sets the yaw rotation of the cameras' look direction
             lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X)));
 
@@ -163,7 +161,7 @@ namespace GamesProgAssignment4
                 lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Cross(Vector3.Up, lookDirection), pitchAngle));
                 currentPitch += pitchAngle;
             }
-            
+
             //Resets the mouses position to the center of the screen, also resets the prevouse mouse state so the camera wont jump around
             Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();

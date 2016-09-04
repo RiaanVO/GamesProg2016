@@ -10,25 +10,20 @@ namespace GamesProgAssignment4
 {
     class BasicModel : GameObject
     {
-        protected Model model { get; set; }
         protected BasicCamera camera;
-        protected Matrix world;
-        protected Matrix scale, rotate, translate;
+        public Model model { get; protected set; }
+        protected Matrix world, scale, rotation, translation;
         //Override if not needed
         protected bool hasLighting = true;
 
-        public BasicModel(Game game, Vector3 startPos, Model m, BasicCamera camera) : base(startPos, game)
+        public BasicModel(Game game, ObjectManager objectManager, Vector3 startPosition, Model model, BasicCamera camera) : base(game, objectManager, startPosition)
         {
-            model = m;
             this.camera = camera;
-
-            //Sets up world matrices
-            scale = rotate = translate = Matrix.Identity;
-
-            //Set up any matrices that need to be set up here
-            translate = Matrix.CreateTranslation(startPos);
-
-            world = scale * rotate * translate;
+            this.model = model;
+            scale = Matrix.CreateScale(1);
+            rotation = Matrix.Identity;
+            translation = Matrix.CreateTranslation(position);
+            world = scale * rotation * translation; ;
         }
 
         /// <summary>
@@ -64,9 +59,14 @@ namespace GamesProgAssignment4
             return world;
         }
 
+        /// <summary>
+        /// Sets the position of the object and adjusts the translation to the new position
+        /// </summary>
+        /// <param name="position"></param>
         public virtual void SetPosition(Vector3 position)
         {
             this.position = position;
+            translation = Matrix.CreateTranslation(position);
         }
     }
 }

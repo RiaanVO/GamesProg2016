@@ -13,7 +13,7 @@ namespace GamesProgAssignment4
         Player player;
         Vector3 skyboxAnchor;
 
-        public Skybox(Game game, Vector3 startPos, Model model, BasicCamera camera, Player player) : base(game, startPos, model, camera)
+        public Skybox(Game game, ObjectManager objectManager, Vector3 startPos, Model model, BasicCamera camera, Player player) : base(game, objectManager, startPos, model, camera)
         {
             this.player = player;
             hasLighting = false;
@@ -24,7 +24,7 @@ namespace GamesProgAssignment4
         {
             position = player.position;
             skyboxAnchor = position;
-            translate = Matrix.CreateTranslation(position);
+            translation = Matrix.CreateTranslation(position);
             base.Initialize();
         }
 
@@ -36,14 +36,14 @@ namespace GamesProgAssignment4
             //skyboxAnchor.Y = 0;
             //skyboxAnchor = Vector3.Zero;
             //Updates world matrix
-            translate = Matrix.CreateTranslation(skyboxAnchor);
+            translation = Matrix.CreateTranslation(skyboxAnchor);
 
             base.Update(gameTime);
         }
 
         public override Matrix GetWorld()
         {
-            return scale * rotate * translate;
+            return scale * rotation * translation;
         }
 
         public override void Draw(GameTime gameTime)

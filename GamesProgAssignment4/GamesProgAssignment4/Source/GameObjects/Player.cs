@@ -5,20 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace GamesProgAssignment4
 {
     class Player : GameObject
     {
-        protected BasicCamera camera;
+        BasicCamera camera;
 
         //Looking varibles
         Vector3 lookDirection;
         Vector3 headHeightOffset = new Vector3(0, 5, 0);
         MouseState prevMouseState;
         float pitchRotationRate = MathHelper.PiOver4 / 150;
-        float currentPitch;// = MathHelper.PiOver2;
+        float currentPitch = 0;// = MathHelper.PiOver2;
         float maxPitch = MathHelper.PiOver2 * (19 / 20f);
 
         //Movement varibles
@@ -36,47 +35,34 @@ namespace GamesProgAssignment4
         float jumpVelocity = 50f;
         float fallRate = 200f; // Is gravity
 
-        //BoxCollider box;
+        SphereCollider collider;
+        float colliderRadius = 5f;
 
-
-        //Limited constructor
-        public Player(Game game, ObjectManager objectManager, Vector3 startPosition) :
-            this(game, objectManager, startPosition, new BasicCamera(game, startPosition, Vector3.Forward, Vector3.Up))
-        {}
-
-        //Main Constructor
-        public Player(Game game, ObjectManager objectManager,Vector3 startPosition, BasicCamera camera) : base(game, objectManager, startPosition)
+        public Player(Game game, ObjectManager objectManager, Vector3 position, BasicCamera camera) : base(game, objectManager, position)
         {
             this.camera = camera;
         }
 
         public override void Initialize()
         {
-            //Set up the collider
-            //box = new BoxCollider();
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
-            currentPitch = 0;
             lookDirection = Vector3.Forward;
             base.Initialize();
         }
 
-        /// <summary>
-        /// Upadates the players input, looking and moving direction, collision, and camera
-        /// </summary>
-        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             handleInput();
             handleMovement(gameTime);
-
             camera.setCameraPositionDirection(position + headHeightOffset, lookDirection);
             base.Update(gameTime);
         }
 
         //Without collision detection at the moment
-        private void handleMovement(GameTime gameTime) {
+        private void handleMovement(GameTime gameTime)
+        {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
 
             if (movementDirection != Vector3.Zero)
@@ -95,7 +81,6 @@ namespace GamesProgAssignment4
                     velocity = Vector3.Zero;
                 }
             }
-
             //Remove y component to be calculated seperatly;
             acceleration.Y = 0;
             velocity += acceleration * deltaTime;
@@ -129,7 +114,8 @@ namespace GamesProgAssignment4
             position += velocity * deltaTime;
         }
 
-        private void handleInput() {
+        private void handleInput()
+        {
             //Get the states of the keyboard and mouse
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();

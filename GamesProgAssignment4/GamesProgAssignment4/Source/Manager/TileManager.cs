@@ -88,7 +88,7 @@ namespace GamesProgAssignment4 {
                     switch (data[j, k]) {
                         case 1:
                             //tiles.Add(new Box(game, 10, new Vector3(21f * (j + 1), 50, 21f * (k + 1)), Game.Content.Load<Texture2D>(@"Textures\crate"), camera));
-                            tiles.Add(new GroundPrimitive(game, objectManager, new Vector3(TILE_SIZE * (j + 1), 0, TILE_SIZE * (k + 1)), camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), (int)TILE_SIZE, 1));
+                            tiles.Add(new GroundPrimitive(game, objectManager, new Vector3(TILE_SIZE * (j + 1), 0, TILE_SIZE * (k + 1)), camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), (int)TILE_SIZE, 1, false));
                             break;
                         default:
                             break;

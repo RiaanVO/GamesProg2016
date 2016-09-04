@@ -7,13 +7,35 @@ using Microsoft.Xna.Framework;
 
 namespace GamesProgAssignment4
 {
-    static class CollisionManager
+    class CollisionManager : GameComponent
     {
-        static List<Collider> colliders;
+        List<Collider> colliders;
+        float elapsedTime;
+        //Milliseconds between each collision check
+        float tickRate = 100;
 
-        static CollisionManager()
+        public CollisionManager(Game game) : base(game)
         {
             colliders = new List<Collider>();
+        }
+
+        /// <summary>
+        /// Checks the given collider against all other colliders
+        /// </summary>
+        /// <param name="collider">The collider to check against all other colliders</param>
+        /// <returns></returns>
+        public bool checkCollision(Collider collider)
+        {
+            //NEEDS TO EXCLUDE 'collider' ITSELF FROM CHECKS!
+
+            foreach (Collider c in colliders)
+            {
+                if (c.isColliding(collider))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -21,7 +43,7 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="collider">The collider to check against all other colliders</param>
         /// <returns></returns>
-        public static List<Collider> collidingWith(Collider collider)
+        public List<Collider> collidingWith(Collider collider)
         {
             List<Collider> collidingWith = new List<Collider>();
 
@@ -34,34 +56,58 @@ namespace GamesProgAssignment4
             }
             return collidingWith;
         }
-
+ 
         /// <summary>
-        /// Checks the given collider against all other colliders
+        /// Updates each collider's 'collidingWith' list with everything that it is colliding with.
         /// </summary>
-        /// <param name="collider">The collider to check against all other colliders</param>
-        /// <returns></returns>
-        public static bool checkCollision(Collider collider)
+        public void checkAllCollisions()
         {
-            //NEEDS TO EXCLUDE ITSELF FROM CHECKS!
-
-            foreach (Collider c in colliders)
+            foreach (Collider c1 in colliders)
             {
-                if ( c.isColliding(collider))
+                foreach (Collider c2 in colliders)
                 {
-                    return true;
+                    //Needs to check if collision is already registered.
+                    if (!ReferenceEquals(c1, c2) && !c1.collidingWith.Contains(c2) &&  c1.isColliding(c2))
+                    {
+                        c1.collidingWith.Add(c2);
+                        c2.collidingWith.Add(c1);
+                    }
                 }
             }
-            return false;
         }
 
-        public static void addCollider(Collider collider)
+        public void updateColliders()
+        {
+            foreach (Collider c in colliders)
+            {
+                c.updateColliderPos();
+                c.collidingWith.Clear();
+            }
+        }
+
+        public void addCollider(Collider collider)
         {
             colliders.Add(collider);
         }
-        
-        public static void removeCollider(Collider collider)
+
+        public void removeCollider(Collider collider)
         {
             colliders.Remove(collider);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (elapsedTime >= tickRate)
+            {
+                elapsedTime = 0;
+                //update collider positions & clear 'collidingWith' lists
+                updateColliders();
+                checkAllCollisions();
+            }
+            else
+            {
+                elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            }
         }
     }
 }

@@ -13,3 +13,5 @@ Stockholm, 2005 08 25
 
 
 Modify however you like, just cred me for my work, maybe link to my page.
+
+Obtained from http://www.custommapmakers.org/skyboxes.php

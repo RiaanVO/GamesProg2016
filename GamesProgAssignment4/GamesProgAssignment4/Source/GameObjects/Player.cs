@@ -54,6 +54,7 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
+            collider = new SphereCollider(game, this, false, colliderRadius);
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
@@ -132,7 +133,15 @@ namespace GamesProgAssignment4
             }
 
             //Collision code goes here to determine if the player should move.
-            position += velocity * deltaTime;
+            if (collider.collidingWith.Count != 0)
+            {
+                
+            }
+            else
+            {
+                position += velocity * deltaTime;
+            }
+
         }
 
         private void handleInput()

@@ -21,6 +21,7 @@ namespace GamesProgAssignment4
             base(game, objectManager, position, camera, graphicsDevice, texture)
         {
             this.size = size;
+            //col = new BoxCollider(game, this, )
             constructCube();
         }
 

@@ -15,6 +15,8 @@ namespace GamesProgAssignment4
         Vector2[] textureCoordinates;
         Vector3[] faceNormals;
 
+        BoxCollider col;
+
         public CubePrimitive(Game game, ObjectManager objectManager, Vector3 position, BasicCamera camera, GraphicsDevice graphicsDevice, Texture2D texture, float size) :
             base(game, objectManager, position, camera, graphicsDevice, texture)
         {

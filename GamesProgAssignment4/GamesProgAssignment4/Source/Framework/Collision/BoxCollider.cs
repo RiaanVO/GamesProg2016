@@ -11,36 +11,59 @@ namespace GamesProgAssignment4
     {
         public BoundingBox collider;
         //Variable to hold half the length of each side
-        float halfSize;
+        //Min point is essentially = to position
+        Vector3 minPoint;
+        Vector3 maxPoint;
 
-        public BoxCollider(Game game, GameObject obj) : base(game, obj)
+        public BoxCollider(Game game, GameObject obj, bool isKinematic) : base(game, obj, isKinematic)
         {
-            halfSize = 0.5f;
-            updateColliderPos();
-        }
-
-        /// <summary>Creates box collider as a Cube</summary>
-        /// <param name="game"></param>
-        /// <param name="position">The centre of the *cube*</param>
-        /// <param name="size">Length of each side of the *cube*</param>
-        public BoxCollider(Game game, GameObject obj, float size) : base(game, obj)
-        {
-            halfSize = size / 2;
+            minPoint = Vector3.Zero;
+            maxPoint = new Vector3(1, 1, 1);
             updateColliderPos();
         }
 
         /// <summary>
-        /// Creates a new BoxCollider (any type)
+        /// Creates a new *cube* collider using centre and size of sides
         /// </summary>
-        /// <param name="min">The minimum point the BoundingBox includes. One corner of the box (lower-left if looking along positive Z)</param>
-        /// <param name="max">The maximum point the BoundingBox includes. Other corner of the box (upper-right if looking along positive Z)</param>
-        public BoxCollider(Game game, GameObject obj, Vector3 min, Vector3 max) : base(game, obj)
+        /// <param name="game"></param>
+        /// <param name="obj"></param>
+        /// <param name="centre"></param>
+        /// <param name="sideLength"></param>
+        public BoxCollider(Game game, GameObject obj, bool isKinematic, Vector3 centre, float sideLength) : base(game, obj, isKinematic)
         {
             //collider = new BoundingBox(min, max);
-            halfSize = (max.X - min.X) / 2;
+            float halfSize = sideLength / 2;
+            minPoint = new Vector3(centre.X - halfSize,centre.Y - halfSize, centre.Z - halfSize);
+            maxPoint = new Vector3(centre.X + halfSize, centre.Y + halfSize, centre.Z + halfSize);
             updateColliderPos();
         }
 
+        /// <summary>
+        /// Creates a new BoxCollider (any type/size)
+        /// </summary>
+        /// <param name="min">The minimum point the BoundingBox includes. One corner of the box (lower-left if looking along positive Z)</param>
+        /// <param name="max">The maximum point the BoundingBox includes. Other corner of the box (upper-right if looking along positive Z)</param>
+        public BoxCollider(Game game, GameObject obj, bool isKinematic, Vector3 min, Vector3 max) : base(game, obj, isKinematic)
+        {
+            //collider = new BoundingBox(min, max);
+            //halfSize = (max.X - min.X) / 2;
+            minPoint = position = min;
+            maxPoint = max;
+            updateColliderPos();
+        }
+
+        /// <summary>
+        /// Updates the BoundingBox's position
+        /// </summary>
+        public override void updateColliderPos()
+        {
+            //Update the min and max points with the position
+            minPoint = position;
+            maxPoint = minPoint + maxPoint;
+            collider = new BoundingBox();
+        }
+
+        /*
         /// <summary>
         /// Updates the BoundingBox's position (NOT WORKING)
         /// </summary>
@@ -48,7 +71,7 @@ namespace GamesProgAssignment4
         {
             collider = new BoundingBox(new Vector3(position.X - halfSize, position.Y - halfSize, position.Z - halfSize),
                 new Vector3(position.X + halfSize, position.Y + halfSize, position.Z + halfSize));
-        }
+        }*/
 
         //Pass in collider to compare
         public override bool isColliding(Collider otherCollider)

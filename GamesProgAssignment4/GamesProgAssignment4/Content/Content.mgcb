@@ -407,3 +407,27 @@
 /processorParam:TextureFormat=Color
 /build:Models/Skyboxes/envmap_miramar/miramar_up.png
 
+#begin Sounds/footsteps.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/footsteps.wav
+
+#begin Sounds/key.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/key.wav
+
+#begin Sounds/scarybgm.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/scarybgm.wav
+
+#begin Sounds/scaryscream.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/scaryscream.wav
+

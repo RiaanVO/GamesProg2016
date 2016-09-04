@@ -57,7 +57,7 @@ namespace GamesProgAssignment4
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             SoundEffect footsteps = Content.Load<SoundEffect>(@"Sounds/footsteps");
-            footsteps.Play();
+            //footsteps.Play();
 
             // TODO: use this.Content to load your game content here
         }
@@ -82,7 +82,7 @@ namespace GamesProgAssignment4
                 Exit();
 
             // TODO: Add your update logic here
-
+            collisionManager.Update(gameTime);
             audioManager.Update(gameTime);
             base.Update(gameTime);
         }

@@ -47,7 +47,7 @@ namespace GamesProgAssignment4
             this.camera = camera;
             audioListenerComponent = new AudioListenerComponet(game, this);
             audioEmitterComponent = new AudioEmitterComponent(game, this);
-            //audioEmitterComponent.createSoundEffectInstance("Footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"));
+            audioEmitterComponent.createSoundEffectInstance("Footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"));
             audioEmitterComponent.setInstanceLoop("Footsteps", true);
             audioEmitterComponent.setInstancePlayback("Footsteps", false);
         }

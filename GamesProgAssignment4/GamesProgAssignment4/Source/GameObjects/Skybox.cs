@@ -33,8 +33,8 @@ namespace GamesProgAssignment4
             //Update position according to player
             position = player.position;
             skyboxAnchor = position;
-            skyboxAnchor.Y = 0;
-            skyboxAnchor = Vector3.Zero;
+            //skyboxAnchor.Y = 0;
+            //skyboxAnchor = Vector3.Zero;
             //Updates world matrix
             translate = Matrix.CreateTranslation(skyboxAnchor);
 

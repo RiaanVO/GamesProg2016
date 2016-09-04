@@ -59,7 +59,8 @@ namespace GamesProgAssignment4
             objects.Add(player);
 
             //Add objects for the player to interact with
-            objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
+            //objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
+            objects.Add(new Skybox(game, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
 
             objects.Add(new Ground(game, Vector3.Zero, game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
 

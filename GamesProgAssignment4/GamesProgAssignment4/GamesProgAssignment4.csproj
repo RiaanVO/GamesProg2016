@@ -52,6 +52,7 @@
     <Compile Include="Source\GameObjects\Enemy.cs" />
     <Compile Include="Source\GameObjects\GroundModel.cs" />
     <Compile Include="Source\GameObjects\GroundPrimitive.cs" />
+    <Compile Include="Source\GameObjects\Key.cs" />
     <Compile Include="Source\GameObjects\Player.cs" />
     <Compile Include="Source\Manager\AudioManager.cs" />
     <Compile Include="Source\Manager\CollisionManager.cs" />

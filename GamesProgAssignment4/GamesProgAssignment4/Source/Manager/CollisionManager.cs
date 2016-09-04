@@ -11,8 +11,8 @@ namespace GamesProgAssignment4
     {
         List<Collider> colliders;
         float elapsedTime;
-        //Milliseconds between each collision check
-        float tickRate = 100;
+        //Milliseconds between each collision check (currently 20/second)
+        float tickRate = 50;
 
         public CollisionManager(Game game) : base(game)
         {
@@ -80,6 +80,7 @@ namespace GamesProgAssignment4
         {
             foreach (Collider c in colliders)
             {
+                c.updatePos();
                 c.updateColliderPos();
                 c.collidingWith.Clear();
             }

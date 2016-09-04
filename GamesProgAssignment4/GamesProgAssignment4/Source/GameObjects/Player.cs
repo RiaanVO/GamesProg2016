@@ -63,6 +63,7 @@ namespace GamesProgAssignment4
         //Without collision detection at the moment
         private void handleMovement(GameTime gameTime)
         {
+
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
 
             if (movementDirection != Vector3.Zero)
@@ -84,9 +85,10 @@ namespace GamesProgAssignment4
             //Remove y component to be calculated seperatly;
             acceleration.Y = 0;
             velocity += acceleration * deltaTime;
+
             if (horizontalVelocity.Length() > maxVelocity)
             {
-                horizontalVelocity = Vector2.Normalize(horizontalVelocity) * maxVelocity;
+                horizontalVelocity = Vector2.Normalize(horizontalVelocity) * (maxVelocity - 1);
                 velocity = new Vector3(horizontalVelocity.X, velocity.Y, horizontalVelocity.Y);
             }
 

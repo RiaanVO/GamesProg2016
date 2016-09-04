@@ -15,6 +15,7 @@ namespace GamesProgAssignment4
 
         ObjectManager objectManager;
         CollisionManager collisionManager;
+        AudioManager audioManager;
 
         public Game1()
         {
@@ -36,6 +37,9 @@ namespace GamesProgAssignment4
             objectManager = new ObjectManager(this);
             collisionManager = new CollisionManager(this);
             Services.AddService(collisionManager);
+
+            audioManager = new AudioManager(this);
+            Services.AddService(audioManager);
 
             Components.Add(objectManager);
 
@@ -75,6 +79,7 @@ namespace GamesProgAssignment4
 
             // TODO: Add your update logic here
 
+            audioManager.Update(gameTime);
             base.Update(gameTime);
         }
 

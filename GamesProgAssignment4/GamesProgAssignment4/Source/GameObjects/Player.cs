@@ -38,9 +38,12 @@ namespace GamesProgAssignment4
         SphereCollider collider;
         float colliderRadius = 5f;
 
+        AudioListenerComponet audioListenerComponent;
+
         public Player(Game game, ObjectManager objectManager, Vector3 position, BasicCamera camera) : base(game, objectManager, position)
         {
             this.camera = camera;
+            audioListenerComponent = new AudioListenerComponet(game, this);
         }
 
         public override void Initialize()

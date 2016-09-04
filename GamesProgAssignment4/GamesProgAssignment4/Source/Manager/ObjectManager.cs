@@ -43,7 +43,7 @@ namespace GamesProgAssignment4
             }
 
             //TEST
-            game.Services.GetService<CollisionManager>().testMethod();
+            //Game.Services.GetService<CollisionManager>().testMethod();
 
             base.Initialize();
         }

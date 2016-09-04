@@ -62,25 +62,26 @@ namespace GamesProgAssignment4
         /// </summary>
         public void checkAllCollisions()
         {
-            //NEEDS TO EXCLUDE 'collider' ITSELF FROM CHECKS!
             foreach (Collider c1 in colliders)
             {
                 foreach (Collider c2 in colliders)
                 {
-                    if (c1.isColliding(c2))
+                    //Needs to check if collision is already registered.
+                    if (!ReferenceEquals(c1, c2) && !c1.collidingWith.Contains(c2) &&  c1.isColliding(c2))
                     {
-                        
+                        c1.collidingWith.Add(c2);
+                        c2.collidingWith.Add(c1);
                     }
                 }
             }
-            //return false;
         }
 
-        public void updateColliderPositions()
+        public void updateColliders()
         {
             foreach (Collider c in colliders)
             {
                 c.updateColliderPos();
+                c.collidingWith.Clear();
             }
         }
 
@@ -99,9 +100,8 @@ namespace GamesProgAssignment4
             if (elapsedTime >= tickRate)
             {
                 elapsedTime = 0;
-                //update collider positions
-                updateColliderPositions();
-                //check all collisions
+                //update collider positions & clear 'collidingWith' lists
+                updateColliders();
                 checkAllCollisions();
             }
             else

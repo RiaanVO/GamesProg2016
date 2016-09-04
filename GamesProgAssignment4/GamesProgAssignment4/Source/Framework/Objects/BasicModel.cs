@@ -23,7 +23,7 @@ namespace GamesProgAssignment4
             scale = Matrix.CreateScale(1);
             rotation = Matrix.Identity;
             translation = Matrix.CreateTranslation(position);
-            world = scale * rotation * translation; ;
+            world = scale * rotation * translation;
         }
 
         /// <summary>

@@ -12,17 +12,28 @@ namespace GamesProgAssignment4
         //Generic class, inherited by bounding boxes and spheres
         //BoundingBox box;
         public List<Collider> collidingWith;
+        protected GameObject obj;
         protected Vector3 position { get; set; }
+        //Used to determine if position should be updated regularly or not
+        public bool isKinematic;
 
-        public Collider(Game game, Vector3 position)
+        public Collider(Game game, GameObject obj, bool isKinematic)
         {
             collidingWith = new List<Collider>();
-            this.position = position;
+            this.obj = obj;
+            position = obj.position;
             game.Services.GetService<CollisionManager>().addCollider(this);
-
         }
 
         public abstract bool isColliding(Collider otherCollider);
+
+        public virtual void updatePos()
+        {
+            if (!isKinematic)
+            {
+                position = obj.position;
+            }
+        }
 
         /// <summary>
         /// Recreates the collider using the position and other given variables.

@@ -53,6 +53,7 @@
     <Compile Include="Source\Manager\ObjectManager.cs" />
     <Compile Include="Source\GameObjects\Player.cs" />
     <Compile Include="Source\Game1.cs" />
+    <Compile Include="Source\Manager\TileManager.cs" />
     <Compile Include="Source\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\GameObjects\Skybox.cs" />

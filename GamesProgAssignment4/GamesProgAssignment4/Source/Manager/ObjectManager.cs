@@ -11,10 +11,15 @@ namespace GamesProgAssignment4
 {
     class ObjectManager : DrawableGameComponent
     {
+
+        Game game;
         //Master list of all game objects
         List<GameObject> objectsMaster = new List<GameObject>();
         //Used for the current update and draw cycles - avoid deleting objects that need to be updated.
         List<GameObject> objectsCurrent = new List<GameObject>();
+
+        // Tile manager
+        TileManager tileManager;
 
         //2D & UI drawing
         SpriteBatch spriteBatch;
@@ -27,12 +32,16 @@ namespace GamesProgAssignment4
         //Basic constructor
         public ObjectManager(Game game) : base(game)
         {
+            this.game = game;
             //Graphics device.sampler state (first element is to specify how the textures are wrapped (wrap or clamp))???
         }
 
         public override void Initialize()
         {
-            foreach(GameObject obj in objectsMaster)
+            tileManager = new TileManager(game, this, camera);
+            tileManager.Initialize();
+
+            foreach (GameObject obj in objectsMaster)
             {
                 obj.Initialize();
             }
@@ -63,7 +72,7 @@ namespace GamesProgAssignment4
             addGameObject(new Skybox(Game, this, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
 
             //addGameObject(new GroundModel(Game, this, Vector3.Zero, Game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
-            addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 100));
+            //addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 100));
 
             addGameObject(new Enemy(Game, this, new Vector3(200f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
@@ -111,6 +120,8 @@ namespace GamesProgAssignment4
             //Add drawing here
             //Test to fix draw order problem
             //GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            tileManager.Draw(gameTime);
 
             //Draw all 3D objects
             foreach (GameObject obj in objectsCurrent)

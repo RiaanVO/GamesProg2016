@@ -23,9 +23,10 @@ namespace GamesProgAssignment4
             this.numTilesAcross = numTilesAcross;
             totalSize = tileSize * numTilesAcross;
             hasLighting = false;
-            centredPosition = new Vector3(-totalSize / 2, 0, -totalSize / 2);
+            centredPosition = new Vector3(-position.X / 2, 0, -position.Z / 2);
 
             translation = Matrix.CreateTranslation(centredPosition);
+            //translation = Matrix.CreateTranslation(position);
 
             constructPlane();
         }

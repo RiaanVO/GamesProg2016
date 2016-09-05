@@ -462,3 +462,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Key/Key_B_02_rot.fbx
 
+#begin Sounds/heartbeat.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/heartbeat.wav
+

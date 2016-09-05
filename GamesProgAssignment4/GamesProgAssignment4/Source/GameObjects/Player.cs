@@ -37,7 +37,7 @@ namespace GamesProgAssignment4
         float fallRate = 200f; // Is gravity
 
         SphereCollider collider;
-        float colliderRadius = 5f;
+        float colliderRadius = 1f;
 
         AudioListenerComponet audioListenerComponent;
         AudioEmitterComponent audioEmitterComponent;
@@ -47,14 +47,12 @@ namespace GamesProgAssignment4
             this.camera = camera;
             audioListenerComponent = new AudioListenerComponet(game, this);
             audioEmitterComponent = new AudioEmitterComponent(game, this);
-            audioEmitterComponent.createSoundEffectInstance("Footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"));
-            audioEmitterComponent.setInstanceLoop("Footsteps", true);
-            audioEmitterComponent.setInstancePlayback("Footsteps", false);
+            audioEmitterComponent.createSoundEffectInstance("footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"), false, true, false);
         }
 
         public override void Initialize()
         {
-            collider = new SphereCollider(game, this, false, colliderRadius);
+            collider = new SphereCollider(game, this, false, objectTag.player, colliderRadius);
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
@@ -70,11 +68,11 @@ namespace GamesProgAssignment4
 
             if (velocity.Length() > 0)
             {
-                audioEmitterComponent.setInstancePlayback("Footsteps", true);
+                audioEmitterComponent.setInstancePlayback("footsteps", true);
             }
             else
             {
-                audioEmitterComponent.setInstancePlayback("Footsteps", false);
+                audioEmitterComponent.setInstancePlayback("footsteps", false);
             }
 
             base.Update(gameTime);
@@ -135,12 +133,10 @@ namespace GamesProgAssignment4
             //Collision code goes here to determine if the player should move.
             if (collider.collidingWith.Count != 0)
             {
-                
+                //do something, handle collision with object
+                //Random bouncing off a cube lmao
             }
-            else
-            {
-                position += velocity * deltaTime;
-            }
+            position += velocity * deltaTime;
 
         }
 

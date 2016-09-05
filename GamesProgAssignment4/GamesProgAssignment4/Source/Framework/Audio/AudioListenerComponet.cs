@@ -20,12 +20,15 @@ namespace GamesProgAssignment4
             game.Services.GetService<AudioManager>().setListenerComponent(this);
         }
 
+        //Update but not needed
+        /*
         public override void Update()
         {
             if(checkHasMoved()) {
                 listener.Position = gameObject.position;
             }
         }
+        */
 
         /// <summary>
         /// Updates the position of the listener.

@@ -87,7 +87,7 @@ namespace GamesProgAssignment4
 
             //Add some Cubes
             int seperationDistance = 30;
-            float crateSize = 5;
+            float crateSize = 5f;
             addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, -seperationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
             addGameObject(new CubePrimitive(Game, this, new Vector3(seperationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
             addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, seperationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));

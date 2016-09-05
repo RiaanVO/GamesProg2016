@@ -7,12 +7,18 @@ using Microsoft.Xna.Framework;
 
 namespace GamesProgAssignment4
 {
+
+    /// <summary>
+    /// Octtree tutorial: http://www.gamedev.net/page/resources/_/technical/game-programming/introduction-to-octrees-r3529
+    /// </summary>
     class CollisionManager : GameComponent
     {
         List<Collider> colliders;
         float elapsedTime;
         //Milliseconds between each collision check (currently 20/second)
-        float tickRate = 50;
+        //float tickRate = 50;
+        //Test for 40 ticks/second
+        float tickRate = 25;
 
         public CollisionManager(Game game) : base(game)
         {

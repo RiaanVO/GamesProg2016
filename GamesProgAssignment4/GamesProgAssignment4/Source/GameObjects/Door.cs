@@ -24,8 +24,8 @@ namespace GamesProgAssignment4
         {
             this.player = player;
             //Estimating door dimensions
-            collider = new BoxCollider(game, this, objectTag.door, true, false, startPosition, startPosition + new Vector3(20f, 20f, 5f));
-            scale = Matrix.CreateScale(10f);
+            collider = new BoxCollider(game, this, objectTag.door, true, false, startPosition, startPosition + new Vector3(21f, 20f, 5f));
+            scale = Matrix.CreateScale(16f);
             rotation = Matrix.CreateRotationY(MathHelper.Pi + MathHelper.PiOver2);
             //audioEmitter = new AudioEmitterComponent(game, this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/scaryscream"));

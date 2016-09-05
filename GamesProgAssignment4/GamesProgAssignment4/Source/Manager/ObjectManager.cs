@@ -67,7 +67,7 @@ namespace GamesProgAssignment4
         {
 
             float aspectRatio = 16f / 9f;//Game.Window.ClientBounds.Width / Game.Window.ClientBounds.Height;
-            Vector3 camPos = new Vector3(-20, 0, -20);
+            Vector3 camPos = new Vector3(25, 0, 20);
             camera = new BasicCamera(Game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 0.1f, 3000F);
 
             //Create player and add to the object list
@@ -81,10 +81,11 @@ namespace GamesProgAssignment4
 
 
             //new Vector3(450, 6f, 340)
-            addGameObject(new Key(Game, this, new Vector3(-10, 0f, -10), Game.Content.Load<Model>(@"Models\Key\Key_B_02_rot"), camera, player));
+            addGameObject(new Key(Game, this, new Vector3(50, 6f, 40), Game.Content.Load<Model>(@"Models\Key\Key_B_02_rot"), camera, player));
             //addGameObject(new Key(Game, this, new Vector3(500f, 0f, 0f), Game.Content.Load<Model>(@"Models\Key\Key_B_02"), camera, player));
 
-            addGameObject(new Door(game, this, new Vector3(40f, 0, 0f), Game.Content.Load<Model>(@"Models\Door\Iron_Door_01_rot"), camera, player));
+            //addGameObject(new Door(game, this, new Vector3(40f, 0, 0f), Game.Content.Load<Model>(@"Models\Door\Iron_Door_01_rot"), camera, player));
+            addGameObject(new Door(game, this, new Vector3(20f, 0, 0f), Game.Content.Load<Model>(@"Models\Door\Iron_Door_01_rot"), camera, player));
 
             //Test UI
             spriteBatch = new SpriteBatch(GraphicsDevice);

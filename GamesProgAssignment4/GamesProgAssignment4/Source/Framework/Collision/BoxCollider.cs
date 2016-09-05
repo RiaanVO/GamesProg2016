@@ -75,22 +75,15 @@ namespace GamesProgAssignment4
         {
             //Update the min and max points with the position
             minPoint = position;
-            //This calculation is wrong?? Needs to have a relative 'maxPoint' variable to calculate the absolute max point
             maxPoint = minPoint + relativeMaxPt;
             collider = new BoundingBox(minPoint, maxPoint);
         }
 
-        /*
         /// <summary>
-        /// Updates the BoundingBox's position (NOT WORKING)
+        /// Checks collisions against another collider
         /// </summary>
-        public override void updateColliderPos()
-        {
-            collider = new BoundingBox(new Vector3(position.X - halfSize, position.Y - halfSize, position.Z - halfSize),
-                new Vector3(position.X + halfSize, position.Y + halfSize, position.Z + halfSize));
-        }*/
-
-        //Pass in collider to compare
+        /// <param name="otherCollider"></param>
+        /// <returns></returns>
         public override bool isColliding(Collider otherCollider)
         {
             SphereCollider sphere = otherCollider as SphereCollider;

@@ -33,11 +33,13 @@ namespace GamesProgAssignment4
 
         bool mapLoaded = false;
 
+        public bool resetGame { get; set; }
+
         //Basic constructor
         public ObjectManager(Game game) : base(game)
         {
             this.game = game;
-            //Graphics device.sampler state (first element is to specify how the textures are wrapped (wrap or clamp))???
+            resetGame = false;
         }
 
         public override void Initialize()
@@ -63,6 +65,7 @@ namespace GamesProgAssignment4
         /// </summary>
         protected override void LoadContent()
         {
+
             float aspectRatio = 16f / 9f;//Game.Window.ClientBounds.Width / Game.Window.ClientBounds.Height;
             Vector3 camPos = new Vector3(-20, 0, -20);
             camera = new BasicCamera(Game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 0.1f, 3000F);
@@ -72,16 +75,9 @@ namespace GamesProgAssignment4
             addGameObject(player);
 
             //Add objects for the player to interact with
-            //objects.Add(new Skybox(Game, player.position, Game.Content.Load<Model>(@"Models\Skybox Model\skybox"), camera, player));
             addGameObject(new Skybox(Game, this, player.position, Game.Content.Load<Model>(@"Models\Skyboxes\envmap_miramar\envmap_miramar"), camera, player));
             addGameObject(new BackgroundAudioObject(Game, this, Vector3.Zero));
-            //addGameObject(new GroundModel(Game, this, Vector3.Zero, Game.Content.Load<Model>(@"Models\Ground Model\Ground"), camera));
-            //addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 100));
-            //addGameObject(new GroundPrimitive(Game, this, Vector3.Zero, camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), 10, 1, true));
-
-
             addGameObject(new Enemy(Game, this, new Vector3(200f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
-            //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
 
 
             //new Vector3(450, 6f, 340)
@@ -90,19 +86,13 @@ namespace GamesProgAssignment4
 
             addGameObject(new Door(game, this, new Vector3(40f, 0, 0f), Game.Content.Load<Model>(@"Models\Door\Iron_Door_01_rot"), camera, player));
 
-            //Add some Cubes
-            //int separationDistance = 30;
-            //float crateSize = 5f;
-            //addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, -separationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-            //addGameObject(new CubePrimitive(Game, this, new Vector3(separationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-            //addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, separationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-            //addGameObject(new CubePrimitive(Game, this, new Vector3(-separationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-
             //Test UI
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            scoreString = new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Score: " + 0, Color.White, 0.01f);
+            scoreString = new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Time Taken: " + 0, Color.White, 0.01f);
             ui.Add(scoreString);
+
+
             //ui.Add(new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White, 0.01f));
             //ui.Add(new UISprite(game, Vector2.Zero, game.Content.Load<Texture2D>(@"Textures\Crate"), Color.Red));
 
@@ -133,6 +123,10 @@ namespace GamesProgAssignment4
                     obj.Update(gameTime);
                 }
             }
+
+            if (resetGame)
+                reset();
+
             base.Update(gameTime);
         }
 
@@ -161,7 +155,7 @@ namespace GamesProgAssignment4
                 spriteBatch.Begin();
 
                 ui.Clear();
-                scoreString.ChangeString("Score: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"));
+                scoreString.ChangeString("Time Taken: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"));
                 ui.Add(scoreString);
 
                 foreach (UIObject uiobj in ui)
@@ -188,5 +182,16 @@ namespace GamesProgAssignment4
             return currentGameState;
         }
 
+
+        private void reset() {
+            resetGame = false;
+            
+            objectsMaster.Clear();
+            objectsCurrent.Clear();
+            Game.Services.GetService<CollisionManager>().reset();
+            Game.Services.GetService<AudioManager>().reset();
+            mapLoaded = false;
+            LoadContent();
+        }
     }
 }

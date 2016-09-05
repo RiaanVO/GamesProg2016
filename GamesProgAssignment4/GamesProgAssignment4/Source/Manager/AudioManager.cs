@@ -53,5 +53,11 @@ namespace GamesProgAssignment4
 
             base.Update(gameTime);
         }
+
+        public void reset() {
+            foreach (AudioEmitterComponent aec in emitterComponents) {
+                aec.stopAll();
+            }
+        }
     }
 }

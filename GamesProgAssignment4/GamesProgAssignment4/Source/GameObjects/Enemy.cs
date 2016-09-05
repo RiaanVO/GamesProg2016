@@ -60,6 +60,7 @@ namespace GamesProgAssignment4
                     {
                         audioEmitter.playSoundEffect("Scream", 0.1f);
                         playerCaught = true;
+                        objectManager.resetGame = true;
                     }
                 }
             }

@@ -178,5 +178,12 @@ namespace GamesProgAssignment4
                 soundEffectInstances[tag].Stop();
             }
         }
+
+        public void stopAll() {
+            foreach (KeyValuePair<string, SoundEffectInstance> pair in soundEffectInstances)
+            {
+                pair.Value.Stop();
+            }
+        }
     }
 }

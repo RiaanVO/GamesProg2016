@@ -115,6 +115,10 @@ namespace GamesProgAssignment4
             colliders.Remove(collider);
         }
 
+        public void reset() {
+            colliders.Clear();
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (elapsedTime >= tickRate)

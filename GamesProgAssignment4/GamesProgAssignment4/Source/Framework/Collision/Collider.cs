@@ -7,6 +7,15 @@ using Microsoft.Xna.Framework;
 
 namespace GamesProgAssignment4
 {
+    public enum objectTag
+    {
+        player,
+        wall, 
+        enemy,
+        hazard,
+        pickup
+    }
+
     abstract class Collider
     {
         //Generic class, inherited by bounding boxes and spheres

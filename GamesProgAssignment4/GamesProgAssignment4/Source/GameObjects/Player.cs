@@ -37,7 +37,7 @@ namespace GamesProgAssignment4
         float fallRate = 200f; // Is gravity
 
         SphereCollider collider;
-        float colliderRadius = 5f;
+        float colliderRadius = 1f;
 
         AudioListenerComponet audioListenerComponent;
         AudioEmitterComponent audioEmitterComponent;
@@ -135,12 +135,10 @@ namespace GamesProgAssignment4
             //Collision code goes here to determine if the player should move.
             if (collider.collidingWith.Count != 0)
             {
-                
+                //do something, handle collision with object
+                //Random bouncing off a cube lmao
             }
-            else
-            {
-                position += velocity * deltaTime;
-            }
+            position += velocity * deltaTime;
 
         }
 

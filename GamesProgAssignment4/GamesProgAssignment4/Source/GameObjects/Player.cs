@@ -54,7 +54,7 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            collider = new SphereCollider(game, this, false, colliderRadius);
+            collider = new SphereCollider(game, this, false, objectTag.player, colliderRadius);
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;

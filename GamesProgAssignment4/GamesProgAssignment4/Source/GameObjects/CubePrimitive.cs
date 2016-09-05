@@ -21,7 +21,7 @@ namespace GamesProgAssignment4
             base(game, objectManager, position, camera, graphicsDevice, texture)
         {
             this.size = size;
-            col = new BoxCollider(game, this, true, position, new Vector3(position.X + size, position.Y + size, position.Z + size));
+            col = new BoxCollider(game, this, true, objectTag.obstacle, position, new Vector3(position.X + size, position.Y + size, position.Z + size));
             constructCube();
         }
 

@@ -12,13 +12,13 @@ namespace GamesProgAssignment4
         public BoundingSphere collider;
         float radius;
 
-        public SphereCollider(Game game, GameObject obj, bool isKinematic, float radius) : base(game, obj, isKinematic)
+        public SphereCollider(Game game, GameObject obj, bool isKinematic, objectTag tag, float radius) : base(game, obj, isKinematic, tag)
         {
             this.radius = radius;
             updateColliderPos();
         }
 
-        public SphereCollider(Game game, GameObject obj, bool isKinematic) : base(game, obj, isKinematic)
+        public SphereCollider(Game game, GameObject obj, bool isKinematic, objectTag tag) : base(game, obj, isKinematic, tag)
         {
             radius = 1f;
             updateColliderPos();

@@ -25,7 +25,7 @@ namespace GamesProgAssignment4
         /// <param name="game"></param>
         /// <param name="obj"></param>
         /// <param name="isKinematic"></param>
-        public BoxCollider(Game game, GameObject obj, bool isKinematic) : base(game, obj, isKinematic)
+        public BoxCollider(Game game, GameObject obj, bool isKinematic, objectTag tag) : base(game, obj, isKinematic, tag)
         {
             minPoint = position;
             maxPoint = position + new Vector3(1, 1, 1);
@@ -55,7 +55,7 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="min">The minimum point the BoundingBox includes. One corner of the box (lower-left if looking along positive Z)</param>
         /// <param name="max">The maximum point the BoundingBox includes. Other corner of the box (upper-right if looking along positive Z)</param>
-        public BoxCollider(Game game, GameObject obj, bool isKinematic, Vector3 min, Vector3 max) : base(game, obj, isKinematic)
+        public BoxCollider(Game game, GameObject obj, bool isKinematic, objectTag tag, Vector3 min, Vector3 max) : base(game, obj, isKinematic, tag)
         {
             //collider = new BoundingBox(min, max);
             //halfSize = (max.X - min.X) / 2;s

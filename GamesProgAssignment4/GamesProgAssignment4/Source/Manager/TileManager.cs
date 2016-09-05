@@ -21,6 +21,7 @@ namespace GamesProgAssignment4 {
 
         public static float TILE_SIZE = 20.0f;
 
+
         private short[,] levelData = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0},
@@ -83,25 +84,31 @@ namespace GamesProgAssignment4 {
         */
 
         private void ParseRawLevelData(short[,] data) {
-            for (int j = 0; j <= data.GetUpperBound(0); j++) {
-                for (int k = 0; k <= data.GetUpperBound(1); k++) {
-                    switch (data[j, k]) {
-                        case 0:
-                            tiles.Add(new CubePrimitive(game, objectManager, new Vector3(TILE_SIZE * j, 0,TILE_SIZE * k), camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/TedO"), 20));
-                            break;
-                        case 1:
-                            tiles.Add(new GroundPrimitive(game, objectManager, new Vector3((TILE_SIZE / 2) * j, 0, (TILE_SIZE / 2) * k), camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/mapzoneagedpavementdiff"), (int)TILE_SIZE, 1));    
-                            break;
-                        case 3:
-                           // tiles.Add(new Wall(game, objectManager, new Vector3(TILE_SIZE * (j + 1), 0, TILE_SIZE * (k + 1)), Game.Content.Load<Model>(@"Models\Structure Models\Wood_Wall_01"), camera, true));
-                            break;
-                        default:
-                            break;
+            
+                System.Console.WriteLine("Map made");
+                for (int j = 0; j <= data.GetUpperBound(0); j++)
+                {
+                    for (int k = 0; k <= data.GetUpperBound(1); k++)
+                    {
+                        switch (data[j, k])
+                        {
+                            case 0:
+                                tiles.Add(new CubePrimitive(game, objectManager, new Vector3(TILE_SIZE * j, 0, TILE_SIZE * k), camera, Game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/TedO"), 20));
+                                //count0++;
+                                break;
+                            case 1:
+                                tiles.Add(new GroundPrimitive(game, objectManager, new Vector3((TILE_SIZE / 2) * j, 0, (TILE_SIZE / 2) * k), camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/mapzoneagedpavementdiff"), (int)TILE_SIZE, 1));
+                                break;
+                            case 3:
+                                // tiles.Add(new Wall(game, objectManager, new Vector3(TILE_SIZE * (j + 1), 0, TILE_SIZE * (k + 1)), Game.Content.Load<Model>(@"Models\Structure Models\Wood_Wall_01"), camera, true));
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
-            }
+            
             //tiles.Add(new GroundPrimitive(game, objectManager, Vector3.Zero, camera, game.GraphicsDevice, Game.Content.Load<Texture2D>(@"Models/Ground Model/sanddf"), (int)TILE_SIZE, 1));
-
         }
 
         /* Disabled for now -- Deserializing level data from JSON file
@@ -123,7 +130,9 @@ namespace GamesProgAssignment4 {
         }
 
         protected override void LoadContent() {
+            
             ParseRawLevelData(levelData);
+                
             base.LoadContent();
             Initialize();
         }

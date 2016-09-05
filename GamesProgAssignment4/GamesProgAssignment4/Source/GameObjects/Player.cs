@@ -28,13 +28,15 @@ namespace GamesProgAssignment4
         Vector3 acceleration;
         float maxVelocity = 50f;
         Vector3 velocity;
-        float minVelocity = 2f;
+        float minVelocity = 5f;
 
 
         bool jumped = false;
         bool grounded = true;
         float jumpVelocity = 50f;
         float fallRate = 200f; // Is gravity
+
+        bool hasKey = false;
 
         SphereCollider collider;
         float colliderRadius = 1f;
@@ -52,7 +54,7 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            collider = new SphereCollider(game, this, false, objectTag.player, colliderRadius);
+            collider = new SphereCollider(game, this, objectTag.player, true, true, colliderRadius);
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
@@ -135,7 +137,9 @@ namespace GamesProgAssignment4
             {
                 //do something, handle collision with object
                 //Random bouncing off a cube lmao
+                
             }
+
             position += velocity * deltaTime;
 
         }
@@ -177,6 +181,11 @@ namespace GamesProgAssignment4
             //Resets the mouses position to the center of the screen, also resets the prevouse mouse state so the camera wont jump around
             Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
+        }
+
+        public void setHasKey(bool hasKeyStatus)
+        {
+            hasKey = hasKeyStatus;
         }
     }
 }

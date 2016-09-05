@@ -25,6 +25,7 @@ namespace GamesProgAssignment4
             colliders = new List<Collider>();
         }
 
+        /*
         /// <summary>
         /// Checks the given collider against all other colliders
         /// </summary>
@@ -43,6 +44,7 @@ namespace GamesProgAssignment4
             }
             return false;
         }
+        */
 
         /// <summary>
         /// Gets all collider objects that the given collider is intersecting with
@@ -68,15 +70,22 @@ namespace GamesProgAssignment4
         /// </summary>
         public void checkAllCollisions()
         {
+            //System.Console.WriteLine(colliders.Count);
             foreach (Collider c1 in colliders)
             {
-                foreach (Collider c2 in colliders)
+                if (c1.checkCollision)
                 {
-                    //Needs to check if collision is already registered.
-                    if (!ReferenceEquals(c1, c2) && !c1.collidingWith.Contains(c2) &&  c1.isColliding(c2))
+                    //if (c1.gameObject as Player != null)
+                        //System.Console.WriteLine("Is player");
+
+                    foreach (Collider c2 in colliders)
                     {
-                        c1.collidingWith.Add(c2);
-                        c2.collidingWith.Add(c1);
+                        //Needs to check if collision is already registered.
+                        if (!ReferenceEquals(c1, c2) && !c1.collidingWith.Contains(c2) && c1.isColliding(c2))
+                        {
+                            c1.collidingWith.Add(c2);
+                            c2.collidingWith.Add(c1);
+                        }
                     }
                 }
             }
@@ -86,8 +95,11 @@ namespace GamesProgAssignment4
         {
             foreach (Collider c in colliders)
             {
-                c.updatePos();
-                c.updateColliderPos();
+                if (c.isKinematic)
+                {
+                    c.updatePos();
+                    c.updateColliderPos();
+                }
                 c.collidingWith.Clear();
             }
         }
@@ -108,8 +120,8 @@ namespace GamesProgAssignment4
             {
                 elapsedTime = 0;
                 //update collider positions & clear 'collidingWith' lists
-                /*updateColliders();
-                checkAllCollisions();*/
+                updateColliders();
+                checkAllCollisions();
             }
             else
             {

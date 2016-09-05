@@ -7,6 +7,16 @@ using Microsoft.Xna.Framework;
 
 namespace GamesProgAssignment4
 {
+    public enum objectTag
+    {
+        player,
+        wall,
+        obstacle, 
+        enemy,
+        hazard,
+        pickup
+    }
+
     abstract class Collider
     {
         //Generic class, inherited by bounding boxes and spheres
@@ -16,12 +26,14 @@ namespace GamesProgAssignment4
         protected Vector3 position { get; set; }
         //Used to determine if position should be updated regularly or not
         public bool isKinematic;
+        public objectTag tag;
 
-        public Collider(Game game, GameObject obj, bool isKinematic)
+        public Collider(Game game, GameObject obj, bool isKinematic, objectTag tag)
         {
             collidingWith = new List<Collider>();
             this.obj = obj;
             position = obj.position;
+            this.tag = tag;
             game.Services.GetService<CollisionManager>().addCollider(this);
         }
 

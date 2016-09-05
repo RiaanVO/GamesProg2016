@@ -82,7 +82,7 @@ namespace GamesProgAssignment4
                 Exit();
 
             // TODO: Add your update logic here
-            //collisionManager.Update(gameTime);
+            collisionManager.Update(gameTime);
             audioManager.Update(gameTime);
             base.Update(gameTime);
         }

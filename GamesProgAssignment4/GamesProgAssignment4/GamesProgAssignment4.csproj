@@ -50,6 +50,7 @@
     <Compile Include="Source\Framework\Objects\BasicModel.cs" />
     <Compile Include="Source\Framework\BasicCamera.cs" />
     <Compile Include="Source\GameObjects\CubePrimitive.cs" />
+    <Compile Include="Source\GameObjects\Door.cs" />
     <Compile Include="Source\GameObjects\Enemy.cs" />
     <Compile Include="Source\GameObjects\GroundModel.cs" />
     <Compile Include="Source\GameObjects\GroundPrimitive.cs" />

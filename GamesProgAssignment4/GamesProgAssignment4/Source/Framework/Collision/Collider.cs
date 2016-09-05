@@ -11,6 +11,7 @@ namespace GamesProgAssignment4
     {
         player,
         wall,
+        door,
         obstacle, 
         enemy,
         hazard,

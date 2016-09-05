@@ -26,7 +26,6 @@ namespace GamesProgAssignment4
         public Key(Game game, ObjectManager objectManager, Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(game, objectManager, startPosition, model, camera)
         {
             this.player = player;
-            position = startPosition;
             hasBeenCollected = false; //false
             orientation = 0f;
             collider = new SphereCollider(game, this, objectTag.pickup, true, false, 1);

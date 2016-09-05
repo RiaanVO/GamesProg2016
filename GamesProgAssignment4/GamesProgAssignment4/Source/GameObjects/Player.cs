@@ -151,14 +151,14 @@ namespace GamesProgAssignment4
 
             if (xFutureCollider.collidingWith.Count != 0) {
                 foreach (Collider col in xFutureCollider.collidingWith) {
-                    if (col.tag == objectTag.obstacle || col.tag == objectTag.wall)
+                    if (col.tag == objectTag.obstacle || col.tag == objectTag.wall || col.tag == objectTag.door)
                         velocity.X = -velocity.X * repelVelocityRate;
                 }
             }
             if (zFutureCollider.collidingWith.Count != 0) {
                 foreach (Collider col in zFutureCollider.collidingWith)
                 {
-                    if (col.tag == objectTag.obstacle || col.tag == objectTag.wall)
+                    if (col.tag == objectTag.obstacle || col.tag == objectTag.wall || col.tag == objectTag.door)
                         velocity.Z = -velocity.Z * repelVelocityRate;
                 }
             }
@@ -209,6 +209,11 @@ namespace GamesProgAssignment4
         public void setHasKey(bool hasKeyStatus)
         {
             hasKey = hasKeyStatus;
+        }
+
+        public bool getHasKey()
+        {
+            return hasKey;
         }
 
         public Vector3 getVelocity() {

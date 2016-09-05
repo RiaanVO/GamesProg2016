@@ -55,6 +55,9 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="min">The minimum point the BoundingBox includes. One corner of the box (lower-left if looking along positive Z)</param>
         /// <param name="max">The maximum point the BoundingBox includes. Other corner of the box (upper-right if looking along positive Z)</param>
+        /// <param name="checkCollision">Whether or not to actually check collision for itself</param>
+        /// <param name="isKinematic">Whether or not the object/collider is able to move around</param>
+        /// <param name="tag">The object tag for this collider</param>
         public BoxCollider(Game game, GameObject obj, objectTag tag, bool checkCollision, bool isKinematic, Vector3 min, Vector3 max) : base(game, obj, tag, checkCollision, isKinematic)
         {
             //collider = new BoundingBox(min, max);

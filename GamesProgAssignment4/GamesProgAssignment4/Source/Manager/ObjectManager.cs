@@ -15,6 +15,7 @@ namespace GamesProgAssignment4
         Game1.GameState currentGameState;
         //Master list of all game objects
         List<GameObject> objectsMaster = new List<GameObject>();
+
         //Used for the current update and draw cycles - avoid deleting objects that need to be updated.
         List<GameObject> objectsCurrent = new List<GameObject>();
 
@@ -84,8 +85,10 @@ namespace GamesProgAssignment4
 
 
             //new Vector3(450, 6f, 340)
-            addGameObject(new Key(Game, this, new Vector3(-10, 0f, -10), Game.Content.Load<Model>(@"Models\Key\Key_B_02_rot"), camera, player)); 
+            addGameObject(new Key(Game, this, new Vector3(-10, 0f, -10), Game.Content.Load<Model>(@"Models\Key\Key_B_02_rot"), camera, player));
             //addGameObject(new Key(Game, this, new Vector3(500f, 0f, 0f), Game.Content.Load<Model>(@"Models\Key\Key_B_02"), camera, player));
+
+            addGameObject(new Door(game, this, new Vector3(40f, 0, 0f), Game.Content.Load<Model>(@"Models\Door\Iron_Door_01_rot"), camera, player));
 
             //Add some Cubes
             //int separationDistance = 30;

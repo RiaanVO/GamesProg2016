@@ -78,6 +78,13 @@ namespace GamesProgAssignment4
             // TODO: use this.Content to load your game content here
         }
 
+        public void gameEnd()
+        {
+            //Ends the game
+            currentGameState = GameState.END;
+            //Does whatever it needs to in order to wrap up the game
+        }
+
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.

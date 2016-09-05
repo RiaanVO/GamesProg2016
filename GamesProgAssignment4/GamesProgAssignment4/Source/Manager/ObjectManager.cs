@@ -139,8 +139,6 @@ namespace GamesProgAssignment4
             //Draw all 3D objects
             if (currentGameState == Game1.GameState.PLAY)
             {
-                float deltaTime = (float)gameTime.ElapsedGameTime.TotalMinutes;
-                scoreString.ChangeString("Score: " + deltaTime.ToString());
                 foreach (GameObject obj in objectsCurrent)
                 {
                     obj.Draw(gameTime);
@@ -149,6 +147,11 @@ namespace GamesProgAssignment4
                 //Draw all UI / 2D objects with same settings (same spritebatch)
                 //System needs changing if you want different sprite batches with different settings
                 spriteBatch.Begin();
+
+                ui.Clear();
+                scoreString.ChangeString("Score: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"));
+                ui.Add(scoreString);
+
                 foreach (UIObject uiobj in ui)
                 {
                     uiobj.Draw(gameTime, spriteBatch);

@@ -108,8 +108,8 @@ namespace GamesProgAssignment4
             {
                 elapsedTime = 0;
                 //update collider positions & clear 'collidingWith' lists
-                updateColliders();
-                checkAllCollisions();
+                /*updateColliders();
+                checkAllCollisions();*/
             }
             else
             {

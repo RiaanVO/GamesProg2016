@@ -26,9 +26,11 @@ namespace GamesProgAssignment4
         float accelerationRate = 200f;
         float decelerationRate = 300f;
         Vector3 acceleration;
-        float maxVelocity = 50f;
+        float maxVelocity = 20f;
         Vector3 velocity;
         float minVelocity = 5f;
+        float repelVelocityRate = 1f;
+        float deltaTime = 0;
 
 
         bool jumped = false;
@@ -38,7 +40,9 @@ namespace GamesProgAssignment4
 
         bool hasKey = false;
 
-        SphereCollider collider;
+        SphereCollider mainCollider;
+        PlayerMovementSphereCollider xFutureCollider;
+        PlayerMovementSphereCollider zFutureCollider;
         float colliderRadius = 1f;
 
         AudioListenerComponet audioListenerComponent;
@@ -54,7 +58,10 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            collider = new SphereCollider(game, this, objectTag.player, true, true, colliderRadius);
+            mainCollider = new SphereCollider(game, this, objectTag.player, true, true, colliderRadius);
+            xFutureCollider = new PlayerMovementSphereCollider(game, this, objectTag.player, true, true, colliderRadius, Vector3.Right);
+            zFutureCollider = new PlayerMovementSphereCollider(game, this, objectTag.player, true, true, colliderRadius, Vector3.Forward);
+
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
@@ -84,7 +91,7 @@ namespace GamesProgAssignment4
         private void handleMovement(GameTime gameTime)
         {
 
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
+            deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
 
             if (movementDirection != Vector3.Zero)
                 movementDirection.Normalize();
@@ -132,12 +139,28 @@ namespace GamesProgAssignment4
                 position = new Vector3(position.X, 0, position.Z);
             }
 
-            //Collision code goes here to determine if the player should move.
-            if (collider.collidingWith.Count != 0)
+            //Collision to deal with player interaction with the world
+            if (mainCollider.collidingWith.Count != 0)
             {
+                
+
                 //do something, handle collision with object
                 //Random bouncing off a cube lmao
                 
+            }
+
+            if (xFutureCollider.collidingWith.Count != 0) {
+                foreach (Collider col in xFutureCollider.collidingWith) {
+                    if (col.tag == objectTag.obstacle || col.tag == objectTag.wall)
+                        velocity.X = -velocity.X * repelVelocityRate;
+                }
+            }
+            if (zFutureCollider.collidingWith.Count != 0) {
+                foreach (Collider col in zFutureCollider.collidingWith)
+                {
+                    if (col.tag == objectTag.obstacle || col.tag == objectTag.wall)
+                        velocity.Z = -velocity.Z * repelVelocityRate;
+                }
             }
 
             position += velocity * deltaTime;
@@ -186,6 +209,10 @@ namespace GamesProgAssignment4
         public void setHasKey(bool hasKeyStatus)
         {
             hasKey = hasKeyStatus;
+        }
+
+        public Vector3 getVelocity() {
+            return velocity * deltaTime;
         }
     }
 }

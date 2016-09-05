@@ -10,7 +10,7 @@ namespace GamesProgAssignment4
     class SphereCollider : Collider
     {
         public BoundingSphere collider;
-        float radius;
+        protected float radius;
 
         public SphereCollider(Game game, GameObject obj, objectTag tag, bool checkCollision, bool isKinematic,  float radius) : base(game, obj, tag, checkCollision, isKinematic)
         {

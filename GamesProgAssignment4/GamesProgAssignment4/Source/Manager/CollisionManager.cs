@@ -18,7 +18,8 @@ namespace GamesProgAssignment4
         //Milliseconds between each collision check (currently 20/second)
         //float tickRate = 50;
         //Test for 40 ticks/second
-        float tickRate = 25;
+        //float tickRate = 25;
+        float tickRate = 0;
 
         public CollisionManager(Game game) : base(game)
         {

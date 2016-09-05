@@ -41,6 +41,7 @@
     <Compile Include="Source\Framework\Audio\AudioComponent.cs" />
     <Compile Include="Source\Framework\Audio\AudioEmitterComponent.cs" />
     <Compile Include="Source\Framework\Audio\AudioListenerComponet.cs" />
+    <Compile Include="Source\Framework\Collision\PlayerMovementSphereCollider.cs" />
     <Compile Include="Source\Framework\Collision\SphereCollider.cs" />
     <Compile Include="Source\Framework\Collision\BoxCollider.cs" />
     <Compile Include="Source\Framework\Collision\Collider.cs" />

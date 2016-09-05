@@ -19,6 +19,16 @@ namespace GamesProgAssignment4
             this.str = str;
         }
 
+        public void ChangeString(string newString)
+        {
+            str = newString;
+        }
+
+        public Vector2 StringSize()
+        {
+            return font.MeasureString(str);
+        }
+
         /// <summary>
         /// Draws the string
         /// </summary>
@@ -29,11 +39,6 @@ namespace GamesProgAssignment4
             
             //Uncomment when fixed
             //spriteBatch.DrawString(font, str, position, color, rotation, origin, scale, effect, layerDepth);
-        }
-
-        public virtual void SetPosition(Vector2 position)
-        {
-            this.position = position;
         }
     }
 }

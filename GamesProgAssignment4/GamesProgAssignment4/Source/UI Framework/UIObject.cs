@@ -80,5 +80,10 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="gameTime"></param>
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch){}
+
+        public void ChangePosition(Vector2 newPosition)
+        {
+            position = newPosition;
+        }
     }
 }

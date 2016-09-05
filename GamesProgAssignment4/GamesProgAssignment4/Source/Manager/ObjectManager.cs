@@ -82,7 +82,7 @@ namespace GamesProgAssignment4
             addGameObject(new Enemy(Game, this, new Vector3(200f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
 
-            addGameObject(new Key(Game, this, new Vector3(500f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
+            addGameObject(new Key(Game, this, new Vector3(450f, 0f, 340f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
 
             //Add some Cubes
             //int seperationDistance = 30;

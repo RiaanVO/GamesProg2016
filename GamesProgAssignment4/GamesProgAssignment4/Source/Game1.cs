@@ -27,13 +27,13 @@ namespace GamesProgAssignment4
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-            int width = 1500;
-
-            //graphics.PreferredBackBufferWidth =  width;
-            //graphics.PreferredBackBufferHeight = width * 9/16;
+            graphics.ToggleFullScreen();
             graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.ApplyChanges();
+
+            Content.RootDirectory = "Content";
         }
 
         public void ChangeGameState(GameState state, int level)
@@ -50,8 +50,7 @@ namespace GamesProgAssignment4
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            // TODO: Add your initialization logic 
             //menuScreen = new MenuScreen(this);
             //Components.Add(menuScreen);
             //menuScreen.SetData(score, currentGameState);

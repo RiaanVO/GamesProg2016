@@ -28,7 +28,8 @@ namespace GamesProgAssignment4
             this.player = player;
             hasBeenCollected = false; //false
             orientation = 0f;
-            collider = new SphereCollider(game, this, objectTag.pickup, true, false, 2f);
+            collider = new SphereCollider(game, this, objectTag.pickup, true, false, 6f);
+            scale = Matrix.CreateScale(0.5f);
             audioEmitter = new AudioEmitterComponent(game, this);
             audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
         }

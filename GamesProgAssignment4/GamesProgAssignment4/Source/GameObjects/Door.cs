@@ -40,7 +40,7 @@ namespace GamesProgAssignment4
                     if (col.tag == objectTag.player)
                     {
                         //Game ends
-                        (game as Game1).gameEnd();
+                        objectManager.resetGame = true;
                     }
                 }
             }

@@ -68,7 +68,7 @@ namespace GamesProgAssignment4
 
             float aspectRatio = 16f / 9f;//Game.Window.ClientBounds.Width / Game.Window.ClientBounds.Height;
             Vector3 camPos = new Vector3(25, 0, 20);
-            camera = new BasicCamera(Game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 0.1f, 3000F);
+            camera = new BasicCamera(Game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver2, aspectRatio, 0.1f, 3000F);
 
             //Create player and add to the object list
             player = new Player(Game, this, camera.camPos, camera);

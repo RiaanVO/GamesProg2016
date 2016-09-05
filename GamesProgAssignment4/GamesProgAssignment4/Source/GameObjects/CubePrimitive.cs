@@ -21,7 +21,7 @@ namespace GamesProgAssignment4
             base(game, objectManager, position, camera, graphicsDevice, texture)
         {
             this.size = size;
-            col = new BoxCollider(game, this, true, objectTag.obstacle, position, new Vector3(position.X + size, position.Y + size, position.Z + size));
+            col = new BoxCollider(game, this, objectTag.obstacle, false, false, position, new Vector3(position.X + size, position.Y + size, position.Z + size));
             constructCube();
         }
 
@@ -105,12 +105,6 @@ namespace GamesProgAssignment4
                 16,19,17, 19,18,17,
                 20,21,23, 21,22,23
             };
-        }
-
-        public void setPosition(Vector3 position)
-        {
-            this.position = position;
-            translation = Matrix.CreateTranslation(position);
         }
 
         public override Matrix getWorld()

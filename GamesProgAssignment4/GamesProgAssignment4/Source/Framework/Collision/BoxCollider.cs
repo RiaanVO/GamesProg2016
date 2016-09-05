@@ -25,7 +25,7 @@ namespace GamesProgAssignment4
         /// <param name="game"></param>
         /// <param name="obj"></param>
         /// <param name="isKinematic"></param>
-        public BoxCollider(Game game, GameObject obj, bool isKinematic, objectTag tag) : base(game, obj, isKinematic, tag)
+        public BoxCollider(Game game, GameObject obj, objectTag tag, bool checkCollision, bool isKinematic) : base(game, obj, tag, checkCollision, isKinematic)
         {
             minPoint = position;
             maxPoint = position + new Vector3(1, 1, 1);
@@ -55,7 +55,7 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="min">The minimum point the BoundingBox includes. One corner of the box (lower-left if looking along positive Z)</param>
         /// <param name="max">The maximum point the BoundingBox includes. Other corner of the box (upper-right if looking along positive Z)</param>
-        public BoxCollider(Game game, GameObject obj, bool isKinematic, objectTag tag, Vector3 min, Vector3 max) : base(game, obj, isKinematic, tag)
+        public BoxCollider(Game game, GameObject obj, objectTag tag, bool checkCollision, bool isKinematic, Vector3 min, Vector3 max) : base(game, obj, tag, checkCollision, isKinematic)
         {
             //collider = new BoundingBox(min, max);
             //halfSize = (max.X - min.X) / 2;s
@@ -71,14 +71,10 @@ namespace GamesProgAssignment4
         public override void updateColliderPos()
         {
             //Update the min and max points with the position
-            //Needs to not be called if kinematic??
-            if (!isKinematic)
-            {
-                minPoint = position;
-                //This calculation is wrong?? Needs to have a relative 'maxPoint' variable to calculate the absolute max point
-                maxPoint = minPoint + relativeMaxPt;
-                collider = new BoundingBox(minPoint, maxPoint);
-            }
+            minPoint = position;
+            //This calculation is wrong?? Needs to have a relative 'maxPoint' variable to calculate the absolute max point
+            maxPoint = minPoint + relativeMaxPt;
+            collider = new BoundingBox(minPoint, maxPoint);
         }
 
         /*

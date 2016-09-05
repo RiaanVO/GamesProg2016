@@ -28,7 +28,7 @@ namespace GamesProgAssignment4
         Vector3 acceleration;
         float maxVelocity = 50f;
         Vector3 velocity;
-        float minVelocity = 2f;
+        float minVelocity = 5f;
 
 
         bool jumped = false;
@@ -52,7 +52,7 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            collider = new SphereCollider(game, this, false, objectTag.player, colliderRadius);
+            collider = new SphereCollider(game, this, objectTag.player, true, true, colliderRadius);
             lookDirection = Vector3.Forward;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
@@ -135,7 +135,9 @@ namespace GamesProgAssignment4
             {
                 //do something, handle collision with object
                 //Random bouncing off a cube lmao
+                
             }
+
             position += velocity * deltaTime;
 
         }

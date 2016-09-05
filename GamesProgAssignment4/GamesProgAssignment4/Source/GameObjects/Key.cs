@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GamesProgAssignment4
 {
     class Key : BasicModel
     {
+        Player player;
+
         float rotationalSpeed = 2f;
         float orientation;
 
@@ -18,16 +21,28 @@ namespace GamesProgAssignment4
 
         public Key(Game game, ObjectManager objectManager, Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(game, objectManager, startPosition, model, camera)
         {
+            this.player = player;
+
             position = startPosition;
-            hasBeenCollected = false;
+            hasBeenCollected = false; //false
             orientation = 0f;
         }
 
         public override void Update(GameTime gameTime)
         {
-            rotateKey(gameTime);
+            //temporary work-around to show key has been collected:
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Enter))
+            {
+                hasBeenCollected = true;
+                player.setHasKey(hasBeenCollected);
+            }
 
-            base.Update(gameTime);
+            if (!hasBeenCollected)
+            {
+                rotateKey(gameTime);
+                base.Update(gameTime);
+            }
         }
 
         private void rotateKey(GameTime gameTime)
@@ -45,7 +60,7 @@ namespace GamesProgAssignment4
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            if (!hasBeenCollected) base.Draw(gameTime);
         }
     }
 }

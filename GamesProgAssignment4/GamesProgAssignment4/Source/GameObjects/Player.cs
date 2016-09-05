@@ -36,6 +36,8 @@ namespace GamesProgAssignment4
         float jumpVelocity = 50f;
         float fallRate = 200f; // Is gravity
 
+        bool hasKey = false;
+
         SphereCollider collider;
         float colliderRadius = 1f;
 
@@ -177,6 +179,11 @@ namespace GamesProgAssignment4
             //Resets the mouses position to the center of the screen, also resets the prevouse mouse state so the camera wont jump around
             Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
+        }
+
+        public void setHasKey(bool hasKeyStatus)
+        {
+            hasKey = hasKeyStatus;
         }
     }
 }

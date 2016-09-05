@@ -47,9 +47,7 @@ namespace GamesProgAssignment4
             this.camera = camera;
             audioListenerComponent = new AudioListenerComponet(game, this);
             audioEmitterComponent = new AudioEmitterComponent(game, this);
-            audioEmitterComponent.createSoundEffectInstance("Footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"));
-            audioEmitterComponent.setInstanceLoop("Footsteps", true);
-            audioEmitterComponent.setInstancePlayback("Footsteps", false);
+            audioEmitterComponent.createSoundEffectInstance("footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"), false, true, false);
         }
 
         public override void Initialize()
@@ -70,11 +68,11 @@ namespace GamesProgAssignment4
 
             if (velocity.Length() > 0)
             {
-                audioEmitterComponent.setInstancePlayback("Footsteps", true);
+                audioEmitterComponent.setInstancePlayback("footsteps", true);
             }
             else
             {
-                audioEmitterComponent.setInstancePlayback("Footsteps", false);
+                audioEmitterComponent.setInstancePlayback("footsteps", false);
             }
 
             base.Update(gameTime);
@@ -133,14 +131,18 @@ namespace GamesProgAssignment4
             }
 
             //Collision code goes here to determine if the player should move.
+            /*
             if (collider.collidingWith.Count != 0)
             {
                 
             }
             else
             {
-                position += velocity * deltaTime;
             }
+            */
+
+            position += velocity * deltaTime;
+
 
         }
 

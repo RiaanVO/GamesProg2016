@@ -14,15 +14,19 @@ namespace GamesProgAssignment4
         public bool hasMoved { get; protected set; }
         Dictionary<string, SoundEffect> soundEffects;
         Dictionary<string, SoundEffectInstance> soundEffectInstances;
+        Dictionary<string, bool> instanceHas3D;
 
         public AudioEmitterComponent(Game game, GameObject gameObject) : base(game, gameObject)
         {
             emitter = new AudioEmitter();
             soundEffects = new Dictionary<string, SoundEffect>();
             soundEffectInstances = new Dictionary<string, SoundEffectInstance>();
+            instanceHas3D = new Dictionary<string, bool>();
             game.Services.GetService<AudioManager>().addEmitterComponent(this);
         }
 
+        //Update but not needed
+        /*
         public override void Update()
         {
             if (checkHasMoved())
@@ -30,6 +34,7 @@ namespace GamesProgAssignment4
                 emitter.Position = gameObject.position;
             }
         }
+        */
 
         /// <summary>
         /// Updates the position of the emitter
@@ -54,7 +59,8 @@ namespace GamesProgAssignment4
         /// <param name="listener"></param>
         public void update3DAudio(AudioListener listener) {
             foreach (KeyValuePair<string, SoundEffectInstance> pair in soundEffectInstances) {
-                pair.Value.Apply3D(listener, emitter);
+                if(instanceHas3D[pair.Key])
+                    pair.Value.Apply3D(listener, emitter);
             }
         }
 
@@ -73,24 +79,66 @@ namespace GamesProgAssignment4
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="soundEffect"></param>
-        public void createSoundEffectInstance(string tag, SoundEffect soundEffect) {
+        public void createSoundEffectInstance(string tag, SoundEffect soundEffect, bool is3D) {
             if (!soundEffects.ContainsKey(tag))
                 soundEffects.Add(tag, soundEffect);
-            createSoundEffectInstance(tag);
+            createSoundEffectInstance(tag, is3D);
         }
 
         /// <summary>
         /// Creates a sound effect instance from an already created sound effect
         /// </summary>
         /// <param name="tag"></param>
-        public void createSoundEffectInstance(string tag) {
+        public void createSoundEffectInstance(string tag, bool is3D) {
             if (soundEffects.ContainsKey(tag)) {
                 soundEffectInstances.Add(tag, soundEffects[tag].CreateInstance());
+                instanceHas3D.Add(tag, is3D);
             }
         }
 
         /// <summary>
-        /// Plays the sound effect
+        /// Create sound effect instance
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="soundEffect"></param>
+        /// <param name="is3D"></param>
+        /// <param name="isLooping"></param>
+        /// <param name="isPlaying"></param>
+        public void createSoundEffectInstance(string tag, SoundEffect soundEffect, bool is3D, bool isLooping, bool isPlaying) {
+            createSoundEffectInstance(tag, soundEffect, is3D);
+            setInstanceLoop(tag, isLooping);
+            setInstancePlayback(tag, isPlaying);
+        }
+
+        /// <summary>
+        /// Creates a sound effect instance with all of the pramaters
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="soundEffect"></param>
+        /// <param name="is3D"></param>
+        /// <param name="isLooping"></param>
+        /// <param name="isPlaying"></param>
+        /// <param name="volume"></param>
+        public void createSoundEffectInstance(string tag, SoundEffect soundEffect, bool is3D, bool isLooping, bool isPlaying, float volume)
+        {
+            createSoundEffectInstance(tag, soundEffect, is3D, isLooping, isPlaying);
+            setVolume(tag, volume);
+        }
+
+
+        /// <summary>
+        /// Sets the volume of the instance tag
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="volume"></param>
+        public void setVolume(string tag, float volume) {
+            if (soundEffectInstances.ContainsKey(tag)) {
+                soundEffectInstances[tag].Volume = volume;
+            }
+        }
+
+        /// <summary>
+        /// Plays the sound effect, single instance
         /// </summary>
         /// <param name="tag"></param>
         public void playSoundEffect(string tag) {
@@ -106,8 +154,6 @@ namespace GamesProgAssignment4
         public void setInstanceLoop(string tag, bool isLooping) {
             if (!soundEffectInstances.ContainsKey(tag))
                 return;
-
-            
             soundEffectInstances[tag].IsLooped = isLooping;
         }
 

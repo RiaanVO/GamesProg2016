@@ -18,6 +18,7 @@ namespace GamesProgAssignment4
             this.game = game;
         }
 
-        public abstract void Update();
+        //Not needed as manager will do it
+        ///public abstract void Update();
     }
 }

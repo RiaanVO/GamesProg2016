@@ -56,7 +56,7 @@ namespace GamesProgAssignment4
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            SoundEffect footsteps = Content.Load<SoundEffect>(@"Sounds/footsteps");
+            //SoundEffect footsteps = Content.Load<SoundEffect>(@"Sounds/footsteps");
             //footsteps.Play();
 
             // TODO: use this.Content to load your game content here
@@ -82,7 +82,7 @@ namespace GamesProgAssignment4
                 Exit();
 
             // TODO: Add your update logic here
-            collisionManager.Update(gameTime);
+            //collisionManager.Update(gameTime);
             audioManager.Update(gameTime);
             base.Update(gameTime);
         }

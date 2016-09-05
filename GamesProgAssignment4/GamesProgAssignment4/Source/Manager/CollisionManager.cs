@@ -7,6 +7,10 @@ using Microsoft.Xna.Framework;
 
 namespace GamesProgAssignment4
 {
+
+    /// <summary>
+    /// Octtree tutorial: http://www.gamedev.net/page/resources/_/technical/game-programming/introduction-to-octrees-r3529
+    /// </summary>
     class CollisionManager : GameComponent
     {
         List<Collider> colliders;

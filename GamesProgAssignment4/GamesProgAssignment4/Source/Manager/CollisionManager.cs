@@ -80,7 +80,6 @@ namespace GamesProgAssignment4
 
                     foreach (Collider c2 in colliders)
                     {
-                        //Needs to check if collision is already registered.
                         if (!ReferenceEquals(c1, c2) && !c1.collidingWith.Contains(c2) && c1.isColliding(c2))
                         {
                             c1.collidingWith.Add(c2);

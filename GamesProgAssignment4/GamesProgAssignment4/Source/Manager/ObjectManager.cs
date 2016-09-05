@@ -82,16 +82,18 @@ namespace GamesProgAssignment4
             addGameObject(new Enemy(Game, this, new Vector3(200f, 0f, 0f), Game.Content.Load<Model>(@"Models\Enemy Model\tank"), camera, player));
             //models.Add(new Tank(Game.Content.Load<Model>(@"Tank\tank"),new Vector3(-10, 0, -10), camera));
 
-            addGameObject(new Key(Game, this, new Vector3(450, 6f, 340), Game.Content.Load<Model>(@"Models\Key\Key_B_02_rot"), camera, player)); 
+
+            //new Vector3(450, 6f, 340)
+            addGameObject(new Key(Game, this, new Vector3(-10, 0f, -10), Game.Content.Load<Model>(@"Models\Key\Key_B_02_rot"), camera, player)); 
             //addGameObject(new Key(Game, this, new Vector3(500f, 0f, 0f), Game.Content.Load<Model>(@"Models\Key\Key_B_02"), camera, player));
 
             //Add some Cubes
-            int separationDistance = 30;
-            float crateSize = 5f;
-            addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, -separationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-            addGameObject(new CubePrimitive(Game, this, new Vector3(separationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-            addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, separationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
-            addGameObject(new CubePrimitive(Game, this, new Vector3(-separationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            //int separationDistance = 30;
+            //float crateSize = 5f;
+            //addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, -separationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            //addGameObject(new CubePrimitive(Game, this, new Vector3(separationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            //addGameObject(new CubePrimitive(Game, this, new Vector3(0, 0, separationDistance), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
+            //addGameObject(new CubePrimitive(Game, this, new Vector3(-separationDistance, 0, 0), camera, GraphicsDevice, Game.Content.Load<Texture2D>(@"Textures/crate"), crateSize));
 
             //Test UI
             spriteBatch = new SpriteBatch(GraphicsDevice);

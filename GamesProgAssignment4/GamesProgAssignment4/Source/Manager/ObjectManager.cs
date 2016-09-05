@@ -30,6 +30,8 @@ namespace GamesProgAssignment4
         BasicCamera camera;
         Player player;
 
+        bool mapLoaded = false;
+
         //Basic constructor
         public ObjectManager(Game game) : base(game)
         {
@@ -39,9 +41,6 @@ namespace GamesProgAssignment4
 
         public override void Initialize()
         {
-            tileManager = new TileManager(game, this, camera);
-            tileManager.Initialize();
-
             foreach (GameObject obj in objectsMaster)
             {
                 obj.Initialize();
@@ -64,7 +63,7 @@ namespace GamesProgAssignment4
         protected override void LoadContent()
         {
             float aspectRatio = 16f / 9f;//Game.Window.ClientBounds.Width / Game.Window.ClientBounds.Height;
-            Vector3 camPos = new Vector3(0, 0, 0);
+            Vector3 camPos = new Vector3(-20, 0, -20);
             camera = new BasicCamera(Game, camPos, camPos + Vector3.Forward, Vector3.Up, MathHelper.PiOver4, aspectRatio, 1f, 3000F);
 
             //Create player and add to the object list
@@ -104,6 +103,13 @@ namespace GamesProgAssignment4
 
             base.LoadContent();
             Initialize();
+
+            if (!mapLoaded)
+            {
+                tileManager = new TileManager(game, this, camera);
+                tileManager.Initialize();
+                mapLoaded = true;
+            }
         }
 
         /// <summary>

@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8EBF27F9-7561-46E6-BC9F-28E35934F52C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>A_MAZE_ING</RootNamespace>
+    <AssemblyName>A-MAZE-ING</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Source\Game1.cs" />
+    <Compile Include="Source\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Framework\Audio\AudioComponent.cs" />
+    <Compile Include="Source\Framework\Audio\AudioEmitterComponent.cs" />
+    <Compile Include="Source\Framework\Audio\AudioListenerComponet.cs" />
+    <Compile Include="Source\Framework\BasicCamera.cs" />
+    <Compile Include="Source\Framework\Collision\BoxCollider.cs" />
+    <Compile Include="Source\Framework\Collision\Collider.cs" />
+    <Compile Include="Source\Framework\Collision\PlayerMovementSphereCollider.cs" />
+    <Compile Include="Source\Framework\Collision\SphereCollider.cs" />
+    <Compile Include="Source\Framework\Objects\BasicModel.cs" />
+    <Compile Include="Source\Framework\Objects\BasicTexturePrimitive.cs" />
+    <Compile Include="Source\Framework\Objects\GameObject.cs" />
+    <Compile Include="Source\GameObjects\BackgroundAudioObject.cs" />
+    <Compile Include="Source\GameObjects\CubePrimitive.cs" />
+    <Compile Include="Source\GameObjects\Door.cs" />
+    <Compile Include="Source\GameObjects\Enemy.cs" />
+    <Compile Include="Source\GameObjects\GroundModel.cs" />
+    <Compile Include="Source\GameObjects\GroundPrimitive.cs" />
+    <Compile Include="Source\GameObjects\Key.cs" />
+    <Compile Include="Source\GameObjects\Player.cs" />
+    <Compile Include="Source\GameObjects\Skybox.cs" />
+    <Compile Include="Source\Manager\AudioManager.cs" />
+    <Compile Include="Source\Manager\CollisionManager.cs" />
+    <Compile Include="Source\Manager\ObjectManager.cs" />
+    <Compile Include="Source\Manager\TileManager.cs" />
+    <Compile Include="Source\MenuScreen.cs" />
+    <Compile Include="Source\UI Framework\UIObject.cs" />
+    <Compile Include="Source\UI Framework\UISprite.cs" />
+    <Compile Include="Source\UI Framework\UIString.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

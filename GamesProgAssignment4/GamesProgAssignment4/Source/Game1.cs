@@ -11,6 +11,12 @@ namespace GamesProgAssignment4
     /// </summary>
     public class Game1 : Game
     {
+        public enum GameState { START, PLAY, LEVEL_CHANGE, END}
+        GameState currentGameState = GameState.PLAY; //change to START for proper menu functionality - set up later :)
+
+        //MenuScreen menuScreen;
+        int score = 0;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -25,6 +31,12 @@ namespace GamesProgAssignment4
             IsMouseVisible = true;
         }
 
+        public void ChangeGameState(GameState state, int level)
+        {
+            currentGameState = state;
+            //add levels for Gold Master build
+        }
+
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -34,7 +46,11 @@ namespace GamesProgAssignment4
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
+
+            //menuScreen = new MenuScreen(this);
+            //Components.Add(menuScreen);
+            //menuScreen.SetData(score, currentGameState);
+
             objectManager = new ObjectManager(this);
             collisionManager = new CollisionManager(this);
             Services.AddService(collisionManager);
@@ -82,8 +98,21 @@ namespace GamesProgAssignment4
                 Exit();
 
             // TODO: Add your update logic here
-            collisionManager.Update(gameTime);
-            audioManager.Update(gameTime);
+
+            if (currentGameState == GameState.PLAY)
+            {
+                if (objectManager.returnCurrentGameState() != GameState.PLAY)
+                {
+                    objectManager.setCurrentGameState(GameState.PLAY);
+                }
+                collisionManager.Update(gameTime);
+                audioManager.Update(gameTime);
+            }
+            else
+            {
+                objectManager.setCurrentGameState(currentGameState);
+            }
+
             base.Update(gameTime);
         }
 

@@ -11,8 +11,8 @@ namespace GamesProgAssignment4
 {
     class ObjectManager : DrawableGameComponent
     {
-
         Game game;
+        Game1.GameState currentGameState;
         //Master list of all game objects
         List<GameObject> objectsMaster = new List<GameObject>();
         //Used for the current update and draw cycles - avoid deleting objects that need to be updated.
@@ -24,6 +24,7 @@ namespace GamesProgAssignment4
         //2D & UI drawing
         SpriteBatch spriteBatch;
         List<UIObject> ui = new List<UIObject>();
+        UIString scoreString;
 
         //Camera that will be passed into all game objects 
         BasicCamera camera;
@@ -95,7 +96,9 @@ namespace GamesProgAssignment4
             //Test UI
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ui.Add(new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White, 0.01f));
+            scoreString = new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Score: " + 0, Color.White, 0.01f);
+            ui.Add(scoreString);
+            //ui.Add(new UIString(Game, Vector2.Zero, Game.Content.Load<SpriteFont>(@"SpriteFonts\Arial"), "Test String", Color.White, 0.01f));
             //ui.Add(new UISprite(game, Vector2.Zero, game.Content.Load<Texture2D>(@"Textures\Crate"), Color.Red));
 
             base.LoadContent();
@@ -108,12 +111,15 @@ namespace GamesProgAssignment4
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            objectsCurrent.Clear();
-            objectsCurrent.AddRange(objectsMaster);
-
-            foreach (GameObject obj in objectsCurrent)
+            if (currentGameState == Game1.GameState.PLAY)
             {
-                obj.Update(gameTime);
+                objectsCurrent.Clear();
+                objectsCurrent.AddRange(objectsMaster);
+
+                foreach (GameObject obj in objectsCurrent)
+                {
+                    obj.Update(gameTime);
+                }
             }
             base.Update(gameTime);
         }
@@ -131,25 +137,40 @@ namespace GamesProgAssignment4
 
 
             //Draw all 3D objects
-            foreach (GameObject obj in objectsCurrent)
+            if (currentGameState == Game1.GameState.PLAY)
             {
-                obj.Draw(gameTime);
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalMinutes;
+                scoreString.ChangeString("Score: " + deltaTime.ToString());
+                foreach (GameObject obj in objectsCurrent)
+                {
+                    obj.Draw(gameTime);
+                }
+                tileManager.Draw(gameTime);
+                //Draw all UI / 2D objects with same settings (same spritebatch)
+                //System needs changing if you want different sprite batches with different settings
+                spriteBatch.Begin();
+                foreach (UIObject uiobj in ui)
+                {
+                    uiobj.Draw(gameTime, spriteBatch);
+                }
+                spriteBatch.End();
             }
-            tileManager.Draw(gameTime);
-            //Draw all UI / 2D objects with same settings (same spritebatch)
-            //System needs changing if you want different sprite batches with different settings
-            spriteBatch.Begin();
-            foreach (UIObject uiobj in ui)
-            {
-                uiobj.Draw(gameTime, spriteBatch);
-            }
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
         public void addGameObject(GameObject gameObject) {
             objectsMaster.Add(gameObject);
+        }
+
+        public void setCurrentGameState(Game1.GameState currGameState)
+        {
+            currentGameState = currGameState;
+        }
+
+        public Game1.GameState returnCurrentGameState()
+        {
+            return currentGameState;
         }
 
     }

@@ -141,9 +141,13 @@ namespace GamesProgAssignment4
         /// Plays the sound effect, single instance
         /// </summary>
         /// <param name="tag"></param>
-        public void playSoundEffect(string tag) {
+        public void playSoundEffect(string tag, float volume) {
             if (soundEffects.ContainsKey(tag))
-                soundEffects[tag].CreateInstance().Play();
+            {
+                SoundEffectInstance sfi = soundEffects[tag].CreateInstance();
+                sfi.Volume = volume;
+                sfi.Play();
+            }
         }
 
         /// <summary>

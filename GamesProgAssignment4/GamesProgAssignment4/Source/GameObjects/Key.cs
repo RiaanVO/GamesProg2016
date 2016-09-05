@@ -28,9 +28,9 @@ namespace GamesProgAssignment4
             this.player = player;
             hasBeenCollected = false; //false
             orientation = 0f;
-            collider = new SphereCollider(game, this, objectTag.pickup, true, false, 1);
+            collider = new SphereCollider(game, this, objectTag.pickup, true, false, 2f);
             audioEmitter = new AudioEmitterComponent(game, this);
-            audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/scaryscream"));
+            audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
         }
 
         public override void Update(GameTime gameTime)
@@ -44,7 +44,7 @@ namespace GamesProgAssignment4
                     {
                         hasBeenCollected = true;
                         player.setHasKey(hasBeenCollected);
-                        audioEmitter.playSoundEffect("pickup");
+                        audioEmitter.playSoundEffect("pickup", 0.1f);
                     }
                 }
             }
@@ -82,3 +82,4 @@ namespace GamesProgAssignment4
         }
     }
 }
+

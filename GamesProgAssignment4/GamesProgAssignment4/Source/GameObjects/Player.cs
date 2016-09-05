@@ -53,16 +53,19 @@ namespace GamesProgAssignment4
             this.camera = camera;
             audioListenerComponent = new AudioListenerComponet(game, this);
             audioEmitterComponent = new AudioEmitterComponent(game, this);
-            audioEmitterComponent.createSoundEffectInstance("footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"), false, true, false);
+            audioEmitterComponent.createSoundEffectInstance("footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"), false, true, false, 0.3f);
         }
 
         public override void Initialize()
         {
+            Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
+
             mainCollider = new SphereCollider(game, this, objectTag.player, true, true, colliderRadius);
             xFutureCollider = new PlayerMovementSphereCollider(game, this, objectTag.player, true, true, colliderRadius, Vector3.Right);
             zFutureCollider = new PlayerMovementSphereCollider(game, this, objectTag.player, true, true, colliderRadius, Vector3.Forward);
 
-            lookDirection = Vector3.Forward;
+            lookDirection = Vector3.Backward;
+            currentPitch = 0;
             velocity = Vector3.Zero;
             acceleration = Vector3.Zero;
             lookDirection = Vector3.Forward;

@@ -500,3 +500,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Door/Iron_Door_01_rot.fbx
 
+#begin Sounds/heartbeat.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/heartbeat.wav
+

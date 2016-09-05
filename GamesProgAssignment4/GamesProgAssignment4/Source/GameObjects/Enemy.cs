@@ -51,7 +51,6 @@ namespace GamesProgAssignment4
 
         public override void Update(GameTime gameTime)
         {
-            //if (player.position != position) handleMovement(gameTime);
             handleMovement(gameTime);
 
             if (collider.collidingWith.Count != 0) {
@@ -59,7 +58,7 @@ namespace GamesProgAssignment4
                 {
                     if(col.tag == objectTag.player && !playerCaught)
                     {
-                        audioEmitter.playSoundEffect("Scream");
+                        audioEmitter.playSoundEffect("Scream", 0.1f);
                         playerCaught = true;
                     }
                 }

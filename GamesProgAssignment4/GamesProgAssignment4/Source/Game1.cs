@@ -29,6 +29,11 @@ namespace GamesProgAssignment4
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            int width = 1500;
+
+            //graphics.PreferredBackBufferWidth =  width;
+            //graphics.PreferredBackBufferHeight = width * 9/16;
+            graphics.IsFullScreen = true;
         }
 
         public void ChangeGameState(GameState state, int level)

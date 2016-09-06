@@ -80,16 +80,30 @@ namespace GamesProgAssignment4
             if (distanceToTarget > stoppingDistFromTarget)
             {
                 Vector3 targetDirection = Vector3.Subtract(targetPosition, position);
+                if (targetDirection != Vector3.Zero) targetDirection.Normalize();
+
                 float newOrientation = (float)Math.Atan2(targetDirection.X, targetDirection.Z);
-                float rotationDirection = newOrientation > orientation ? +1 : -1;
-                float rotationalVelocity = rotationalSpeed * rotationDirection;
 
-                if (Math.Abs(newOrientation - orientation) > orientationDifference) orientation += rotationalVelocity * deltaTime;
+                if (lookDirection != targetDirection)
+                {
+                    //Also multiply by turning acceleration?
+                    lookDirection += targetDirection * 0.1f;
+                    if (lookDirection != Vector3.Zero)
+                        lookDirection.Normalize();
 
-                Vector3 addVector = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(orientation));
-                lookDirection += addVector;
+                    //Stops the enemy trying to be a spooky flying enemy
+                    lookDirection.Y = 0;
+                }
 
-                if ((velocity += lookDirection * acceleration).Length() > maxVelocity) velocity = Vector3.Normalize(velocity) * maxVelocity;
+                //float rotationDirection = newOrientation > orientation ? +1 : -1;
+                //float rotationalVelocity = rotationalSpeed * rotationDirection;
+
+                //if (Math.Abs(newOrientation - orientation) > orientationDifference) orientation += rotationalVelocity * deltaTime;
+
+                //Vector3 addVector = Vector3.Transform(Vector3.Backward, Matrix.CreateRotationY(orientation));
+                //lookDirection += addVector;
+
+                if ((velocity += lookDirection * acceleration).Length() > maxVelocity) velocity = Vector3.Normalize(velocity) * (maxVelocity-1);
             }
             else
             {
@@ -99,7 +113,7 @@ namespace GamesProgAssignment4
             position += velocity * deltaTime;
 
             translation = Matrix.CreateTranslation(position);
-            rotation = Matrix.CreateRotationY(orientation);
+            rotation = Matrix.CreateRotationY((float)Math.Atan2(lookDirection.X, lookDirection.Z));
         }
 
         private float Vector3ToRadian (Vector3 direction)

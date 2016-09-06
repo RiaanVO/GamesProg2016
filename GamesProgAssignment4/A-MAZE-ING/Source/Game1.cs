@@ -27,11 +27,11 @@ namespace A_MAZE_ING
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            //graphics.ToggleFullScreen();
-            //graphics.IsFullScreen = true;
-            //graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //graphics.ApplyChanges();
+            graphics.ToggleFullScreen();
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
         }

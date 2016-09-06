@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamesProgAssignment4", "GamesProgAssignment4\GamesProgAssignment4.csproj", "{32A13F89-860A-4471-8AC4-5EDF7B73213E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A-MAZE-ING", "A-MAZE-ING\A-MAZE-ING.csproj", "{8EBF27F9-7561-46E6-BC9F-28E35934F52C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +17,10 @@ Global
 		{32A13F89-860A-4471-8AC4-5EDF7B73213E}.Debug|x86.Build.0 = Debug|x86
 		{32A13F89-860A-4471-8AC4-5EDF7B73213E}.Release|x86.ActiveCfg = Release|x86
 		{32A13F89-860A-4471-8AC4-5EDF7B73213E}.Release|x86.Build.0 = Release|x86
+		{8EBF27F9-7561-46E6-BC9F-28E35934F52C}.Debug|x86.ActiveCfg = Debug|x86
+		{8EBF27F9-7561-46E6-BC9F-28E35934F52C}.Debug|x86.Build.0 = Debug|x86
+		{8EBF27F9-7561-46E6-BC9F-28E35934F52C}.Release|x86.ActiveCfg = Release|x86
+		{8EBF27F9-7561-46E6-BC9F-28E35934F52C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

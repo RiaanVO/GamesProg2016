@@ -172,6 +172,7 @@ namespace A_MAZE_ING
 
         private void handleInput()
         {
+
             //Get the states of the keyboard and mouse
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();
@@ -208,6 +209,7 @@ namespace A_MAZE_ING
             if(game.Window != null)
                 Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
+
         }
 
         public void setHasKey(bool hasKeyStatus)

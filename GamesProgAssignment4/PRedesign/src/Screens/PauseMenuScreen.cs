@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace PRedesign
 {
@@ -27,6 +28,19 @@ namespace PRedesign
         }
         #endregion
 
+        #region Update and Draw
+        public override void Draw(GameTime gameTime)
+        {
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            SpriteFont font = ScreenManager.SpriteFont;
+
+            //Fade any other screens to black a little
+            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+
+            base.Draw(gameTime);
+        }
+        #endregion
+
         #region Handle Input
         /// <summary>
         /// Event handler for the quite game menu option
@@ -42,6 +56,7 @@ namespace PRedesign
 
         //Event handler for the message box to quite the game and return to the main menu
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e) {
+            ObjectManager.clearAll();
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
         }
         #endregion

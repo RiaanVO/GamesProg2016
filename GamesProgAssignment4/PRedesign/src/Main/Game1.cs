@@ -16,12 +16,15 @@ namespace PRedesign
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            IsMouseVisible = true;
+
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
 
             //Add the base screens
-            screenManager.AddScreen(new BackgroundScreen());
-            screenManager.AddScreen(new MainMenuScreen());
+            LoadingScreen.Load(screenManager, true, new GamePlayScreen());
+            //screenManager.AddScreen(new BackgroundScreen());
+            //screenManager.AddScreen(new MainMenuScreen());
         }
 
         /// <summary>

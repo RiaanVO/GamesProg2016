@@ -11,12 +11,31 @@ namespace PRedesign
     {
         #region Fields
         protected Vector3 position;
+        protected float orientation;
+        protected Vector3 velocity;
+        protected float angular;
         #endregion
 
         #region Properties
         public Vector3 Position {
             get { return position; }
             set { position = value; }
+        }
+
+        public float Orientation {
+            get { return orientation; }
+            set { orientation = value; }
+        }
+
+        public Vector3 Velocity{
+            get { return velocity; }
+            set { velocity = value; }
+        }
+
+        public float Angular
+        {
+            get { return angular; }
+            set { angular = value; }
         }
         #endregion
 

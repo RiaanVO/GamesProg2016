@@ -14,7 +14,7 @@ namespace PRedesign
         protected BasicCamera camera;
         protected BasicEffect basicEffect;
         protected GraphicsDevice graphicsDevice;
-        protected Matrix world, scale, rotation, translation;
+        protected Matrix worldMatrix, scaleMatrix, rotationMatrix, translationMatrix;
 
         protected VertexPositionNormalTexture[] vertexData;
         protected int[] indexData;
@@ -56,22 +56,22 @@ namespace PRedesign
             set { texture = value; }
         }
 
-        public Matrix Scale
+        public Matrix ScaleMatrix
         {
-            get { return scale; }
-            set { scale = value; }
+            get { return scaleMatrix; }
+            set { scaleMatrix = value; }
         }
 
-        public Matrix Rotation
+        public Matrix RotationMatrix
         {
-            get { return rotation; }
-            set { rotation = value; }
+            get { return rotationMatrix; }
+            set { rotationMatrix = value; }
         }
 
-        public Matrix Translation
+        public Matrix TranslationMatrix
         {
-            get { return translation; }
-            set { translation = value; }
+            get { return translationMatrix; }
+            set { translationMatrix = value; }
         }
 
         public new Vector3 Position
@@ -80,7 +80,7 @@ namespace PRedesign
             set
             {
                 position = value;
-                translation = Matrix.CreateTranslation(position);
+                translationMatrix = Matrix.CreateTranslation(position);
             }
         }
 
@@ -93,23 +93,18 @@ namespace PRedesign
 
         #region Initialization
         /// <summary>
-        /// Simple constructor where properties must be set
+        /// Constructor for the basic texture primitive
         /// </summary>
         /// <param name="startPosition"></param>
-        public BasicTexturePrimitive(Vector3 startPosition) : base(startPosition)
-        {
-            translation = Matrix.CreateTranslation(startPosition);
-            scale = Matrix.CreateScale(1);
-            rotation = Matrix.Identity;
-            world = scale * rotation * translation;
-        }
-
+        /// <param name="camera"></param>
+        /// <param name="graphicsDevice"></param>
+        /// <param name="texture"></param>
         public BasicTexturePrimitive(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Texture2D texture) : base(startPosition)
         {
-            translation = Matrix.CreateTranslation(startPosition);
-            scale = Matrix.CreateScale(1);
-            rotation = Matrix.Identity;
-            world = scale * rotation * translation;
+            translationMatrix = Matrix.CreateTranslation(startPosition);
+            scaleMatrix = Matrix.CreateScale(1);
+            rotationMatrix = Matrix.Identity;
+            worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
             this.camera = camera;
             this.graphicsDevice = graphicsDevice;
             this.texture = texture;
@@ -125,6 +120,8 @@ namespace PRedesign
         {
             if (vertexData == null || indexData == null || graphicsDevice == null || camera == null)
                 return;
+            if (basicEffect == null)
+                basicEffect = new BasicEffect(graphicsDevice);
 
             basicEffect.World = getWorld();
             basicEffect.View = camera.View;
@@ -150,7 +147,7 @@ namespace PRedesign
         #region Public Methods
         public virtual Matrix getWorld()
         {
-            return world;
+            return worldMatrix;
         }
         #endregion
     }

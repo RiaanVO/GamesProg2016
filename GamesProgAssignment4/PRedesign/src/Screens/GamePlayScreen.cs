@@ -33,25 +33,49 @@ namespace PRedesign
             //Load game play content here
             gameFont = content.Load<SpriteFont>(@"Fonts/GameFont");
 
+            //Load content
             Texture2D groundTexture = content.Load<Texture2D>(@"Textures/3SNe");
-            Model model = content.Load<Model>(@"Models/Skybox Model/skybox");
+            Model skyModel = content.Load<Model>(@"Models/Skybox Model/skybox");
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
+            Model tankModel = content.Load<Model>(@"Models/Enemy Model/tank");
+            Texture2D crateTexture = content.Load<Texture2D>(@"Textures/crate");
 
+            //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;
+            ObjectManager.Camera = camera;
+            ObjectManager.GraphicsDevice = ScreenManager.GraphicsDevice;
+            ObjectManager.Game = ScreenManager.Game;
+
+            int levelWidth = 100;
+            int tileSize = 3;
+            NavigationMap.CreateNavigationMap(levelWidth, levelWidth, tileSize);
 
             Player player = new Player(Vector3.Zero);
-            player.Camera = camera;
-            player.Game = ScreenManager.Game;
 
-            Skybox skybox = new Skybox(Vector3.Zero, camera, model);
-            skybox.GraphicsDevice = ScreenManager.GraphicsDevice;
+            Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
 
+            GroundPrimitive ground = new GroundPrimitive(Vector3.Zero, groundTexture, tileSize, levelWidth);
+            ground.CenterGridPlane = false;
 
-            GroundPrimitive ground = new GroundPrimitive(Vector3.Zero, camera, ScreenManager.GraphicsDevice, groundTexture, 10, 100);
-            ground.BasicEffect = basicEffect;
+            Tank tank = new Tank(new Vector3(4,0,4), tankModel);
+            tank.Scale = 0.25f;
+            player.Tank = tank;
 
+            int numCrates = 10;
+            List<CubePrimitive> crates = new List<CubePrimitive>();
+            for(int x = 0; x < numCrates; x+=4){
+                for (int z = 0; z < numCrates; z+=4) {
+                    crates.Add(new CubePrimitive(new Vector3(x *tileSize, 0, z * tileSize), crateTexture, tileSize));
+                    crates.Add(new CubePrimitive(new Vector3((x + 1) * tileSize, 0, z * tileSize), crateTexture, tileSize));
+
+                }
+            }
+            foreach (CubePrimitive crate in crates) {
+                NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
+            }
+            
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();
         }

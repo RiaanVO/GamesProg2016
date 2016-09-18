@@ -17,6 +17,28 @@ namespace PRedesign
         //Current list will copy master before update to avoid adding and removing errors
         private static List<GameObject> objectsMaster = new List<GameObject>();
         private static List<GameObject> objectsCurrent = new List<GameObject>();
+
+        //Need to find a better location for these varibles
+        private static GraphicsDevice graphicsDevice;
+        private static BasicCamera camera;
+        private static Game game;
+        #endregion
+
+        #region Properties
+        public static GraphicsDevice GraphicsDevice {
+            get { return graphicsDevice; }
+            set { graphicsDevice = value; }
+        }
+
+        public static BasicCamera Camera {
+            get { return camera; }
+            set { camera = value; }
+        }
+
+        public static Game Game {
+            get { return game; }
+            set { game = value; }
+        }
         #endregion
 
         #region Public Methods

@@ -28,10 +28,25 @@ namespace PRedesign
         #endregion
 
         #region Initialization
-        public Skybox(Vector3 startPosition, BasicCamera camera, Model model) : base(startPosition) {
-            this.camera = camera;
-            this.model = model;
-            scale = Matrix.CreateScale(1000);
+        /// <summary>
+        /// Constructor which camera will be gotten from the object manager
+        /// </summary>
+        /// <param name="startPosition"></param>
+        /// <param name="model"></param>
+        public Skybox(Vector3 startPosition, Model model) : base(startPosition, ObjectManager.Camera, model) {
+            scaleMatrix = Matrix.CreateScale(1000);
+            graphicsDevice = ObjectManager.GraphicsDevice;
+        }
+
+        /// <summary>
+        /// Constructor where you must provide all values
+        /// </summary>
+        /// <param name="startPosition"></param>
+        /// <param name="camera"></param>
+        /// <param name="model"></param>
+        public Skybox(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Model model) : base(startPosition, camera, model) {
+            this.graphicsDevice = graphicsDevice;
+            scaleMatrix = Matrix.CreateScale(1000);
         }
         #endregion
 
@@ -39,11 +54,12 @@ namespace PRedesign
         public override void Update(GameTime gameTime)
         {
             //Update position according to player
-            position = player.Position;
+            if(player != null)
+                position = player.Position;
             position.Y = 0;
 
             //Updates world matrix
-            translation = Matrix.CreateTranslation(position);
+            translationMatrix = Matrix.CreateTranslation(position);
 
             base.Update(gameTime);
         }
@@ -79,7 +95,7 @@ namespace PRedesign
 
         public override Matrix GetWorld()
         {
-            return scale * rotation * translation;
+            return scaleMatrix * translationMatrix;
         }
         #endregion
     }

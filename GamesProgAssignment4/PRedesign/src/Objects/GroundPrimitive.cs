@@ -45,14 +45,35 @@ namespace PRedesign
             set {
                 centerGridPlane = value;
                 if (centerGridPlane)
-                    Translation = Matrix.CreateTranslation(position - new Vector3(TotalSize / 2, 0, TotalSize / 2));
+                    TranslationMatrix = Matrix.CreateTranslation(position - new Vector3(TotalSize / 2, 0, TotalSize / 2));
                 else
-                    Translation = Matrix.CreateTranslation(position);
+                    TranslationMatrix = Matrix.CreateTranslation(position);
             }
         }
         #endregion
 
         #region Initialization
+        /// <summary>
+        /// Constructor for ground primitive which will get required values from object manager
+        /// </summary>
+        /// <param name="startPosition"></param>
+        /// <param name="texture"></param>
+        /// <param name="tileSize"></param>
+        /// <param name="numTilesAcross"></param>
+        public GroundPrimitive(Vector3 startPosition, Texture2D texture, int tileSize, int numTilesAcross) : base(startPosition, ObjectManager.Camera, ObjectManager.GraphicsDevice, texture) {
+            this.tileSize = tileSize;
+            this.numTilesAcross = numTilesAcross;
+        }
+
+        /// <summary>
+        /// Constructor where you must define the values
+        /// </summary>
+        /// <param name="startPosition"></param>
+        /// <param name="camera"></param>
+        /// <param name="graphicsDevice"></param>
+        /// <param name="texture"></param>
+        /// <param name="tileSize"></param>
+        /// <param name="numTilesAcross"></param>
         public GroundPrimitive(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Texture2D texture, int tileSize, int numTilesAcross) 
             : base(startPosition, camera, graphicsDevice, texture)
         {
@@ -75,7 +96,7 @@ namespace PRedesign
         #region Public Methods
         public override Matrix getWorld()
         {
-            return translation;
+            return translationMatrix;
         }
         #endregion
 
@@ -110,9 +131,9 @@ namespace PRedesign
             }
 
             if (centerGridPlane)
-                Translation = Matrix.CreateTranslation(position - new Vector3(TotalSize / 2, 0, TotalSize / 2));
+                TranslationMatrix = Matrix.CreateTranslation(position - new Vector3(TotalSize / 2, 0, TotalSize / 2));
             else
-                Translation = Matrix.CreateTranslation(position);
+                TranslationMatrix = Matrix.CreateTranslation(position);
 
             gridPlaneConstructed = true;
         }

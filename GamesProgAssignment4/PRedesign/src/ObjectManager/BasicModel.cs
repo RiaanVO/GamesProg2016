@@ -13,8 +13,10 @@ namespace PRedesign
         #region Fields
         protected BasicCamera camera;
         protected Model model;
-        protected Matrix world, scale, rotation, translation;
+        protected Matrix worldMatrix, scaleMatrix, rotationMatrix, translationMatrix;
         protected bool hasLighting = false;
+        protected float modelBaseOrientation;
+        protected float scale;
         #endregion
 
         #region Properties
@@ -28,21 +30,29 @@ namespace PRedesign
             set { model = value; }
         }
 
-        public Matrix Scale {
+        public Matrix ScaleMatrix {
+            get { return scaleMatrix; }
+            set { scaleMatrix = value; }
+        }
+
+        public Matrix RotationMatrix
+        {
+            get { return rotationMatrix; }
+            set { rotationMatrix = value; }
+        }
+
+        public Matrix TranslationMatrix
+        {
+            get { return translationMatrix; }
+            set { translationMatrix = value; }
+        }
+
+        public float Scale {
             get { return scale; }
-            set { scale = value; }
-        }
-
-        public Matrix Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; }
-        }
-
-        public Matrix Translation
-        {
-            get { return translation; }
-            set { translation = value; }
+            set {
+                scale = value;
+                scaleMatrix = Matrix.CreateScale(scale);
+            }
         }
 
         public new Vector3 Position
@@ -50,8 +60,13 @@ namespace PRedesign
             get { return position; }
             set {
                 position = value;
-                translation = Matrix.CreateTranslation(position);
+                translationMatrix = Matrix.CreateTranslation(position);
             }
+        }
+
+        public float ModelBaseOrientation {
+            get { return modelBaseOrientation; }
+            set { modelBaseOrientation = value; }
         }
 
         public bool HasLighting {
@@ -62,18 +77,7 @@ namespace PRedesign
 
         #region Initialization
         /// <summary>
-        /// Simple constructor where values must be set through properties
-        /// </summary>
-        /// <param name="startPosition"></param>
-        public BasicModel(Vector3 startPosition) : base(startPosition) {
-            translation = Matrix.CreateTranslation(startPosition);
-            scale = Matrix.CreateScale(1);
-            rotation = Matrix.Identity;
-            world = scale * rotation * translation;
-        }
-
-        /// <summary>
-        /// Constructor which sets the model and the camera
+        /// Constructor which sets the model and the camera, alterations must be set though properties
         /// </summary>
         /// <param name="startPosition"></param>
         /// <param name="camera"></param>
@@ -81,6 +85,12 @@ namespace PRedesign
         public BasicModel(Vector3 startPosition, BasicCamera camera, Model model) : base(startPosition) {
             this.camera = camera;
             this.model = model;
+
+            translationMatrix = Matrix.CreateTranslation(position);
+            Scale = 1;
+            modelBaseOrientation = 0;
+            rotationMatrix = Matrix.Identity;
+            worldMatrix = Matrix.Identity;
         }
         #endregion
 
@@ -120,7 +130,7 @@ namespace PRedesign
         /// <returns></returns>
         public virtual Matrix GetWorld()
         {
-            return world;
+            return worldMatrix;
         }
         #endregion
     }

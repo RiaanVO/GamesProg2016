@@ -178,8 +178,8 @@ namespace PRedesign
         /// <param name="position2"></param>
         /// <returns></returns>
         private static float Heuristic(Vector2 position1, Vector2 position2) {
-            return Vector2.Distance(position1, position2); //More computing intensive
-            //return Math.Abs(position1.X - position2.X) + Math.Abs(position1.Y - position2.Y);
+            //return Vector2.Distance(position1, position2); //More computing intensive
+            return Math.Abs(position1.X - position2.X) + Math.Abs(position1.Y - position2.Y);
         }
         
         //Resets the state of the search nodes

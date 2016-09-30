@@ -41,6 +41,7 @@
     <Compile Include="src\AudioManager\AudioComponent.cs" />
     <Compile Include="src\AudioManager\AudioEmitterComponent.cs" />
     <Compile Include="src\AudioManager\AudioListenerComponent.cs" />
+    <Compile Include="src\Debuging\PathRenderer.cs" />
     <Compile Include="src\Main\Game1.cs" />
     <Compile Include="src\Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

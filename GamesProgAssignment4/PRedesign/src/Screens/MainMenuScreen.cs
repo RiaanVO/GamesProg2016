@@ -16,19 +16,23 @@ namespace PRedesign
         {
             //Create the entries
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
+            MenuEntry openLevelEditorEntry = new MenuEntry("Level Editor");
             MenuEntry quitMenuEntry = new MenuEntry("Quit");
 
             //Attach the event handlers
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
+            openLevelEditorEntry.Selected += OpenLevelEditorEntrySelected;
             quitMenuEntry.Selected += OnCancel;
 
             //Resize the text
             TitleScale = 5f;
             playGameMenuEntry.BaseTextScale = 2;
+            openLevelEditorEntry.BaseTextScale = 2;
             quitMenuEntry.BaseTextScale = 2;
 
             //Add them to the list of entries
             MenuEntries.Add(playGameMenuEntry);
+            MenuEntries.Add(openLevelEditorEntry);
             MenuEntries.Add(quitMenuEntry);
         }
 
@@ -42,6 +46,10 @@ namespace PRedesign
         /// <param name="e"></param>
         void PlayGameMenuEntrySelected(object sender, EventArgs e) {
             LoadingScreen.Load(ScreenManager, true, new GamePlayScreen());
+        }
+
+        void OpenLevelEditorEntrySelected(object sender, EventArgs e) {
+            LoadingScreen.Load(ScreenManager, true, new LevelEditorScreen());
         }
 
         protected override void OnCancel()

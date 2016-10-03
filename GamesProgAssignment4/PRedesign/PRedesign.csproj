@@ -41,6 +41,12 @@
     <Compile Include="src\AudioManager\AudioComponent.cs" />
     <Compile Include="src\AudioManager\AudioEmitterComponent.cs" />
     <Compile Include="src\AudioManager\AudioListenerComponent.cs" />
+    <Compile Include="src\LevelManager\Level.cs" />
+    <Compile Include="src\LevelManager\LevelManager.cs" />
+    <Compile Include="src\Editor\EditorButtonGroup.cs" />
+    <Compile Include="src\Editor\EditorGridElement.cs" />
+    <Compile Include="src\Editor\EditorOptionButton.cs" />
+    <Compile Include="src\Editor\LevelEditor.cs" />
     <Compile Include="src\Main\Game1.cs" />
     <Compile Include="src\Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,6 +79,7 @@
     <Compile Include="src\ScreenManager\ScreenManager.cs" />
     <Compile Include="src\Screens\BackgroundScreen.cs" />
     <Compile Include="src\Screens\GamePlayScreen.cs" />
+    <Compile Include="src\Screens\LevelEditorScreen.cs" />
     <Compile Include="src\Screens\LoadingScreen.cs" />
     <Compile Include="src\Screens\MainMenuScreen.cs" />
     <Compile Include="src\Screens\MenuScreen.cs" />
@@ -87,19 +94,33 @@
     <Compile Include="src\UI\Screens UI\MenuEntry.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
+    <Content Include="Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Content\levels.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="levels.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

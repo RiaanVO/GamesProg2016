@@ -47,6 +47,7 @@ namespace PRedesign
             ObjectManager.GraphicsDevice = ScreenManager.GraphicsDevice;
             ObjectManager.Game = ScreenManager.Game;
 
+            /*
             int levelWidth = 100;
             int tileSize = 3;
             NavigationMap.CreateNavigationMap(levelWidth, levelWidth, tileSize);
@@ -75,7 +76,17 @@ namespace PRedesign
             foreach (CubePrimitive crate in crates) {
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
-            
+            */
+            Player player = new Player(Vector3.Zero);
+
+            Skybox skybox = new Skybox(Vector3.Zero, skyModel);
+            skybox.Player = player;
+
+            LevelManager.GroundTexture = groundTexture;
+            LevelManager.WallTexture = crateTexture;
+
+            LevelManager.LoadLevel(1);
+
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();
         }

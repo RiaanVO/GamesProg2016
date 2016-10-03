@@ -41,16 +41,12 @@
     <Compile Include="src\AudioManager\AudioComponent.cs" />
     <Compile Include="src\AudioManager\AudioEmitterComponent.cs" />
     <Compile Include="src\AudioManager\AudioListenerComponent.cs" />
-<<<<<<< HEAD
     <Compile Include="src\LevelManager\Level.cs" />
     <Compile Include="src\LevelManager\LevelManager.cs" />
     <Compile Include="src\Editor\EditorButtonGroup.cs" />
     <Compile Include="src\Editor\EditorGridElement.cs" />
     <Compile Include="src\Editor\EditorOptionButton.cs" />
     <Compile Include="src\Editor\LevelEditor.cs" />
-=======
-    <Compile Include="src\Debuging\PathRenderer.cs" />
->>>>>>> origin/feature/ProjectRedesign
     <Compile Include="src\Main\Game1.cs" />
     <Compile Include="src\Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

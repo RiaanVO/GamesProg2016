@@ -16,14 +16,17 @@ namespace PRedesign
         {
             //Create the menu entries
             MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");
+            MenuEntry returnToMainMenu = new MenuEntry("Main Menu");
             MenuEntry quitGameMenuEntry = new MenuEntry("Quit Game");
 
             //Set up their handlers
             resumeGameMenuEntry.Selected += OnCancel;
+            returnToMainMenu.Selected += OnMainMenuSelected;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
 
             //Add them to the list of options
             MenuEntries.Add(resumeGameMenuEntry);
+            MenuEntries.Add(returnToMainMenu);
             MenuEntries.Add(quitGameMenuEntry);
         }
         #endregion
@@ -58,7 +61,24 @@ namespace PRedesign
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e) {
             ObjectManager.clearAll();
             ScreenManager.Game.Exit();
-            //LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+        }
+
+        /// <summary>
+        /// Event handler for the return to main menu option
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnMainMenuSelected(object sender, EventArgs e) {
+            const string message = "Are you sure you want to return to the main menu?";
+            MessageBoxScreen confirmMainMenuMessageBox = new MessageBoxScreen(message);
+            confirmMainMenuMessageBox.Accepted += ConfirmMainMenuMessageBoxAccepted;
+            ScreenManager.AddScreen(confirmMainMenuMessageBox);
+        }
+
+        //Event handler for the message box to return to the main menu
+        void ConfirmMainMenuMessageBoxAccepted(object sender, EventArgs e) {
+            ObjectManager.clearAll();
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
         }
         #endregion
     }

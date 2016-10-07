@@ -53,13 +53,13 @@ namespace PRedesign
         /// </summary>
         public override void HandleInput(InputState inputState)
         {
-            if (inputState.IsMenuDown()) {
+            if (inputState.IsMenuUp()) {
                 selectedEntry--;
                 if (selectedEntry < 0)
                     selectedEntry = menuEntries.Count - 1;
             }
 
-            if (inputState.IsMenuUp()){
+            if (inputState.IsMenuDown()){
                 selectedEntry++;
                 if (selectedEntry >= menuEntries.Count)
                     selectedEntry = 0;

@@ -22,11 +22,12 @@ namespace PRedesign
             Components.Add(screenManager);
 
             //Add the base screens
+            screenManager.AddScreen(new BackgroundScreen());
+            screenManager.AddScreen(new MainMenuScreen());
             //LoadingScreen.Load(screenManager, true, new GamePlayScreen());
             LevelManager.LoadLevelsFromFile();
-            LoadingScreen.Load(screenManager, true, new MainMenuScreen());
-            //screenManager.AddScreen(new BackgroundScreen());
-            //screenManager.AddScreen(new MainMenuScreen());
+            //LoadingScreen.Load(screenManager, true, new MainMenuScreen());
+            
         }
 
         /// <summary>

@@ -207,3 +207,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/crate.png
 
+#begin AIFSM/fsm_npc2.xml
+/copy:AIFSM/fsm_npc2.xml
+

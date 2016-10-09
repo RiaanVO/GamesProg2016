@@ -39,6 +39,7 @@ namespace PRedesign
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
             Model tankModel = content.Load<Model>(@"Models/Enemy Model/tank");
             Texture2D crateTexture = content.Load<Texture2D>(@"Textures/crate");
+            
 
             //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
@@ -56,14 +57,10 @@ namespace PRedesign
             Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
 
-            GroundPrimitive ground = new GroundPrimitive(Vector3.Zero, groundTexture, tileSize, levelWidth);
+            GroundPrimitive ground = new GroundPrimitive(Vector3.Zero, groundTexture, tileSize, levelWidth / tileSize);
             ground.CenterGridPlane = false;
 
-            Tank tank = new Tank(new Vector3(4,0,4), tankModel);
-            tank.Scale = 0.25f;
-            player.Tank = tank;
-
-            int numCrates = 10;
+            int numCrates = levelWidth / tileSize;
             List<CubePrimitive> crates = new List<CubePrimitive>();
             for(int x = 0; x < numCrates; x+=4){
                 for (int z = 0; z < numCrates; z+=4) {
@@ -75,7 +72,20 @@ namespace PRedesign
             foreach (CubePrimitive crate in crates) {
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
-            
+
+            Tank tank = new Tank(new Vector3(4, 0, 4), tankModel);
+            tank.Scale = 0.25f;
+            player.Tank = tank;
+
+            NPCTank npcTank = new NPCTank(new Vector3(10, 0, 10), tankModel, player);
+            npcTank.Scale = 0.25f;
+            npcTank.PatrolPoints = new Vector3[] {
+                new Vector3(10, 0, 10),
+                new Vector3(57, 0, 10),
+                new Vector3(57, 0, 60),
+                new Vector3(10, 0, 60)
+            };
+
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();
         }

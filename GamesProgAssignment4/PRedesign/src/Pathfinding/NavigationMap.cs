@@ -101,8 +101,10 @@ namespace PRedesign
             Vector2 startPoint = new Vector2(startPointV3.X, startPointV3.Z);
             Vector2 endPoint = new Vector2(endPointV3.X, endPointV3.Z);
 
-            SearchNode startNode = searchNodes[(int)(startPoint.X / nodeWidth), (int)(startPoint.Y / nodeWidth)];
-            SearchNode endNode = searchNodes[(int)(endPoint.X / nodeWidth), (int)(endPoint.Y / nodeWidth)];
+            SearchNode startNode = positionToSearchNode(startPointV3);
+            SearchNode endNode = positionToSearchNode(endPointV3);
+            if (startNode == null || endNode == null)
+                return new List<Vector3>();
 
             startNode.InOpenList = true;
             startNode.DistanceToGoal = Heuristic(startPoint, endPoint);
@@ -160,12 +162,9 @@ namespace PRedesign
         /// <param name="position"></param>
         /// <param name="isObstructed"></param>
         public static void setSearchNodeObstructed(Vector3 position, bool isObstructed) {
-            if (searchNodes == null)
-                return;
-            int x = (int)(position.X / nodeWidth);
-            int y = (int)(position.Z / nodeWidth);
-            searchNodes[x,y].Obstructed = isObstructed;
-
+            SearchNode node = positionToSearchNode(position);
+            if(node != null)
+                node.Obstructed = isObstructed;
         }
         #endregion
 
@@ -242,6 +241,16 @@ namespace PRedesign
             }
 
             return finalPath;
+        }
+
+        private static SearchNode positionToSearchNode(Vector3 position) {
+            if (searchNodes == null)
+                return null;
+            int x = (int)(position.X / nodeWidth);
+            int y = (int)(position.Z / nodeWidth);
+            if (x >= numNodesWidth || y >= numNodesHeight|| x < 0 || y < 0)
+                return null;
+            return searchNodes[x, y];
         }
         #endregion
     }

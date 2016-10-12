@@ -144,7 +144,7 @@ namespace PRedesign
         {
             if (pathPoints != null && (brain.CurrentState.Equals("PATROL") || brain.CurrentState.Equals("SEEK")))
                 if (pathPoints.Count() > 1)
-                    DebugDrawer.RenderPath(pathPoints, Color.Yellow);
+                    ObjectMetaDrawer.RenderPath(pathPoints, Color.Yellow);
             base.Draw(gameTime);
         }
 

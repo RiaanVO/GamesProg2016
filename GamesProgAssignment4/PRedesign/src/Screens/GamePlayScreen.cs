@@ -158,7 +158,7 @@ namespace PRedesign
             //Place draw logic here for game play
 
             ObjectManager.Draw(gameTime);
-            DebugDrawer.RenderNavigationMap(Color.Violet);
+            ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
 
             //////////////////////////////////////
 

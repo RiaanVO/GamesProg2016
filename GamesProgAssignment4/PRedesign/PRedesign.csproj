@@ -44,6 +44,10 @@
     <Compile Include="src\AudioManager\AudioComponent.cs" />
     <Compile Include="src\AudioManager\AudioEmitterComponent.cs" />
     <Compile Include="src\AudioManager\AudioListenerComponent.cs" />
+    <Compile Include="src\Collision\BoxCollider.cs" />
+    <Compile Include="src\Collision\Collider.cs" />
+    <Compile Include="src\Collision\CollisionManager.cs" />
+    <Compile Include="src\Collision\SphereCollider.cs" />
     <Compile Include="src\Meta Drawer\ObjectMetaDrawer.cs" />
     <Compile Include="src\LevelManager\Level.cs" />
     <Compile Include="src\LevelManager\LevelManager.cs" />
@@ -54,6 +58,7 @@
     <Compile Include="src\Main\Game1.cs" />
     <Compile Include="src\Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Meta Drawer\WireShapeDrawer.cs" />
     <Compile Include="src\ObjectManager\BasicCamera.cs" />
     <Compile Include="src\ObjectManager\BasicModel.cs" />
     <Compile Include="src\ObjectManager\BasicTexturePrimitive.cs" />

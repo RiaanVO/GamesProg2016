@@ -56,6 +56,7 @@
     <Compile Include="src\ObjectManager\GameObject.cs" />
     <Compile Include="src\ObjectManager\ObjectManager.cs" />
     <Compile Include="src\Objects\CubePrimitive.cs" />
+    <Compile Include="src\Objects\CeilingPrimitive.cs" />
     <Compile Include="src\Objects\GroundPrimitive.cs" />
     <Compile Include="src\Movement\Steering Behaviors\Dynamic\Align.cs" />
     <Compile Include="src\Movement\Steering Behaviors\Dynamic\Arrive.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="src\Objects\Player.cs" />
     <Compile Include="src\Objects\Skybox.cs" />
     <Compile Include="src\Objects\Tank.cs" />
+    <Compile Include="src\Objects\Testing\TetraKey.cs" />
     <Compile Include="src\Pathfinding\NavigationMap.cs" />
     <Compile Include="src\ScreenManager\GameScreen.cs" />
     <Compile Include="src\ScreenManager\InputState.cs" />

@@ -26,9 +26,9 @@ namespace PRedesign
         //Movement varibles
         Vector3 movementDirection;
         Vector3 acceleration;
-        float accelerationRate = 200f;
-        float decelerationRate = 300f;
-        float maxVelocity = 50f;//20f;
+        float accelerationRate = 500f;
+        float decelerationRate = 400f;
+        float maxVelocity = 30f;//20f;
         float minVelocity = 5f;
         float deltaTime = 0;
 
@@ -36,7 +36,8 @@ namespace PRedesign
         bool jumped = false;
         bool grounded = true;
         float jumpVelocity = 50f;
-        float fallRate = 200f; // Is gravity
+        float jumpHeight; //The height which the player falls back to after jumping (instead of zero)
+        float fallRate = 200f; // Is gravity, is good
 
 
         /// <summary>
@@ -74,6 +75,8 @@ namespace PRedesign
 
             camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
             lookDirection = Vector3.Left;
+
+            jumpHeight = startPosition.Y;
 
             if (game != null)
                 if (game.Window != null)
@@ -178,12 +181,12 @@ namespace PRedesign
 
             velocity += acceleration * deltaTime;
 
-            if (position.Y < 0)
+            if (position.Y < jumpHeight)
             {
                 velocity.Y = 0;
                 acceleration.Y = 0;
                 grounded = true;
-                position = new Vector3(position.X, 0, position.Z);
+                position = new Vector3(position.X, jumpHeight, position.Z);
             }
             
             //Colision code goes here

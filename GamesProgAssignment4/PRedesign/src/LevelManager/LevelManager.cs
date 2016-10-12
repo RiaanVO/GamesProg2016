@@ -26,6 +26,7 @@ namespace PRedesign {
 
         private static Texture2D groundTexture;
         private static Texture2D wallTexture;
+        private static Texture2D ceilingTexture;
 
         // Master list of levels
         private static IList<Level> levels = new List<Level>();
@@ -45,10 +46,16 @@ namespace PRedesign {
             get { return wallTexture; }
             set { wallTexture = value; }
         }
+        
+        public static Texture2D CeilingTexture {
+            get { return ceilingTexture; }
+            set { ceilingTexture = value; }
+        }
 
         public static IList<Level> Levels {
             get { return levels; }
         }
+
         #endregion
 
         #region Public Methods
@@ -122,6 +129,7 @@ namespace PRedesign {
                             break;
                         case TILE_PATH:
                             ObjectManager.addGameObject(new GroundPrimitive(new Vector3((TILE_SIZE * j) / 2, 0, (TILE_SIZE * i) / 2), groundTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((TILE_SIZE * j) / 2, TILE_SIZE/2, (TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
                             break;
                     }
                 }

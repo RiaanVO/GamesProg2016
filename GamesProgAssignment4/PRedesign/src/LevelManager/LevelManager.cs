@@ -22,10 +22,11 @@ namespace PRedesign {
         private const int TILE_WALL = 0;
         private const int TILE_PATH = 1;
 
-        private const int TILE_SIZE = 2;
+        private const int TILE_SIZE = 15;
 
         private static Texture2D groundTexture;
         private static Texture2D wallTexture;
+        private static Texture2D ceilingTexture;
 
         // Master list of levels
         private static IList<Level> levels = new List<Level>();
@@ -45,11 +46,16 @@ namespace PRedesign {
             get { return wallTexture; }
             set { wallTexture = value; }
         }
+        
+        public static Texture2D CeilingTexture {
+            get { return ceilingTexture; }
+            set { ceilingTexture = value; }
+        }
 
         public static IList<Level> Levels {
             get { return levels; }
         }
-
+		  
         public static int TileSize {
             get { return TILE_SIZE; }
         }
@@ -132,6 +138,7 @@ namespace PRedesign {
                             break;
                         case TILE_PATH:
                             ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, 0, (float)(TILE_SIZE * i) / 2), groundTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE/2, (float)(TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
                             break;
                     }
                 }

@@ -34,11 +34,12 @@ namespace PRedesign
             gameFont = content.Load<SpriteFont>(@"Fonts/GameFont");
 
             //Load content
-            Texture2D groundTexture = content.Load<Texture2D>(@"Textures/3SNe");
-            Model skyModel = content.Load<Model>(@"Models/Skybox Model/skybox");
+            Texture2D groundTexture = content.Load<Texture2D>(@"Textures/white floor");
+            Texture2D ceilingTexture = content.Load<Texture2D>(@"Textures/ceiling v3");
+            Model skyModel = content.Load<Model>(@"Models/TechnoSkybox Model/technobox");
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
             Model tankModel = content.Load<Model>(@"Models/Enemy Model/tank");
-            Texture2D crateTexture = content.Load<Texture2D>(@"Textures/crate");
+            Texture2D crateTexture = content.Load<Texture2D>(@"Textures/blue stripe wall");
 
             //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
@@ -77,13 +78,14 @@ namespace PRedesign
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
             */
-            Player player = new Player(new Vector3(-5,0,-5));
+            Player player = new Player(new Vector3(-5,3.5f,-5));
 
             Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
 
             LevelManager.GroundTexture = groundTexture;
             LevelManager.WallTexture = crateTexture;
+            LevelManager.CeilingTexture = ceilingTexture;
             LevelManager.LoadLevel(1);
 
             Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
@@ -158,7 +160,7 @@ namespace PRedesign
             //Place draw logic here for game play
 
             ObjectManager.Draw(gameTime);
-            ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
+            //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
 
             //////////////////////////////////////
 

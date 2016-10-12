@@ -77,15 +77,26 @@ namespace PRedesign
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
             */
-            Player player = new Player(Vector3.Zero);
+            Player player = new Player(new Vector3(-5,0,-5));
 
             Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
 
             LevelManager.GroundTexture = groundTexture;
             LevelManager.WallTexture = crateTexture;
-
             LevelManager.LoadLevel(1);
+
+            Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
+            tank.Scale = 0.2f;
+            player.Tank = tank;
+
+            NPCTank npc = new NPCTank(new Vector3(8, 0, 8), tankModel, player);
+            npc.Scale = 0.2f;
+            npc.PatrolPoints = new Vector3[] {
+                new Vector3(8, 0, 13),
+                new Vector3(8, 0, 48),
+                new Vector3(33, 0, 48),
+            };
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();

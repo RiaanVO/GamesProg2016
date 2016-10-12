@@ -49,6 +49,10 @@ namespace PRedesign {
         public static IList<Level> Levels {
             get { return levels; }
         }
+
+        public static int TileSize {
+            get { return TILE_SIZE; }
+        }
         #endregion
 
         #region Public Methods

@@ -29,12 +29,12 @@ namespace PRedesign
         Vector3[] patrolPoints;
         int patrolIndex = 0;
         float patrolChangeRadius = 1;
-        double playerNearDistance = 10;
-        double playerFarDistance = 25;
+        double playerNearDistance = LevelManager.TileSize * 4;
+        double playerFarDistance = LevelManager.TileSize * 6;
         float idleDelayTime = 5;
         float currentIdleTime;
         string previousState;
-        bool loadFromFile = true;
+        bool loadFromFile = false;
         #endregion
 
         #region Properties
@@ -47,7 +47,7 @@ namespace PRedesign
                 pathSteering.Targets = pathPoints;
             }
         }
-
+        
         public Vector3 CurrentTarget
         {
             get { return currentTarget; }
@@ -60,7 +60,11 @@ namespace PRedesign
 
         public Vector3[] PatrolPoints {
             get { return patrolPoints; }
-            set { patrolPoints = value; }
+            set
+            {
+                patrolPoints = value;
+                CurrentTarget = patrolPoints[0];
+            }
         }
         #endregion
 

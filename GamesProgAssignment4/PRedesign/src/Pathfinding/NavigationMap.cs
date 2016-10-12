@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace PRedesign
 {
@@ -27,11 +28,12 @@ namespace PRedesign
         private static int levelWidth;
         private static int levelHeight;
         private static int nodeWidth;
-        private static int halfNodeWidth;
+        private static float halfNodeWidth;
         private static int numNodesWidth;
         private static int numNodesHeight;
         private static List<SearchNode> openList = new List<SearchNode>();
         private static List<SearchNode> closedList = new List<SearchNode>();
+        private static List<VertexPositionColor> verts = new List<VertexPositionColor>();
         #endregion
 
         #region Initialization
@@ -39,10 +41,11 @@ namespace PRedesign
             levelWidth = newLevelWidth;
             levelHeight = newLevelHeight;
             nodeWidth = newNodeWidth;
-            halfNodeWidth = nodeWidth / 2;
+            halfNodeWidth = (float)nodeWidth / 2;
             numNodesWidth = levelWidth / nodeWidth + 1;
             numNodesHeight = levelHeight / nodeWidth + 1;
             InitializeSearchNodes();
+            verts.Clear();
         }
 
         private static void InitializeSearchNodes() {
@@ -166,6 +169,37 @@ namespace PRedesign
             int y = (int)(position.Z / nodeWidth);
             searchNodes[x,y].Obstructed = isObstructed;
 
+        }
+
+        public static List<VertexPositionColor> getNodesVerts() {
+            if (verts.Count != 0)
+                return verts;
+            float halfNodeSmall = halfNodeWidth * 0.95f;
+            foreach (SearchNode node in searchNodes) {
+                Vector3 blCorner = new Vector3(node.Position.X - halfNodeSmall, 0.01f, node.Position.Y - halfNodeSmall);
+                Vector3 brCorner = new Vector3(node.Position.X + halfNodeSmall, 0.01f, node.Position.Y - halfNodeSmall);
+                Vector3 tlCorner = new Vector3(node.Position.X - halfNodeSmall, 0.01f, node.Position.Y + halfNodeSmall);
+                Vector3 trCorner = new Vector3(node.Position.X + halfNodeSmall, 0.01f, node.Position.Y + halfNodeSmall);
+                Color squareColor;
+                if (node.Obstructed)
+                    squareColor = Color.Red;
+                else
+                    squareColor = Color.Blue;
+
+                //Bottom
+                verts.Add(new VertexPositionColor(blCorner, squareColor));
+                verts.Add(new VertexPositionColor(brCorner, squareColor));
+                //Right
+                verts.Add(new VertexPositionColor(brCorner, squareColor));
+                verts.Add(new VertexPositionColor(trCorner, squareColor));
+                //Top
+                verts.Add(new VertexPositionColor(trCorner, squareColor));
+                verts.Add(new VertexPositionColor(tlCorner, squareColor));
+                //Left
+                verts.Add(new VertexPositionColor(tlCorner, squareColor));
+                verts.Add(new VertexPositionColor(blCorner, squareColor));
+            }
+            return verts;
         }
         #endregion
 

@@ -11,11 +11,11 @@ namespace PRedesign
     class CubePrimitive : BasicTexturePrimitive
     {
         #region Fields
-        float size;
-        Vector3[] structure;
-        Vector2[] textureCoordinates;
-        Vector3[] faceNormals;
-        Vector3 centeredPosition;
+        protected float size;
+        protected Vector3[] structure;
+        protected Vector2[] textureCoordinates;
+        protected Vector3[] faceNormals;
+        protected Vector3 centeredPosition;
         #endregion
 
         #region Properties

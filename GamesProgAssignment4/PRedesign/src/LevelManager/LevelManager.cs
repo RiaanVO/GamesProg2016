@@ -22,7 +22,7 @@ namespace PRedesign {
         private const int TILE_WALL = 0;
         private const int TILE_PATH = 1;
 
-        private const int TILE_SIZE = 20;
+        private const int TILE_SIZE = 2;
 
         private static Texture2D groundTexture;
         private static Texture2D wallTexture;
@@ -55,7 +55,10 @@ namespace PRedesign {
         public static IList<Level> Levels {
             get { return levels; }
         }
-
+		  
+        public static int TileSize {
+            get { return TILE_SIZE; }
+        }
         #endregion
 
         #region Public Methods
@@ -102,6 +105,12 @@ namespace PRedesign {
                 currentLevel = levels[id - 1];
             }
             if (!isLevelLoaded) {
+                //Clear the managers
+                //ObjectManager.clearAll();
+                //AudioManager.clearAll();
+                NavigationMap.CreateNavigationMap(currentLevel.Data.GetLength(1) * TILE_SIZE, currentLevel.Data.GetLength(0) * TILE_SIZE, TILE_SIZE);
+
+                //Construct the objects for the level
                 LoadLevelData();
             }
         }
@@ -125,11 +134,11 @@ namespace PRedesign {
                         case TILE_EMPTY:
                             break;
                         case TILE_WALL:
-                            ObjectManager.addGameObject(new CubePrimitive(new Vector3((TILE_SIZE * j) - TILE_SIZE / 2, 0, (TILE_SIZE * i) - TILE_SIZE / 2), wallTexture, TILE_SIZE));
+                            ObjectManager.addGameObject(new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), wallTexture, TILE_SIZE));
                             break;
                         case TILE_PATH:
-                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((TILE_SIZE * j) / 2, 0, (TILE_SIZE * i) / 2), groundTexture, TILE_SIZE, 1));
-                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((TILE_SIZE * j) / 2, TILE_SIZE/2, (TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, 0, (float)(TILE_SIZE * i) / 2), groundTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE/2, (float)(TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
                             break;
                     }
                 }
@@ -139,6 +148,7 @@ namespace PRedesign {
 
         private static void UnloadLevel() {
             ObjectManager.clearAll();
+            AudioManager.clearAll();
             isLevelLoaded = false;
         }
         #endregion

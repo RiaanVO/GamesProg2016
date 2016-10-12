@@ -12,7 +12,6 @@ namespace PRedesign {
         
         public int Id { get; set; }
         public int[,] Data { get; set; }
-
     }
 
 }

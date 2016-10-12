@@ -13,7 +13,7 @@ namespace PRedesign
         #region Fields
         int tileSize;
         int numTilesAcross;
-        bool centerGridPlane = true;
+        bool centerGridPlane = false;
         bool gridPlaneConstructed = false;
         #endregion
 

@@ -74,7 +74,7 @@ namespace PRedesign
         {
             if (targets != null)
                 if (targets.Count() > 1)
-                    //PathRenderer.RenderPath(targets, Color.White, 0);
+                    DebugDrawer.RenderPath(targets, Color.White);
             base.Draw(gameTime);
         }
 

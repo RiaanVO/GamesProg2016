@@ -79,6 +79,7 @@
     <Compile Include="src\Objects\Player.cs" />
     <Compile Include="src\Objects\Skybox.cs" />
     <Compile Include="src\Objects\Tank.cs" />
+    <Compile Include="src\Objects\Testing\NPCEnemy.cs" />
     <Compile Include="src\Objects\Testing\TetraKey.cs" />
     <Compile Include="src\Objects\Wall.cs" />
     <Compile Include="src\Pathfinding\NavigationMap.cs" />

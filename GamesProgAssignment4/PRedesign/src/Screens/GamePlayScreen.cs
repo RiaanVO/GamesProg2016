@@ -40,6 +40,7 @@ namespace PRedesign
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
             Model tankModel = content.Load<Model>(@"Models/Enemy Model/tank");
             Texture2D crateTexture = content.Load<Texture2D>(@"Textures/blue stripe wall");
+            Model tetraKeyModel = content.Load<Model>(@"Models/TetraKey Model/SplitDiamond");
 
             //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
@@ -87,6 +88,8 @@ namespace PRedesign
             LevelManager.WallTexture = crateTexture;
             LevelManager.CeilingTexture = ceilingTexture;
             LevelManager.LoadLevel(1);
+
+            ObjectManager.addGameObject(new TetraKey(new Vector3(-15f,5f, -15f), tetraKeyModel, camera, player));
 
             Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
             tank.Scale = 0.2f;

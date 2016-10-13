@@ -47,6 +47,7 @@
     <Compile Include="src\Collision\BoxCollider.cs" />
     <Compile Include="src\Collision\Collider.cs" />
     <Compile Include="src\Collision\CollisionManager.cs" />
+    <Compile Include="src\Collision\QuadTree.cs" />
     <Compile Include="src\Collision\SphereCollider.cs" />
     <Compile Include="src\Meta Drawer\ObjectMetaDrawer.cs" />
     <Compile Include="src\LevelManager\Level.cs" />

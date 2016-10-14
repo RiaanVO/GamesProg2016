@@ -12,6 +12,8 @@ namespace PRedesign
     class Player : GameObject
     {
         #region Fields
+        SphereCollider collider;
+
         BasicCamera camera;
 
         Vector3 lookDirection;
@@ -78,6 +80,10 @@ namespace PRedesign
 
             jumpHeight = startPosition.Y;
 
+            collider = new SphereCollider(this, ObjectTag.player, 5.0f);
+            collider.DrawColour = Color.Magenta;
+            CollisionManager.ForceTreeConstruction();
+
             if (game != null)
                 if (game.Window != null)
                     Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
@@ -87,6 +93,16 @@ namespace PRedesign
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
+            collider.updateColliderPos(position);
+
+            foreach (Collider collido in collider.getCollisions())
+            {
+                if (collido.Tag.Equals(ObjectTag.hazard))
+                {
+                    Console.WriteLine("Ow! Spikes!");
+                }
+            }
+
             handleInput();
             handleMovement(gameTime);
 

@@ -16,7 +16,7 @@ namespace PRedesign
         protected Matrix worldMatrix, scaleMatrix, rotationMatrix, translationMatrix;
         protected bool hasLighting = false;
         protected float modelBaseOrientation;
-        protected float scale;
+        protected float scale = 1;
         #endregion
 
         #region Properties
@@ -87,7 +87,7 @@ namespace PRedesign
             this.model = model;
 
             translationMatrix = Matrix.CreateTranslation(position);
-            Scale = 1;
+            scaleMatrix = Matrix.CreateScale(scale);
             modelBaseOrientation = 0;
             rotationMatrix = Matrix.Identity;
             worldMatrix = Matrix.Identity;

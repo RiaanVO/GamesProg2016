@@ -15,86 +15,69 @@ namespace PRedesign
     {
         Player player;
 
-        float rotationalSpeed = 2f;
-
         bool hasBeenCollected;
         //SphereCollider collider;
-        bool keyRelocated = false;
+        //bool keyRelocated = false;
 
         AudioEmitterComponent audioEmitter;
-        private float activateDistance;
 
-        //Split animation variables
+        // animation variables
         private bool isSplit;
-        private float outerDistance = 2f;
-        private float currentDistance = 0f;
-        private float movementSpeed = 0.1f;
-        private Matrix innerRotation;
-        private Matrix outerRotation;
+        private float deltaTime;
+        private float rotationalSpeed = 1f; //speed of rotation
+        private float activateDistance = 35f; //distance between player and object to activate
+        private float outerMaxDistance = 25f; //how far the outer parts can move
+        private float currentDistance; //how far the outers are currently
+        private float outerMovementSpeed = 2f; //how quickly the outer parts move
+        
+        // hover animation variables
+        private float hoverHeight;
+        private float originalYPosition;
+        private float hoverSpeed = 0.8f;
 
         public TetraKey(Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(startPosition, camera, model)
         {
             this.player = player;
             hasBeenCollected = false; //false
             orientation = 0f;
+            scale = 0.03f;
+            scaleMatrix = Matrix.CreateScale(scale);
             //collider = new SphereCollider(game, this, objectTag.pickup, true, false, 6f);
-            scaleMatrix = Matrix.CreateScale(0.5f);
+
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
-            activateDistance = 20f;
 
             //Set up animation variables
             isSplit = false;
+            //scaleMatrix = Matrix.CreateScale(0.05f);
+            currentDistance = 0f;
+            hoverHeight = 0f;
+            originalYPosition = startPosition.Y;
+
+            hasLighting = true;
         }
 
         public override void Update(GameTime gameTime)
         {
-            //temporary work-around to show key has been collected:
-            /*
-            if (collider.collidingWith.Count != 0 && !hasBeenCollected)
-            {
-                foreach (Collider col in collider.collidingWith) {
-                    if(col.tag == objectTag.player)
-                    {
-                        hasBeenCollected = true;
-                        player.setHasKey(hasBeenCollected);
-                        audioEmitter.playSoundEffect("pickup", 0.1f);
-                    }
-                }
-            }
-            */
-
-            //Note: Likely not needed any more as we have an editor?
-            /*
-            KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.K) && !keyRelocated)
-            {
-                position = new Vector3(450, 6f, 340);
-                translationMatrix = Matrix.CreateTranslation(position);
-                collider.updatePos();
-                collider.updateColliderPos();
-                keyRelocated = true;
-            }
-            */
-
             if (!hasBeenCollected)
             {
                 rotateKey(gameTime);
 
                 //Replace with proper state machine behaviour?
-                /*if (Vector3.Distance(this.position, player.Position) < activateDistance)
-                {
-                    splitAnimation();
-                }*/
+                if (Vector3.Distance(this.position, player.Position) < activateDistance)
+                    isSplit = true;
+                else
+                    isSplit = false;
 
+                splitAnimation();
+                hoverAnimation();
                 base.Update(gameTime);
             }
-            //split key?
         }
 
         private void rotateKey(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
+            deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
             
             orientation += rotationalSpeed * deltaTime;
             //resets to zero + overlap
@@ -103,49 +86,62 @@ namespace PRedesign
                 float overlap = orientation - MathHelper.TwoPi;
                 orientation = 0f + overlap;
             }
-
-            //Angle in radians
-            rotationMatrix = Matrix.CreateRotationY(orientation);
-
-            //If not split:
-            //all rotate together (don't have to change anything)
-            
             //Otherwise rotate the outside counterclockwise
             if (isSplit)
             {
-                model.Bones["top_jnt"].Transform *= -outerRotation;
-                model.Bones["bot_jnt"].Transform *= -outerRotation;
+                rotationMatrix = Matrix.CreateRotationY(-orientation);
+                model.Bones["top_geo"].Transform = Matrix.CreateRotationY(orientation * 2);
+                model.Bones["bot_geo"].Transform = Matrix.CreateRotationY(orientation * 2);
+            }
+            else
+            {
+                rotationMatrix = Matrix.CreateRotationY(orientation);
+                model.Bones["top_geo"].Transform = Matrix.CreateRotationY(0f);
+                model.Bones["bot_geo"].Transform = Matrix.CreateRotationY(0f);
             }
         }
 
         private void splitAnimation()
         {
-
-            //Rotates them - doesn't need to now
-            outerRotation = Matrix.CreateRotationY(0.01f);
-            model.Bones["top_jnt"].Transform *= outerRotation;
-            model.Bones["bot_jnt"].Transform *= outerRotation;
-
-            model.Bones["mid_jnt"].Transform *= outerRotation;
-
-            //Moves them outwards
+            //Moves them outwards or inwards
             //Needs to accelerate and decelerate as they go past? or just move it out until it hits the limit
-            if (currentDistance <= outerDistance)
+            if (isSplit && currentDistance <= outerMaxDistance)
             {
-                currentDistance += movementSpeed;
-                model.Bones["top_jnt"].Transform *= Matrix.CreateTranslation(0f, currentDistance, 0f);
-                model.Bones["bot_jnt"].Transform *= Matrix.CreateTranslation(0f, currentDistance, 0f);
+                currentDistance += outerMovementSpeed;
             }
+            if (!isSplit && currentDistance > 0)
+            {
+                currentDistance -= outerMovementSpeed;
+            }
+            //currentDistance += (isSplit ? outerMovementSpeed : -outerMovementSpeed);
+            model.Bones["top_geo"].Transform *= Matrix.CreateTranslation(0f, currentDistance, 0f);
+            model.Bones["bot_geo"].Transform *= Matrix.CreateTranslation(0f, -currentDistance, 0f);
+
+        }
+
+        private void hoverAnimation()
+        {
+            hoverHeight += hoverSpeed * deltaTime;
+            //resets to zero + overlap
+            if (hoverHeight > MathHelper.TwoPi)
+            {
+                float overlap = hoverHeight - MathHelper.TwoPi;
+                hoverHeight = 0f + overlap;
+            }
+
+            position.Y = originalYPosition + (float)Math.Sin(hoverHeight);
         }
 
         public override Matrix GetWorld()
         {
+            translationMatrix = Matrix.CreateTranslation(position);
             return scaleMatrix * rotationMatrix * translationMatrix;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (!hasBeenCollected) base.Draw(gameTime);
+            if (!hasBeenCollected)
+                base.Draw(gameTime);
         }
     }
 }

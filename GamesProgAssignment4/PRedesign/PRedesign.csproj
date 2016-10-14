@@ -81,10 +81,11 @@
     <Compile Include="src\Movement\Steering Behaviors\Kinematic\KinematicSeek.cs" />
     <Compile Include="src\Movement\Steering Behaviors\Kinematic\KinematicWander.cs" />
     <Compile Include="src\Movement\Steering Behaviors\SteeringBehavior.cs" />
-    <Compile Include="src\Objects\NPCTank.cs" />
+    <Compile Include="src\Objects\Deprecated\NPCTank.cs" />
     <Compile Include="src\Objects\Player.cs" />
     <Compile Include="src\Objects\Skybox.cs" />
-    <Compile Include="src\Objects\Tank.cs" />
+    <Compile Include="src\Objects\Deprecated\Tank.cs" />
+    <Compile Include="src\Objects\NPCEnemy.cs" />
     <Compile Include="src\Objects\Testing\TetraKey.cs" />
     <Compile Include="src\Objects\Wall.cs" />
     <Compile Include="src\Pathfinding\NavigationMap.cs" />

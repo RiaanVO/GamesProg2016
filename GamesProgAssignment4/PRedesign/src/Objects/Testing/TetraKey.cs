@@ -69,7 +69,6 @@ namespace PRedesign
                 List<Collider> currentCollisions = collider.getCollisions();
                 if (currentCollisions.Count() > 0)
                 {
-                    LevelManager.ReloadLevel();
                     foreach (Collider col in currentCollisions)
                     {
                         if (col.Tag == ObjectTag.player)

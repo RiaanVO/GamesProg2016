@@ -28,6 +28,7 @@ namespace PRedesign
         public SphereCollider(GameObject gameObject, ObjectTag tag, float radius) : base(gameObject, tag)
         {
             this.radius = radius;
+            collider = new BoundingSphere(position, radius);
         }
 
         public override bool isColliding(Collider otherCollider)
@@ -59,7 +60,8 @@ namespace PRedesign
         /// </summary>
         public override void drawCollider()
         {
-            WireShapeDrawer.AddBoundingSphere(collider, drawColour);
+            if(collider != null)
+                WireShapeDrawer.AddBoundingSphere(collider, drawColour);
         }
         #endregion
     }

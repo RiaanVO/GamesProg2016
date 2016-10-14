@@ -16,7 +16,7 @@ namespace PRedesign
         Player player;
 
         bool hasBeenCollected;
-        //SphereCollider collider;
+        SphereCollider collider;
         //bool keyRelocated = false;
 
         AudioEmitterComponent audioEmitter;
@@ -42,7 +42,11 @@ namespace PRedesign
             orientation = 0f;
             scale = 0.03f;
             scaleMatrix = Matrix.CreateScale(scale);
-            //collider = new SphereCollider(game, this, objectTag.pickup, true, false, 6f);
+
+            collider = new SphereCollider(this, ObjectTag.pickup, 3f);
+            collider.DrawColour = Color.Yellow;
+
+            CollisionManager.ForceTreeConstruction();
 
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));

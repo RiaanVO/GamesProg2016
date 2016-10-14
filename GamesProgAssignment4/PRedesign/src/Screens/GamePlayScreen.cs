@@ -93,7 +93,7 @@ namespace PRedesign
             LevelManager.CeilingTexture = ceilingTexture;
             LevelManager.LoadLevel(1);
 
-            ObjectManager.addGameObject(new TetraKey(new Vector3(-15f,5f, -15f), tetraKeyModel, camera, player));
+            ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), tetraKeyModel, camera, player));
 
             /*Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
             tank.Scale = 0.2f;
@@ -160,6 +160,8 @@ namespace PRedesign
             }
         }
 
+        private BoundingSphere testSphere = new BoundingSphere(Vector3.Zero, 5);
+
         public override void Draw(GameTime gameTime)
         {
             //ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
@@ -170,7 +172,7 @@ namespace PRedesign
             ObjectManager.Draw(gameTime);
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
 
-            CollisionManager.Render(Color.Violet, false, false);
+            CollisionManager.Render(Color.Violet, false, true);
             WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 
             //////////////////////////////////////

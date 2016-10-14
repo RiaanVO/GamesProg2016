@@ -284,9 +284,12 @@ namespace PRedesign
         /// <param name="life">The amount of time, in seconds, to keep rendering the bounding sphere.</param>
         public static void AddBoundingSphere(BoundingSphere sphere, Color color, float life)
         {
+            if (unitSphere == null)
+                InitializeSphere();
+
             // Get a DebugShape we can use to draw the sphere
             DebugShape shape = GetShapeForLines(sphereLineCount, life);
-
+            
             // Iterate our unit sphere vertices
             for (int i = 0; i < unitSphere.Length; i++)
             {

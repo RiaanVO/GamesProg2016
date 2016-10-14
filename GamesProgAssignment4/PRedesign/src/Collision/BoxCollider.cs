@@ -79,5 +79,10 @@ namespace PRedesign
         {
             WireShapeDrawer.AddBoundingBox(collider, drawColour);
         }
+
+        public override List<Collider> getCollisions()
+        {
+            return CollisionManager.GetCollidingWith(this);
+        }
     }
 }

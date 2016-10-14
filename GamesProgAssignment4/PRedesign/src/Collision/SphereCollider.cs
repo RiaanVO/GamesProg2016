@@ -63,6 +63,11 @@ namespace PRedesign
             if(collider != null)
                 WireShapeDrawer.AddBoundingSphere(collider, drawColour);
         }
+
+        public override List<Collider> getCollisions()
+        {
+            return CollisionManager.GetCollidingWith(this);
+        }
         #endregion
     }
 }

@@ -57,6 +57,8 @@ namespace PRedesign
             CollisionManager.addCollider(this);
         }
 
+        public abstract List<Collider> getCollisions();
+
         public abstract bool isColliding(Collider otherCollider);
         public abstract void updateColliderPos(Vector3 newPosition);
         public void Remove() {

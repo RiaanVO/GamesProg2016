@@ -14,6 +14,12 @@ namespace PRedesign
         #region Fields
         SphereCollider collider;
 
+        float invulnerabilitySeconds;
+        float remainingDelay;
+        bool isInvulnerable;
+
+        int health;
+
         BasicCamera camera;
 
         Vector3 lookDirection;
@@ -67,6 +73,12 @@ namespace PRedesign
             get { return game; }
             set { game = value; }
         }
+
+        public float InvulnerabilitySeconds
+        {
+            get { return invulnerabilitySeconds;  }
+            set { invulnerabilitySeconds = value;  }
+        }
         #endregion
 
         #region Initialization
@@ -83,6 +95,12 @@ namespace PRedesign
             collider = new SphereCollider(this, ObjectTag.player, 5.0f);
             collider.DrawColour = Color.Magenta;
             CollisionManager.ForceTreeConstruction();
+  
+            invulnerabilitySeconds = 5;
+            remainingDelay = invulnerabilitySeconds;
+            isInvulnerable = false;
+
+            health = 10;
 
             if (game != null)
                 if (game.Window != null)
@@ -93,23 +111,44 @@ namespace PRedesign
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
-            collider.updateColliderPos(position);
-
-            foreach (Collider collido in collider.getCollisions())
+            if (health > 0)
             {
-                if (collido.Tag.Equals(ObjectTag.hazard))
+                if (isInvulnerable)
                 {
-                    Console.WriteLine("Ow! Spikes!");
+                    var timer = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    remainingDelay -= timer;
+
+                    if (remainingDelay <= 0)
+                    {
+                        isInvulnerable = false;
+                        remainingDelay = 5.0f;
+                    }
                 }
+
+                collider.updateColliderPos(position);
+
+                foreach (Collider collido in collider.getCollisions())
+                {
+                    if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
+                    {
+                        Console.WriteLine("Ow! I recieved the ow factor!");
+                        health--;
+                        isInvulnerable = true;
+                    }
+                }
+
+                handleInput();
+                handleMovement(gameTime);
+
+                handleMouseSelection();
+                camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
+
+                base.Update(gameTime);
             }
-
-            handleInput();
-            handleMovement(gameTime);
-
-            handleMouseSelection();
-            camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
-
-            base.Update(gameTime);
+            else
+            {
+                //GAME OVER, YOU DEAD BOIIIIIIIII
+            }
         }
 
         private void handleInput() {

@@ -94,6 +94,7 @@
     <Compile Include="src\ScreenManager\InputState.cs" />
     <Compile Include="src\ScreenManager\ScreenManager.cs" />
     <Compile Include="src\Screens\BackgroundScreen.cs" />
+    <Compile Include="src\Screens\GameOverScreen.cs" />
     <Compile Include="src\Screens\GamePlayScreen.cs" />
     <Compile Include="src\Screens\LevelEditorScreen.cs" />
     <Compile Include="src\Screens\LoadingScreen.cs" />

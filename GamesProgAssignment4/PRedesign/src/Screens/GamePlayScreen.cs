@@ -46,7 +46,8 @@ namespace PRedesign
             //New models
             Model tetraKeyModel = content.Load<Model>(@"Models/TetraKey Model/SplitDiamond");
             Model tetraEnemyModel = content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed");
-            Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15");
+            Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter");
+				//Music
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
             //Create camera and set up object manager
@@ -97,6 +98,8 @@ namespace PRedesign
             LevelManager.LoadLevel(1);
 
             ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), tetraKeyModel, camera, player));
+
+            ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), spikesModel));
 
             /*Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
             tank.Scale = 0.2f;

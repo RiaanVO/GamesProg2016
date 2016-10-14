@@ -42,7 +42,7 @@ namespace PRedesign
             Texture2D crateTexture = content.Load<Texture2D>(@"Textures/blue stripe wall");
             //New models
             Model tetraKeyModel = content.Load<Model>(@"Models/TetraKey Model/SplitDiamond");
-            Model tetraEnemyModel = content.Load<Model>(@"Models/Enemy Model/TetraEnemyRedv2");
+            Model tetraEnemyModel = content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed");
             Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15");
 
             //Create camera and set up object manager
@@ -98,10 +98,10 @@ namespace PRedesign
             tank.Scale = 0.2f;
             player.Tank = tank;*/
 
-            NPCEnemy npc = new NPCEnemy(new Vector3(8, 5, 8), tankModel, player);
-            npc.Scale = 0.02f;
-            npc.HasLighting = true;
-            npc.PatrolPoints = new Vector3[] {
+            NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 5, 20), tetraEnemyModel, player);
+            Enemy.Scale = 0.08f;
+            Enemy.HasLighting = true;
+            Enemy.PatrolPoints = new Vector3[] {
                 new Vector3(8, 5, 13),
                 new Vector3(8, 5, 48),
                 new Vector3(33, 5, 48),

@@ -19,6 +19,7 @@ namespace PRedesign
         public bool InClosedList;
         public float DistanceToGoal;
         public float DistanceTraveled;
+        public BoundingBox nodeRegion;
     }
 
     static class NavigationMap
@@ -34,6 +35,7 @@ namespace PRedesign
         private static List<SearchNode> openList = new List<SearchNode>();
         private static List<SearchNode> closedList = new List<SearchNode>();
         private static List<VertexPositionColor> verts = new List<VertexPositionColor>();
+        private const float regionScale = 0.9f;
         #endregion
 
         #region Initialization
@@ -53,13 +55,15 @@ namespace PRedesign
                 return;
             //Create the search nodes
             searchNodes = new SearchNode[numNodesWidth, numNodesHeight];
-
+            Vector3 nodeRegionOffset = new Vector3(nodeWidth * regionScale, nodeWidth * regionScale, nodeWidth * regionScale);
             for (int x = 0; x < numNodesWidth; x ++) {
                 for (int y = 0; y < numNodesHeight; y ++) {
                     SearchNode node = new SearchNode();
                     node.Position = new Vector2(halfNodeWidth + x * nodeWidth, halfNodeWidth + y * nodeWidth);
                     node.Obstructed = false;
                     node.Neighbours = new SearchNode[4];
+                    Vector3 nodeCenter = new Vector3(node.Position.X, 0, node.Position.Y);
+                    node.nodeRegion = new BoundingBox(nodeCenter - nodeRegionOffset, nodeCenter + nodeRegionOffset);
                     searchNodes[x, y] = node;
                 }
             }
@@ -169,6 +173,20 @@ namespace PRedesign
             SearchNode node = positionToSearchNode(position);
             if (node != null)
                 node.Obstructed = isObstructed;
+        }
+
+        /// <summary>
+        /// Do not use. Unless apsolutly nessasary. Very inefficant.
+        /// </summary>
+        /// <param name="obstructedRegion"></param>
+        /// <param name="isObstructed"></param>
+        //public static void setSearchNodeObstructed(BoundingBox obstructedRegion, bool isObstructed) { }
+
+        public static bool isPositionObstructed(Vector3 position) {
+            SearchNode node = positionToSearchNode(position);
+            if (node == null)
+                return true;
+            return node.Obstructed;
         }
 
         public static List<VertexPositionColor> getNodesVerts() {

@@ -13,6 +13,11 @@ namespace PRedesign
     {
         #region Fields
         SphereCollider collider;
+        Vector3 colliderPositionOffset = new Vector3(0, 5, 0);
+        float colliderRadius = 1f;
+        SphereMovementChecker movementCollider;
+        List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
+
 
         BasicCamera camera;
 
@@ -42,28 +47,34 @@ namespace PRedesign
         float fallRate = 200f; // Is gravity, is good
 
 
+
+
         /// <summary>
         /// For lab task
         /// </summary>
         Tank tank;
-        public Tank Tank {
+        public Tank Tank
+        {
             get { return tank; }
             set { tank = value; }
         }
         #endregion
 
         #region Properties
-        public BasicCamera Camera {
+        public BasicCamera Camera
+        {
             get { return camera; }
             set { camera = value; }
         }
 
-        public Vector3 HeadHeightOffset {
+        public Vector3 HeadHeightOffset
+        {
             get { return headHeightOffset; }
             set { headHeightOffset = value; }
         }
 
-        public Game Game {
+        public Game Game
+        {
             get { return game; }
             set { game = value; }
         }
@@ -80,8 +91,10 @@ namespace PRedesign
 
             jumpHeight = startPosition.Y;
 
-            collider = new SphereCollider(this, ObjectTag.player, 5.0f);
+            collider = new SphereCollider(this, ObjectTag.player, colliderRadius);
+            collider.PositionOffset = colliderPositionOffset;
             collider.DrawColour = Color.Magenta;
+            movementCollider = new SphereMovementChecker(collider, tagsToCheck);
             CollisionManager.ForceTreeConstruction();
 
             if (game != null)
@@ -112,7 +125,8 @@ namespace PRedesign
             base.Update(gameTime);
         }
 
-        private void handleInput() {
+        private void handleInput()
+        {
             //Get the states of the keyboard and mouse
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();
@@ -120,7 +134,7 @@ namespace PRedesign
             //Resets the movement direction to zero, then checks which keys are pressed to create a new movement direction.
             if (lookDirection != Vector3.Zero)
                 lookDirection.Normalize();
-            
+
             //Sets the yaw rotation of the cameras' look direction
             lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X)));
 
@@ -148,7 +162,7 @@ namespace PRedesign
 
             //Resets the mouses position to the center of the screen, also resets the prevouse mouse state so the camera wont jump around
             if (game != null)
-                if(game.Window != null)
+                if (game.Window != null)
                     Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
         }
@@ -204,11 +218,23 @@ namespace PRedesign
                 grounded = true;
                 position = new Vector3(position.X, jumpHeight, position.Z);
             }
-            
+
             //Colision code goes here
+            checkMovementCollisions(deltaTime);
 
             position += velocity * deltaTime;
 
+        }
+
+        private void checkMovementCollisions(float deltaTime)
+        {
+            //Check movement directions
+            if (!movementCollider.canMoveX(position, velocity * deltaTime))
+                velocity.X = -Velocity.X * deltaTime;
+            //if (!movementCollider.canMoveY(position, velocity * deltaTime))
+              //velocity.Y = 0;
+            if (!movementCollider.canMoveZ(position, velocity * deltaTime))
+                velocity.Z = -Velocity.Z * deltaTime;
         }
         #endregion
 

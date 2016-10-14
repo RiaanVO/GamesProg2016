@@ -17,13 +17,21 @@ namespace PRedesign
         float maxSpeed;
         float dragPercentage;
 
-        FollowPath pathSteering;
 
+        //Steering Behaviours and fields
+        FollowPath pathSteering;
         Vector3 currentTarget;
         Vector3[] pathPoints;
 
         Player player;
-        
+
+        //Collision
+        SphereCollider collider;
+        float colliderRadius = 4.5f;
+        SphereMovementChecker movementCollider;
+        List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle, ObjectTag.player};
+
+        //AI FSM fields
         AiFSM brain;
         Vector3[] patrolPoints;
         int patrolIndex = 0;
@@ -128,6 +136,10 @@ namespace PRedesign
                 brain.addState(SeekState);
                 brain.addState(IdleState);
             }
+
+            collider = new SphereCollider(this, ObjectTag.enemy, colliderRadius);
+            collider.PositionOffset = new Vector3(0, -1.5f, 0);
+            movementCollider = new SphereMovementChecker(collider, tagsToCheck);
         }
         #endregion
 
@@ -136,13 +148,7 @@ namespace PRedesign
         {
             previousState = brain.CurrentState;
             brain.update(gameTime);
-            /*
-            switch (brain.CurrentState) {
-                case "PATROL": updatePatrol(gameTime); break;
-                case "SEEK": updateSeek(gameTime); break;
-                case "IDLE": updateIdle(gameTime); break;
-            }*/
-
+            
             //Animation
             deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
             animateRotation(gameTime);
@@ -177,55 +183,7 @@ namespace PRedesign
 
         #region Helper Methods
 
-        /// <summary>
-        /// Updates the patroling behaviour
-        /// </summary>
-        /// <param name="deltaTime"></param>
-        private void updatePatrol(GameTime gameTime) {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!previousState.Equals(brain.CurrentState))
-            {
-                CurrentTarget = patrolPoints[patrolIndex];
-            }
-
-            if (Vector3.Distance(position, patrolPoints[patrolIndex]) < patrolChangeRadius){
-                patrolIndex++;
-                if (patrolIndex >= patrolPoints.Count())
-                    patrolIndex = 0;
-                CurrentTarget = patrolPoints[patrolIndex];
-            }
-
-            if (pathSteering != null)
-            {
-                update(pathSteering.getSteering(), deltaTime);
-            }
-        }
-
-        /// <summary>
-        /// Gets the players position and navigates to it
-        /// </summary>
-        /// <param name="deltaTime"></param>
-        private void updateSeek(GameTime gameTime) {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (CurrentTarget != player.Position)
-                CurrentTarget = player.Position;
-            if (pathSteering != null)
-            {
-                update(pathSteering.getSteering(), deltaTime);
-            }
-        }
-
-        /// <summary>
-        /// Increments the idle timer
-        /// </summary>
-        /// <param name="deltaTime"></param>
-        private void updateIdle(GameTime gameTime) {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!previousState.Equals(brain.CurrentState)) {
-                currentIdleTime = 0;
-            }
-            currentIdleTime += deltaTime;
-        }
+        
 
         public void update(SteeringOutput steering, float deltaTime)
         {
@@ -236,8 +194,13 @@ namespace PRedesign
             else
             {
                 velocity *= 1 - dragPercentage * dragPercentage;
+
+                checkMovementCollisions(deltaTime);
+                velocity.Y = 0;
+
                 //Update position and rotation
                 position += velocity * deltaTime;
+                collider.updateColliderPos(position);
                 orientation += rotation * deltaTime;
 
                 //Update the velocity and rotation
@@ -252,12 +215,21 @@ namespace PRedesign
             translationMatrix = Matrix.CreateTranslation(position);
         }
 
+        private void checkMovementCollisions(float deltaTime)
+        {
+            //Check movement directions
+            if (!movementCollider.canMoveX(position, velocity * deltaTime))
+                velocity.X = 0;
+            //if (!movementCollider.canMoveY(position, velocity * deltaTime))
+              //  velocity.Y = 0;
+            if (!movementCollider.canMoveZ(position, velocity * deltaTime))
+                velocity.Z = 0;
+        }
+
 
         #endregion
 
         #region FSM Construction
-
-
 
         /// <summary>
         /// Used to translate the function name into an actual function
@@ -299,6 +271,68 @@ namespace PRedesign
 
         public bool playerFar() {
             return Vector3.Distance(position, player.Position) > playerFarDistance;
+        }
+        #endregion
+
+        #region FSM update functions
+        /// <summary>
+        /// Updates the patroling behaviour
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        private void updatePatrol(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (!previousState.Equals(brain.CurrentState))
+            {
+                
+                CurrentTarget = patrolPoints[patrolIndex];
+            }
+
+            if (NavigationMap.isPositionObstructed(patrolPoints[patrolIndex]))
+                patrolIndex++;
+
+            if (Vector3.Distance(position, patrolPoints[patrolIndex]) < patrolChangeRadius)
+            {
+                patrolIndex++;
+                if (patrolIndex >= patrolPoints.Count())
+                    patrolIndex = 0;
+                CurrentTarget = patrolPoints[patrolIndex];
+            }
+            
+            if (pathSteering != null)
+            {
+                update(pathSteering.getSteering(), deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets the players position and navigates to it
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        private void updateSeek(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (CurrentTarget != player.Position)
+                CurrentTarget = player.Position;
+            if (pathSteering != null)
+            {
+                update(pathSteering.getSteering(), deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Increments the idle timer
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        private void updateIdle(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (!previousState.Equals(brain.CurrentState))
+            {
+                currentIdleTime = 0;
+            }
+            currentIdleTime += deltaTime;
         }
         #endregion
     }

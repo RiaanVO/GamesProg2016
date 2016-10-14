@@ -19,6 +19,7 @@ namespace PRedesign
             collider = new BoxCollider(this, ObjectTag.hazard, new Vector3(15, 3, 15));
             collider.DrawColour = Color.Blue;
             CollisionManager.ForceTreeConstruction();
+            hasLighting = true;
         }
 
         public override void Update(GameTime gameTime)

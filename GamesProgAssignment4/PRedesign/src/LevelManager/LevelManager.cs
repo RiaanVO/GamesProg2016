@@ -119,6 +119,9 @@ namespace PRedesign {
                 //AudioManager.clearAll();
                 NavigationMap.CreateNavigationMap(currentLevel.Data.GetLength(1) * TILE_SIZE, currentLevel.Data.GetLength(0) * TILE_SIZE, TILE_SIZE);
 
+                //Temporary - call GamePlayScreen to reload
+                
+
                 //Construct the objects for the level
                 LoadLevelData();
             }

@@ -143,6 +143,10 @@ namespace PRedesign
 
                 foreach (Collider collido in collider.getCollisions())
                 {
+                    if (collido.Tag == ObjectTag.pickup)
+                    {
+
+                    }
                     if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
                     {
                         Console.WriteLine("Ow! I recieved the ow factor!");

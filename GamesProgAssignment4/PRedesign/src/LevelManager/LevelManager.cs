@@ -37,6 +37,7 @@ namespace PRedesign {
         // Current level data
         private static Level currentLevel;
         private static bool isLevelLoaded = false;
+        private static BoundingBox levelEnclosure;
         #endregion
 
         #region Properties
@@ -63,12 +64,22 @@ namespace PRedesign {
             get { return TILE_SIZE; }
         }
 
+
         public static Model EnemyModel {
             set { enemyModel = value; }
         }
 
         public static Player Player {
             set { player = value; }
+        }
+
+        public static BoundingBox LevelEnclosure {
+            get {
+                if (levelEnclosure == null)
+                    levelEnclosure = new BoundingBox(Vector3.Zero, Vector3.Zero);
+                return levelEnclosure;
+            }
+
         }
         #endregion
 
@@ -133,9 +144,19 @@ namespace PRedesign {
                 //AudioManager.clearAll();
                 NavigationMap.CreateNavigationMap(currentLevel.Data.GetLength(1) * TILE_SIZE, currentLevel.Data.GetLength(0) * TILE_SIZE, TILE_SIZE);
 
+                //Temporary - call GamePlayScreen to reload
+                
+
                 //Construct the objects for the level
                 LoadLevelData();
             }
+        }
+
+
+        public static void ReloadLevel()
+        {
+            UnloadLevel();
+            LoadLevel(currentLevel.Id);
         }
 
         /// <summary>
@@ -158,6 +179,12 @@ namespace PRedesign {
         /// Parses the data from the selected level and populates the level with objects
         /// </summary>
         private static void LoadLevelData() {
+            int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
+            int currentLevelHeight = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
+            int largestDimension = (currentLevelWidth > currentLevelHeight) ? currentLevelWidth : currentLevelHeight;
+            int heightScale = 3;
+            levelEnclosure = new BoundingBox(new Vector3(-TILE_SIZE, -TILE_SIZE * heightScale, -TILE_SIZE), new Vector3(largestDimension + TILE_SIZE, TILE_SIZE * heightScale, largestDimension + TILE_SIZE));
+
             for (int i = 0; i <= currentLevel.Data.GetUpperBound(0); i++) {
                 for (int j = 0; j <= currentLevel.Data.GetUpperBound(1); j++) {
                     switch (currentLevel.Data[j, i]) {
@@ -167,15 +194,16 @@ namespace PRedesign {
                             ObjectManager.addGameObject(new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), wallTexture, TILE_SIZE));
                             break;
                         case TILE_PATH:
-                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, 0, (float)(TILE_SIZE * i) / 2), groundTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2f, 0, (float)(TILE_SIZE * i) / 2f), groundTexture, TILE_SIZE, 1));
                             ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
+
                             break;
                     }
                 }
             }
 
             foreach (Enemy enemy in currentLevel.Enemies) {
-                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize, 0, enemy.Y * TileSize), enemyModel, player);
+                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), enemyModel, player);
                 newEnemy.Scale = 0.08f;
                 newEnemy.HasLighting = true;
                 Vector3[] patrolPoints = new Vector3[enemy.PatrolPoints.Count];
@@ -185,6 +213,9 @@ namespace PRedesign {
                 newEnemy.PatrolPoints = patrolPoints;
                 ObjectManager.addGameObject(newEnemy);                
             }
+
+            CollisionManager.ForceTreeConstruction();
+
             isLevelLoaded = true;
         }
 
@@ -194,6 +225,7 @@ namespace PRedesign {
         private static void UnloadLevel() {
             ObjectManager.clearAll();
             AudioManager.clearAll();
+            CollisionManager.clearAll();
             isLevelLoaded = false;
         }
         #endregion

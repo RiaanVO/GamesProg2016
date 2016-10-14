@@ -432,13 +432,6 @@ namespace PRedesign {
             enemyList = new List<EditorEnemy>();
         }
 
-        private static void UnloadEditor() {
-            UnloadLevelGrid();
-            levelSelectbuttons.Clear();
-            enemySelectButtons.Clear();
-            editorButtons.Clear();
-        }
-
         #endregion
 
         #region Level and Enemy Selection Methods
@@ -626,7 +619,7 @@ namespace PRedesign {
         }
 
         private static void QuitEditorMessageBoxAccepted(object sender, EventArgs e) {
-            UnloadEditor();
+            UnloadLevelGrid();
             LoadingScreen.Load(screenReference.ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
         }
 

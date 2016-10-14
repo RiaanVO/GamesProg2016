@@ -6,12 +6,27 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace PRedesign
 {
     class Player : GameObject
     {
         #region Fields
+        SphereCollider collider;
+        Vector3 colliderPositionOffset = new Vector3(0, 5, 0);
+        float colliderRadius = 1f;
+        SphereMovementChecker movementCollider;
+        List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
+
+
+        float invulnerabilitySeconds;
+        float remainingDelay;
+        bool isInvulnerable;
+
+        int health;
+
         BasicCamera camera;
 
         Vector3 lookDirection;
@@ -39,31 +54,49 @@ namespace PRedesign
         float jumpHeight; //The height which the player falls back to after jumping (instead of zero)
         float fallRate = 200f; // Is gravity, is good
 
+        //Audio Components
+        AudioListenerComponent audioListenerComponent;
+        AudioEmitterComponent audioEmitterComponent;
+
+        //Gameplay Variables
+        public bool hasKey = false;
+
+
 
         /// <summary>
         /// For lab task
         /// </summary>
         Tank tank;
-        public Tank Tank {
+        public Tank Tank
+        {
             get { return tank; }
             set { tank = value; }
         }
         #endregion
 
         #region Properties
-        public BasicCamera Camera {
+        public BasicCamera Camera
+        {
             get { return camera; }
             set { camera = value; }
         }
 
-        public Vector3 HeadHeightOffset {
+        public Vector3 HeadHeightOffset
+        {
             get { return headHeightOffset; }
             set { headHeightOffset = value; }
         }
 
-        public Game Game {
+        public Game Game
+        {
             get { return game; }
             set { game = value; }
+        }
+
+        public float InvulnerabilitySeconds
+        {
+            get { return invulnerabilitySeconds;  }
+            set { invulnerabilitySeconds = value;  }
         }
         #endregion
 
@@ -78,25 +111,79 @@ namespace PRedesign
 
             jumpHeight = startPosition.Y;
 
+            collider = new SphereCollider(this, ObjectTag.player, colliderRadius);
+            collider.PositionOffset = colliderPositionOffset;
+            collider.DrawColour = Color.Magenta;
+            movementCollider = new SphereMovementChecker(collider, tagsToCheck);
+            CollisionManager.ForceTreeConstruction();
+  
+            invulnerabilitySeconds = 5;
+            remainingDelay = invulnerabilitySeconds;
+            isInvulnerable = false;
+
+            health = 10;
+
             if (game != null)
                 if (game.Window != null)
                     Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
+
+            //Audio
+            audioListenerComponent = new AudioListenerComponent(this);
+            audioEmitterComponent = new AudioEmitterComponent(this);
+            //audioEmitterComponent.createSoundEffectInstance("bgMusic", game.Content.Load<SoundEffect>(@"Sounds/Music/The Lift"), false, true, true, 1f);
+            
         }
         #endregion
 
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
-            handleInput();
-            handleMovement(gameTime);
+            if (health > 0)
+            {
+                if (isInvulnerable)
+                {
+                    var timer = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    remainingDelay -= timer;
 
-            handleMouseSelection();
-            camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
+                    if (remainingDelay <= 0)
+                    {
+                        isInvulnerable = false;
+                        remainingDelay = 5.0f;
+                    }
+                }
 
-            base.Update(gameTime);
+                collider.updateColliderPos(position);
+
+                foreach (Collider collido in collider.getCollisions())
+                {
+                    if (collido.Tag == ObjectTag.pickup)
+                    {
+
+                    }
+                    if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
+                    {
+                        Console.WriteLine("Ow! I recieved the ow factor!");
+                        health--;
+                        isInvulnerable = true;
+                    }
+                }
+
+                handleInput();
+                handleMovement(gameTime);
+
+                handleMouseSelection();
+                camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
+
+                base.Update(gameTime);
+            }
+            else
+            {
+                //GAME OVER, YOU DEAD BOIIIIIIIII
+            }
         }
 
-        private void handleInput() {
+        private void handleInput()
+        {
             //Get the states of the keyboard and mouse
             MouseState mouseState = Mouse.GetState();
             KeyboardState keyboardState = Keyboard.GetState();
@@ -104,7 +191,7 @@ namespace PRedesign
             //Resets the movement direction to zero, then checks which keys are pressed to create a new movement direction.
             if (lookDirection != Vector3.Zero)
                 lookDirection.Normalize();
-            
+
             //Sets the yaw rotation of the cameras' look direction
             lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X)));
 
@@ -132,7 +219,7 @@ namespace PRedesign
 
             //Resets the mouses position to the center of the screen, also resets the prevouse mouse state so the camera wont jump around
             if (game != null)
-                if(game.Window != null)
+                if (game.Window != null)
                     Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
             prevMouseState = Mouse.GetState();
         }
@@ -188,11 +275,23 @@ namespace PRedesign
                 grounded = true;
                 position = new Vector3(position.X, jumpHeight, position.Z);
             }
-            
+
             //Colision code goes here
+            checkMovementCollisions(deltaTime);
 
             position += velocity * deltaTime;
 
+        }
+
+        private void checkMovementCollisions(float deltaTime)
+        {
+            //Check movement directions
+            if (!movementCollider.canMoveX(position, velocity * deltaTime))
+                velocity.X = -Velocity.X * deltaTime;
+            //if (!movementCollider.canMoveY(position, velocity * deltaTime))
+              //velocity.Y = 0;
+            if (!movementCollider.canMoveZ(position, velocity * deltaTime))
+                velocity.Z = -Velocity.Z * deltaTime;
         }
         #endregion
 

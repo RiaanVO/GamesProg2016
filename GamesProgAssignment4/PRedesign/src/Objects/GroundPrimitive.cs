@@ -15,6 +15,7 @@ namespace PRedesign
         int numTilesAcross;
         bool centerGridPlane = false;
         bool gridPlaneConstructed = false;
+        BoxCollider collider;
         #endregion
 
         #region Properties
@@ -63,6 +64,8 @@ namespace PRedesign
         public GroundPrimitive(Vector3 startPosition, Texture2D texture, int tileSize, int numTilesAcross) : base(startPosition, ObjectManager.Camera, ObjectManager.GraphicsDevice, texture) {
             this.tileSize = tileSize;
             this.numTilesAcross = numTilesAcross;
+            
+            //setupCollider();
         }
 
         /// <summary>
@@ -79,6 +82,14 @@ namespace PRedesign
         {
             this.tileSize = tileSize;
             this.numTilesAcross = numTilesAcross;
+            //setupCollider();
+        }
+
+        private void setupCollider() {
+            collider = new BoxCollider(this, ObjectTag.floor, new Vector3(tileSize, 1, tileSize));
+            collider.DrawColour = Color.LightCyan;
+            collider.PositionOffset = new Vector3(0, -1, 0);
+            collider.updateColliderPos(position * 2);
         }
         #endregion
 
@@ -131,7 +142,7 @@ namespace PRedesign
             }
 
             if (centerGridPlane)
-                TranslationMatrix = Matrix.CreateTranslation(position - new Vector3(TotalSize / 2, 0, TotalSize / 2));
+                TranslationMatrix = Matrix.CreateTranslation(position - new Vector3(TotalSize / 2f, 0, TotalSize / 2f));
             else
                 TranslationMatrix = Matrix.CreateTranslation(position);
 

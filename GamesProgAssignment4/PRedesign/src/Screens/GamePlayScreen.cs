@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace PRedesign
 {
@@ -20,7 +22,8 @@ namespace PRedesign
         #endregion
 
         #region initialization
-        public GamePlayScreen() {
+        public GamePlayScreen()
+        {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
@@ -43,8 +46,10 @@ namespace PRedesign
             //New models
             Model tetraKeyModel = content.Load<Model>(@"Models/TetraKey Model/SplitDiamond");
             Model tetraEnemyModel = content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed");
-            Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15");
-
+            Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter");
+				//Music
+            Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
+            MediaPlayer.Play(bgMusic);
             //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;
@@ -82,7 +87,7 @@ namespace PRedesign
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
             */
-            Player player = new Player(new Vector3(-5,3.5f,-5));
+            Player player = new Player(new Vector3(20, 3.5f, 20));
 
             Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
@@ -94,13 +99,15 @@ namespace PRedesign
             LevelManager.Player = player;
             LevelManager.LoadLevel(1);
 
-            ObjectManager.addGameObject(new TetraKey(new Vector3(-15f,5f, -15f), tetraKeyModel, camera, player));
+            ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), tetraKeyModel, camera, player));
+
+            ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), spikesModel));
 
             /*Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
             tank.Scale = 0.2f;
             player.Tank = tank;*/
 
-            NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 5, 20), tetraEnemyModel, player);
+            NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 6, 20), tetraEnemyModel, player);
             Enemy.Scale = 0.08f;
             Enemy.HasLighting = true;
             Enemy.PatrolPoints = new Vector3[] {
@@ -151,7 +158,8 @@ namespace PRedesign
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 
             //Place update logic here so that the game will only update when it is active
-            if (IsActive) {
+            if (IsActive)
+            {
                 //Stuff
 
                 ObjectManager.Update(gameTime);
@@ -160,16 +168,21 @@ namespace PRedesign
             }
         }
 
+        private BoundingSphere testSphere = new BoundingSphere(Vector3.Zero, 5);
+
         public override void Draw(GameTime gameTime)
         {
             //ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
             //Place draw logic here for game play
 
             ObjectManager.Draw(gameTime);
+
+
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
+            CollisionManager.Render(Color.Violet, false, true);
+            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 
             //////////////////////////////////////
 
@@ -177,7 +190,6 @@ namespace PRedesign
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {
                 float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
-
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
         }

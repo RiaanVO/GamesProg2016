@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace PRedesign
 {
@@ -91,7 +93,8 @@ namespace PRedesign
             //Audio
             audioListenerComponent = new AudioListenerComponent(this);
             audioEmitterComponent = new AudioEmitterComponent(this);
-            audioEmitterComponent.createSoundEffectInstance("footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"), false, true, false, 0.3f);
+            //audioEmitterComponent.createSoundEffectInstance("bgMusic", game.Content.Load<SoundEffect>(@"Sounds/Music/The Lift"), false, true, true, 1f);
+            
         }
         #endregion
 

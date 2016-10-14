@@ -71,9 +71,13 @@ namespace PRedesign
             collider = new BoundingBox(minPoint, maxPoint);
         }
 
+        
+
+        
+
         public override void drawCollider()
         {
-            //throw new NotImplementedException();
+            WireShapeDrawer.AddBoundingBox(collider, drawColour);
         }
     }
 }

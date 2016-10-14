@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace PRedesign.src.Meta_Drawer
+namespace PRedesign
 {
     /// <summary>
     /// A system for handling rendering of various debug shapes.
@@ -27,7 +27,7 @@ namespace PRedesign.src.Meta_Drawer
     /// many lines in one call to DrawUserPrimitives as possible. If the renderer is trying to draw
     /// more lines than are allowed in the Reach profile, it will break them up into multiple draw
     /// calls to make sure the game continues to work for any game.</remarks>
-    public static class WireShapeDrawer
+     static class WireShapeDrawer
     {
         // A single shape in our debug renderer
         class DebugShape
@@ -67,6 +67,8 @@ namespace PRedesign.src.Meta_Drawer
         private const int sphereLineCount = (sphereResolution + 1) * 3;
         private static Vector3[] unitSphere;
 
+        private static bool isInitalized = false;
+
         /// <summary>
         /// Initializes the renderer.
         /// </summary>
@@ -89,6 +91,7 @@ namespace PRedesign.src.Meta_Drawer
 
             // Create our unit sphere vertices
             InitializeSphere();
+            isInitalized = true;
         }
 
         /// <summary>
@@ -304,6 +307,12 @@ namespace PRedesign.src.Meta_Drawer
         public static void Draw(GameTime gameTime, Matrix view, Matrix projection)
         {
             // Update our effect with the matrices.
+            if (view == null || projection == null)
+                return;
+            if (ObjectManager.GraphicsDevice == null)
+                return;
+            if (!isInitalized)
+                Initialize(ObjectManager.GraphicsDevice);
             effect.View = view;
             effect.Projection = projection;
 

@@ -20,7 +20,8 @@ namespace PRedesign
         #endregion
 
         #region initialization
-        public GamePlayScreen() {
+        public GamePlayScreen()
+        {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
@@ -78,7 +79,7 @@ namespace PRedesign
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
             */
-            Player player = new Player(new Vector3(-5,3.5f,-5));
+            Player player = new Player(new Vector3(-5, 3.5f, -5));
 
             Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
@@ -142,7 +143,8 @@ namespace PRedesign
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 
             //Place update logic here so that the game will only update when it is active
-            if (IsActive) {
+            if (IsActive)
+            {
                 //Stuff
 
                 ObjectManager.Update(gameTime);
@@ -156,11 +158,13 @@ namespace PRedesign
             //ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
             //Place draw logic here for game play
 
             ObjectManager.Draw(gameTime);
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
+
+            CollisionManager.Render(Color.Violet, false, false);
+            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 
             //////////////////////////////////////
 
@@ -168,7 +172,6 @@ namespace PRedesign
             if (TransitionPosition > 0 || pauseAlpha > 0)
             {
                 float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
-
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
         }

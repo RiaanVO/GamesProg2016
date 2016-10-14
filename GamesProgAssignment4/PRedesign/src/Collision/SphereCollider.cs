@@ -59,7 +59,7 @@ namespace PRedesign
         /// </summary>
         public override void drawCollider()
         {
-            //ObjectMetaDrawer.RenderBoundingSphere(collider, drawColour);
+            WireShapeDrawer.AddBoundingSphere(collider, drawColour);
         }
         #endregion
     }

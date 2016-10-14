@@ -54,10 +54,14 @@ namespace PRedesign
             this.gameObject = gameObject;
             position = gameObject.Position;
             this.tag = tag;
+            CollisionManager.addCollider(this);
         }
 
         public abstract bool isColliding(Collider otherCollider);
         public abstract void updateColliderPos(Vector3 newPosition);
+        public void Remove() {
+            CollisionManager.removeCollider(this);
+        }
         public abstract void drawCollider();
     }
 }

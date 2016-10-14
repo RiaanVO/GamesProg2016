@@ -10,7 +10,9 @@ namespace PRedesign
 {
     class Wall :  CubePrimitive
     {
+        private BoxCollider collider;
         public Wall(Vector3 startPosition, Texture2D texture, float size) : base(startPosition, texture, size) {
+            collider = new BoxCollider(this, ObjectTag.wall, new Vector3(Size, Size, Size));
             NavigationMap.setSearchNodeObstructed(centeredPosition, true);
         }
     }

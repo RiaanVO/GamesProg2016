@@ -123,8 +123,23 @@ namespace PRedesign
             {
                 if (m_childNode != null)
                     foreach (QuadTree childNode in m_childNode)
-                        childNode.Remove(collider);
+                        if (childNode != null)
+                            childNode.Remove(collider);
             }
+        }
+
+        public void RemoveAll()
+        {
+            foreach (QuadTree childNode in m_childNode)
+            {
+                if (childNode != null)
+                    RemoveAll();
+            }
+            m_objects.Clear();
+            m_childNode = null;
+            _parent = null;
+            m_treeBuilt = false;
+            m_treeReady = false;
         }
 
         /// <summary>
@@ -154,7 +169,7 @@ namespace PRedesign
 
             //Find or create subdivided regions for each octant in the current region
             BoundingBox[] childQuadrant = new BoundingBox[4];
-            childQuadrant[0] = (m_childNode[0] != null) ? m_childNode[0].m_region : new BoundingBox(m_region.Min, center);
+            childQuadrant[0] = (m_childNode[0] != null) ? m_childNode[0].m_region : new BoundingBox(m_region.Min, new Vector3(center.X, m_region.Max.Y, center.Z));
             childQuadrant[1] = (m_childNode[1] != null) ? m_childNode[1].m_region : new BoundingBox(new Vector3(center.X, m_region.Min.Y, m_region.Min.Z), new Vector3(m_region.Max.X, m_region.Max.Y, center.Z));
             childQuadrant[2] = (m_childNode[2] != null) ? m_childNode[2].m_region : new BoundingBox(new Vector3(m_region.Min.X, m_region.Min.Y, center.Z), new Vector3(center.X, m_region.Max.Y, m_region.Max.Z));
             childQuadrant[3] = (m_childNode[3] != null) ? m_childNode[3].m_region : new BoundingBox(new Vector3(center.X, m_region.Min.Y, center.Z), m_region.Max);
@@ -246,7 +261,7 @@ namespace PRedesign
 
             //Create subdivided regions for each octant
             BoundingBox[] quadrant = new BoundingBox[4];
-            quadrant[0] = new BoundingBox(m_region.Min, center);
+            quadrant[0] = new BoundingBox(m_region.Min, new Vector3(center.X, m_region.Max.Y, center.Z));
             quadrant[1] = new BoundingBox(new Vector3(center.X, m_region.Min.Y, m_region.Min.Z), new Vector3(m_region.Max.X, m_region.Max.Y, center.Z));
             quadrant[2] = new BoundingBox(new Vector3(m_region.Min.X, m_region.Min.Y, center.Z), new Vector3(center.X, m_region.Max.Y, m_region.Max.Z));
             quadrant[3] = new BoundingBox(new Vector3(center.X, m_region.Min.Y, center.Z), m_region.Max);
@@ -332,7 +347,7 @@ namespace PRedesign
         /// Processes all pending insertions by inserting them into the tree.
         /// </summary>
         /// <remarks>Consider deprecating this?</remarks>
-        private void UpdateTree()   //complete & tested
+        public void UpdateTree()   //complete & tested
         {
             /*I think I can just directly insert items into the tree instead of using a queue.*/
             if (!m_treeBuilt)
@@ -353,13 +368,16 @@ namespace PRedesign
             m_treeReady = true;
         }
 
-        public List<Collider> collidingWith(Collider collider) {
+        public List<Collider> collidingWith(Collider collider)
+        {
             if (!m_treeReady)
                 UpdateTree();
 
             List<Collider> collidingWith = new List<Collider>();
-            foreach (Collider otherCollider in m_objects) {
-                if (collider != otherCollider) {
+            foreach (Collider otherCollider in m_objects)
+            {
+                if (collider != otherCollider)
+                {
                     if (collider.isColliding(otherCollider))
                         collidingWith.Add(otherCollider);
                 }
@@ -367,14 +385,16 @@ namespace PRedesign
 
             if (m_childNode != null)
                 foreach (QuadTree childNode in m_childNode)
-                    if(childNode.colliderInQuadTree(collider))
-                        collidingWith.AddRange(childNode.collidingWith(collider));
+                    if (childNode != null)
+                        if (childNode.colliderInQuadTree(collider))
+                            collidingWith.AddRange(childNode.collidingWith(collider));
 
 
             return collidingWith;
         }
 
-        private bool colliderInQuadTree(Collider collider) {
+        private bool colliderInQuadTree(Collider collider)
+        {
             bool colliderInQuadTree = false;
             BoxCollider boxCol = collider as BoxCollider;
             SphereCollider sphereCol = collider as SphereCollider;
@@ -384,12 +404,26 @@ namespace PRedesign
                 if (type == ContainmentType.Contains || type == ContainmentType.Intersects)
                     colliderInQuadTree = true;
             }
-            else if (sphereCol != null) {
+            else if (sphereCol != null)
+            {
                 ContainmentType type = m_region.Contains(sphereCol.Collider);
                 if (type == ContainmentType.Contains || type == ContainmentType.Intersects)
                     colliderInQuadTree = true;
             }
             return colliderInQuadTree;
+        }
+
+        public void RenderTree(Color colour, bool showRegions, bool showColliders)
+        {
+            if(showRegions)
+                WireShapeDrawer.AddBoundingBox(m_region, colour);
+            if (m_objects != null && showColliders)
+                foreach (Collider collider in m_objects)
+                    collider.drawCollider();
+            if (m_childNode != null)
+                foreach (QuadTree childNode in m_childNode)
+                    if (childNode != null)
+                        childNode.RenderTree(colour, showRegions, showColliders);
         }
     }
 }

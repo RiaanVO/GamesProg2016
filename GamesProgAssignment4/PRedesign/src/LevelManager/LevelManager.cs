@@ -34,6 +34,7 @@ namespace PRedesign {
         // Current level data
         private static Level currentLevel;
         private static bool isLevelLoaded = false;
+        private static BoundingBox levelEnclosure;
         #endregion
 
         #region Properties
@@ -58,6 +59,14 @@ namespace PRedesign {
 		  
         public static int TileSize {
             get { return TILE_SIZE; }
+        }
+
+        public static BoundingBox LevelEnclosure {
+            get {
+                if (levelEnclosure == null)
+                    levelEnclosure = new BoundingBox(Vector3.Zero, Vector3.Zero);
+                return levelEnclosure;
+            }
         }
         #endregion
 
@@ -128,6 +137,12 @@ namespace PRedesign {
 
         #region Helper Methods
         private static void LoadLevelData() {
+            int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
+            int currentLevelHeight = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
+            int largestDimension = (currentLevelWidth > currentLevelHeight) ? currentLevelWidth : currentLevelHeight;
+            int heightScale = 3;
+            levelEnclosure = new BoundingBox(new Vector3(-TILE_SIZE, -TILE_SIZE * heightScale, - TILE_SIZE), new Vector3(largestDimension + TILE_SIZE, TILE_SIZE * heightScale, largestDimension + TILE_SIZE));
+
             for (int i = 0; i <= currentLevel.Data.GetUpperBound(0); i++) {
                 for (int j = 0; j <= currentLevel.Data.GetUpperBound(1); j++) {
                     switch (currentLevel.Data[i, j]) {
@@ -143,12 +158,14 @@ namespace PRedesign {
                     }
                 }
             }
+            CollisionManager.ForceTreeConstruction();
             isLevelLoaded = true;
         }
 
         private static void UnloadLevel() {
             ObjectManager.clearAll();
             AudioManager.clearAll();
+            CollisionManager.clearAll();
             isLevelLoaded = false;
         }
         #endregion

@@ -28,6 +28,9 @@ namespace PRedesign {
         private static Texture2D wallTexture;
         private static Texture2D ceilingTexture;
 
+        private static Model enemyModel;
+        private static Player player;
+
         // Master list of levels
         private static IList<Level> levels = new List<Level>();
 
@@ -59,22 +62,38 @@ namespace PRedesign {
         public static int TileSize {
             get { return TILE_SIZE; }
         }
+
+        public static Model EnemyModel {
+            set { enemyModel = value; }
+        }
+
+        public static Player Player {
+            set { player = value; }
+        }
         #endregion
 
-        #region Public Methods
+        #region Main Methods
+        /// <summary>
+        /// Attempts to load all the levels from the external level file
+        /// </summary>
         public static void LoadLevelsFromFile() {
 
             // Loads all of the level data into a list, or a single level if only one object exists
             if (File.Exists(LEVEL_FILEPATH)) {
                 if (File.ReadLines(LEVEL_FILEPATH).Count() > 1) {
                     levels = JsonConvert.DeserializeObject<List<Level>>(File.ReadAllText(LEVEL_FILEPATH));
-                } else {
+                } else if (File.ReadLines(LEVEL_FILEPATH).Count() == 0) {
+                    return;
+                } else { 
                     string test = File.ReadAllText(LEVEL_FILEPATH);
                     levels.Add(JsonConvert.DeserializeObject<Level>(File.ReadAllText(LEVEL_FILEPATH)));
                 }
             }
         }
 
+        /// <summary>
+        /// Attempts to write all the data models for levels into the level external level file
+        /// </summary>
         public static void WriteLevelsToFile() {
 
             if (File.Exists(LEVEL_FILEPATH)) {
@@ -84,22 +103,26 @@ namespace PRedesign {
             JsonSerializer serializer = new JsonSerializer();
             using (StreamWriter sw = new StreamWriter(LEVEL_FILEPATH)) {
                 using (JsonTextWriter writer = new JsonTextWriter(sw)) {
-                    writer.WriteStartArray();
                     if (levels.Count > 1) {
+                        writer.WriteStartArray();
                         foreach (Level level in levels) {
                             if (levels.IndexOf(level) != 0) {
                                 writer.WriteRaw("\n");
                             }
                             serializer.Serialize(writer, level);
                         }
+                        writer.WriteEndArray();
                     } else {
                         serializer.Serialize(writer, levels[0]);
                     }
-                    writer.WriteEndArray();
                 }
             }
         }
 
+        /// <summary>
+        /// Loads the main level data and creatses the navigation map using the data
+        /// </summary>
+        /// <param name="id"></param>
         public static void LoadLevel(int id) {
             if (id <= levels.Count && id > 0) {
                 currentLevel = levels[id - 1];
@@ -115,6 +138,9 @@ namespace PRedesign {
             }
         }
 
+        /// <summary>
+        /// Unloads the current level and attempts to load the next level
+        /// </summary>
         public static void NextLevel() {
             if(currentLevel.Id + 1 <= levels.Count) {
                 currentLevel = levels[levels.IndexOf(currentLevel) + 1];
@@ -127,10 +153,14 @@ namespace PRedesign {
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Parses the data from the selected level and populates the level with objects
+        /// </summary>
         private static void LoadLevelData() {
             for (int i = 0; i <= currentLevel.Data.GetUpperBound(0); i++) {
                 for (int j = 0; j <= currentLevel.Data.GetUpperBound(1); j++) {
-                    switch (currentLevel.Data[i, j]) {
+                    switch (currentLevel.Data[j, i]) {
                         case TILE_EMPTY:
                             break;
                         case TILE_WALL:
@@ -138,14 +168,29 @@ namespace PRedesign {
                             break;
                         case TILE_PATH:
                             ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, 0, (float)(TILE_SIZE * i) / 2), groundTexture, TILE_SIZE, 1));
-                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE/2, (float)(TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
                             break;
                     }
                 }
             }
+
+            foreach (Enemy enemy in currentLevel.Enemies) {
+                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize, 0, enemy.Y * TileSize), enemyModel, player);
+                newEnemy.Scale = 0.08f;
+                newEnemy.HasLighting = true;
+                Vector3[] patrolPoints = new Vector3[enemy.PatrolPoints.Count];
+                for (int i = 0; i <= enemy.PatrolPoints.Count - 1; i++) {
+                    patrolPoints[i] = new Vector3(enemy.PatrolPoints[i].X * TileSize, 5, enemy.PatrolPoints[i].Y * TileSize);
+                }
+                newEnemy.PatrolPoints = patrolPoints;
+                ObjectManager.addGameObject(newEnemy);                
+            }
             isLevelLoaded = true;
         }
 
+        /// <summary>
+        /// Unloads the current level - cleaing all lists holding objects/references
+        /// </summary>
         private static void UnloadLevel() {
             ObjectManager.clearAll();
             AudioManager.clearAll();

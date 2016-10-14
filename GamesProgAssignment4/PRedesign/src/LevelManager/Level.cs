@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace PRedesign {
 
-    // Data model
-
+  /// <summary>
+  /// Data model for level JSON serialisation
+  /// </summary>
     class Level {
         
         public int Id { get; set; }
         public int[,] Data { get; set; }
+        public List<Enemy> Enemies { get; set; }
     }
 
 }

@@ -35,6 +35,12 @@ namespace PRedesign {
                 }
             }
         }
+
+        public void Visible(bool visible) {
+            foreach (EditorOptionButton btn in buttons) {
+                btn.Visible = visible;
+            }
+        }
         #endregion
     }
 }

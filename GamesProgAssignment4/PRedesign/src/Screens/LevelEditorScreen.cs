@@ -14,7 +14,7 @@ namespace PRedesign {
 
         #region Fields
         ContentManager content;
-        Texture2D backgroundTexture;
+        Texture2D backgroundTexture, editorEnemyTexture, editorNodeTexture;
         SpriteFont editorFont;
         #endregion
 
@@ -26,6 +26,10 @@ namespace PRedesign {
 
             backgroundTexture = content.Load<Texture2D>(@"Textures/MenuBackground");
             editorFont = content.Load<SpriteFont>(@"Fonts/GameFont");
+            editorEnemyTexture = content.Load<Texture2D>(@"Textures/editor_enemy");
+            editorNodeTexture = content.Load<Texture2D>(@"Textures/editor_node");
+
+
 
             InitialiseEditor();
         }
@@ -33,7 +37,11 @@ namespace PRedesign {
         private void InitialiseEditor() {
             LevelEditor.GraphicsDevice = ScreenManager.GraphicsDevice;
             LevelEditor.EditorFont = editorFont;
+            LevelEditor.EnemyTexture = editorEnemyTexture;
+            LevelEditor.NodeTexture = editorNodeTexture;
+            LevelEditor.GameScreen = this;
             LevelEditor.LoadEditor();
+
         }
         #endregion
 

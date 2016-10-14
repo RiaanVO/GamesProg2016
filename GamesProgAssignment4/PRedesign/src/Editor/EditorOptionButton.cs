@@ -13,6 +13,7 @@ namespace PRedesign {
         #region Fields
         Texture2D BaseTexture;
         Texture2D SelectedTexture;
+        Texture2D PaintTexture;
         bool isSelected = false;
         int Size;
         #endregion
@@ -25,9 +26,10 @@ namespace PRedesign {
         #endregion
 
         #region Initialisation
-        public EditorOptionButton(string id, Vector2 position, Vector2 textOffset, SpriteFont font, string text, Color textTint, Texture2D buttonTexture, Texture2D selectedTexture, int size) : base(id, position, textOffset, font, text, textTint, buttonTexture) {
+        public EditorOptionButton(string id, Vector2 position, Vector2 textOffset, SpriteFont font, string text, Color textTint, Texture2D buttonTexture, Texture2D selectedTexture, Texture2D paintTexture, int size) : base(id, position, textOffset, font, text, textTint, buttonTexture) {
             BaseTexture = buttonTexture;
             SelectedTexture = selectedTexture;
+            PaintTexture = paintTexture;
             Size = size;
 
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Size, Size);
@@ -45,15 +47,15 @@ namespace PRedesign {
             if (Visible) {
                 Point drawBase = Point.Zero;
                 if (Disabled)
-                    // drawBase = new Point(0, Bounds.Height);
                     drawBase = new Point(0, (int)Font.MeasureString(Text).Y);
                 if (Pressed)
-                    // drawBase = new Point(0, Bound.Height* 2);
                     drawBase = new Point(0, ((int)Font.MeasureString(Text).Y) * 2);
                 if (Texture != null)
-                    // spriteBatch.Draw(Texture, Position, new Rectangle(drawBase.X, drawBase.Y, Bounds.Width, Bounds.Height), Color.White);
+                    if (PaintTexture != null) {
+                        spriteBatch.Draw(PaintTexture, new Rectangle((int)Position.X - Size / 2, (int)Position.Y, Size / 2, Size / 2), Color.White);
+                    }
                     spriteBatch.Draw(Texture, new Rectangle((int)Position.X, (int)Position.Y, Size, Size / 2), Color.White);
-                spriteBatch.DrawString(Font, Text, new Vector2(Position.X + (Size - (int)Font.MeasureString(Text).X) / 2, Position.Y + (Size / 2 - (int)Font.MeasureString(Text).Y) / 2), TextTint);
+                    spriteBatch.DrawString(Font, Text, new Vector2(Position.X + (Size - (int)Font.MeasureString(Text).X) / 2, Position.Y + (Size / 2 - (int)Font.MeasureString(Text).Y) / 2), TextTint);
             }
 
         }

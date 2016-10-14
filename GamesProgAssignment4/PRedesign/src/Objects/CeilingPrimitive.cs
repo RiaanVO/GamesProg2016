@@ -13,7 +13,7 @@ namespace PRedesign
         #region Fields
         int tileSize;
         int numTilesAcross;
-        bool centerGridPlane = true;
+        bool centerGridPlane = false;
         bool gridPlaneConstructed = false;
         #endregion
 
@@ -119,7 +119,7 @@ namespace PRedesign
                     vertexData[currVertexAdd + 1] = new VertexPositionNormalTexture(topRight, Vector3.Down, new Vector2(1, 0));
                     vertexData[currVertexAdd + 2] = new VertexPositionNormalTexture(bottomLeft, Vector3.Down, new Vector2(0, 1));
                     vertexData[currVertexAdd + 3] = new VertexPositionNormalTexture(bottomRight, Vector3.Down, new Vector2(1, 1));
-
+                    
                     int currIndexAdd = x * 6 + z * numTilesAcross * 6;
                     indexData[currIndexAdd] = currVertexAdd + 0;
                     indexData[currIndexAdd + 1] = currVertexAdd + 2;

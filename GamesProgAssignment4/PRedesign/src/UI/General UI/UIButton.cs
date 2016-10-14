@@ -16,6 +16,7 @@ namespace PRedesign
         public bool Pressed { get; set; }
         public Rectangle Bounds { get; protected set; }
         public int Padding { get; set; }
+        public string tag { get; set; }
         #endregion
 
         #region Event related Items
@@ -24,13 +25,20 @@ namespace PRedesign
         #endregion
 
         #region Initialize
-        public UIButton(string id, Vector2 position, Vector2 textOffset, SpriteFont font, string text, Color textTint, Texture2D buttonTexture) : base(id, position, textOffset, font, text, textTint)
+        public UIButton(string id, Vector2 position, Vector2 textOffset, SpriteFont font, string text, Color textTint, Texture2D buttonTexture, string tag) : base(id, position, textOffset, font, text, textTint)
         {
             Texture = buttonTexture;
+            this.tag = tag;
             //For stacked button textures
-            //Bounds = new Rectangle((int)position.X, (int)position.Y, Texture.Width, Texture.Height);
             if(Bounds == Rectangle.Empty)
             Bounds = new Rectangle((int)position.X, (int)position.Y, (int)font.MeasureString(Text).X, (int)font.MeasureString(Text).Y);
+        }
+
+        public UIButton(string id, Vector2 position, Vector2 textOffset, SpriteFont font, string text, Color textTint, Texture2D buttonTexture) : base(id, position, textOffset, font, text, textTint) {
+            Texture = buttonTexture;
+            //For stacked button textures
+            if (Bounds == Rectangle.Empty)
+                Bounds = new Rectangle((int)position.X, (int)position.Y, (int)font.MeasureString(Text).X, (int)font.MeasureString(Text).Y);
         }
         #endregion
 

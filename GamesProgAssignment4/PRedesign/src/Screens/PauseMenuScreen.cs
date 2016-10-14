@@ -51,7 +51,7 @@ namespace PRedesign
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void QuitGameMenuEntrySelected(object sender, EventArgs e) {
-            const string message = "Are you sure you want to quite the game?";
+            const string message = "Are you sure you want to quit the game?";
             MessageBoxScreen confirmQuitMessageBox = new MessageBoxScreen(message);
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;
             ScreenManager.AddScreen(confirmQuitMessageBox);

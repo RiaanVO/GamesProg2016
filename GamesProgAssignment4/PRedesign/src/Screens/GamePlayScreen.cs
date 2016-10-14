@@ -90,6 +90,8 @@ namespace PRedesign
             LevelManager.GroundTexture = groundTexture;
             LevelManager.WallTexture = crateTexture;
             LevelManager.CeilingTexture = ceilingTexture;
+            LevelManager.EnemyModel = tetraEnemyModel;
+            LevelManager.Player = player;
             LevelManager.LoadLevel(1);
 
             ObjectManager.addGameObject(new TetraKey(new Vector3(-15f,5f, -15f), tetraKeyModel, camera, player));

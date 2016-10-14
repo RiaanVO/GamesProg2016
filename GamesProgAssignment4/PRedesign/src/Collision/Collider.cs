@@ -15,7 +15,10 @@ namespace PRedesign
         obstacle,
         enemy,
         hazard,
-        pickup
+        pickup,
+        movementChecker,
+        floor,
+        roof
     }
 
     abstract class Collider
@@ -27,6 +30,7 @@ namespace PRedesign
         protected Color drawColour = Color.Black;
         protected ObjectTag tag;
         protected Vector3 positionOffset = Vector3.Zero;
+        protected QuadTree quadTreeNode;
         #endregion
 
         #region properties
@@ -47,6 +51,17 @@ namespace PRedesign
         {
             get { return positionOffset; }
             set { positionOffset = value; }
+        }
+        public Vector3 Position {
+            get { return position; }
+        }
+        public Vector3 AdjustedPosition {
+            get { return position + positionOffset; }
+        }
+
+        public QuadTree QuadTreeNode {
+            get { return quadTreeNode; }
+            set { quadTreeNode = value; }
         }
         #endregion
 

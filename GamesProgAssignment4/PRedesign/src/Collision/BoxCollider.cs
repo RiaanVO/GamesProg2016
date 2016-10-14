@@ -13,6 +13,7 @@ namespace PRedesign
         private BoundingBox collider;
         private bool isCentered = false; //If not it is assumend to be from bottom origion
         Vector3 boxSize;
+        private float sizeScale = 1.01f;
         #endregion
 
         #region Properties
@@ -36,7 +37,8 @@ namespace PRedesign
         public BoxCollider(GameObject gameObject, ObjectTag tag, Vector3 boxSize) : base(gameObject, tag)
         {
             this.boxSize = boxSize;
-            updateColliderPos(gameObject.Position);
+            createBoundingBox();
+            //updateColliderPos(gameObject.Position);
         }
 
         public override bool isColliding(Collider otherCollider)
@@ -58,21 +60,30 @@ namespace PRedesign
 
         public override void updateColliderPos(Vector3 newPosition)
         {
+            if (position == newPosition)
+                return;
+
             position = newPosition;
-            Vector3 minPoint, maxPoint;
-            if (isCentered) {
-                minPoint = position - (boxSize / 2) + positionOffset;
-                maxPoint = position + (boxSize / 2) + positionOffset;
-            } else {
-                minPoint = position + positionOffset;
-                maxPoint = position + boxSize + positionOffset;
+            createBoundingBox();
+            if (quadTreeNode != null)
+                quadTreeNode.moveCollider(this);
+        }
+
+        private void createBoundingBox() {
+        Vector3 minPoint, maxPoint;
+            if (isCentered)
+            {
+                minPoint = position - (boxSize * sizeScale / 2) + positionOffset;
+                maxPoint = position + (boxSize * sizeScale / 2) + positionOffset;
+            }
+            else
+            {
+                minPoint = (position -  (boxSize * (sizeScale - 1))) + positionOffset;
+                maxPoint = position + boxSize * sizeScale + positionOffset;
             }
 
             collider = new BoundingBox(minPoint, maxPoint);
         }
-
-        
-
         
 
         public override void drawCollider()

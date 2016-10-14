@@ -87,7 +87,7 @@ namespace PRedesign
                 NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
             }
             */
-            Player player = new Player(new Vector3(-5, 3.5f, -5));
+            Player player = new Player(new Vector3(20, 3.5f, 20));
 
             Skybox skybox = new Skybox(Vector3.Zero, skyModel);
             skybox.Player = player;
@@ -105,7 +105,7 @@ namespace PRedesign
             tank.Scale = 0.2f;
             player.Tank = tank;*/
 
-            NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 5, 20), tetraEnemyModel, player);
+            NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 6, 20), tetraEnemyModel, player);
             Enemy.Scale = 0.08f;
             Enemy.HasLighting = true;
             Enemy.PatrolPoints = new Vector3[] {
@@ -176,8 +176,9 @@ namespace PRedesign
             //Place draw logic here for game play
 
             ObjectManager.Draw(gameTime);
-            //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
 
+
+            //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
             CollisionManager.Render(Color.Violet, false, true);
             WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 

@@ -113,6 +113,7 @@ namespace PRedesign
         {
             m_pendingInsertion.Enqueue(collider);
             m_treeReady = false;
+            collider.QuadTreeNode = this;
         }
 
         public void Remove(Collider collider)

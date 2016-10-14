@@ -50,8 +50,14 @@ namespace PRedesign
 
         public override void updateColliderPos(Vector3 newPosition)
         {
+            if (newPosition + positionOffset == position)
+                return;
+
             position = newPosition + positionOffset;
             collider.Center = position;
+
+            if (quadTreeNode != null)
+                quadTreeNode.moveCollider(this);
         }
 
         #region debug drawing

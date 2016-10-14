@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace PRedesign
 {
@@ -18,6 +20,12 @@ namespace PRedesign
         SphereMovementChecker movementCollider;
         List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
 
+
+        float invulnerabilitySeconds;
+        float remainingDelay;
+        bool isInvulnerable;
+
+        int health;
 
         BasicCamera camera;
 
@@ -46,6 +54,12 @@ namespace PRedesign
         float jumpHeight; //The height which the player falls back to after jumping (instead of zero)
         float fallRate = 200f; // Is gravity, is good
 
+        //Audio Components
+        AudioListenerComponent audioListenerComponent;
+        AudioEmitterComponent audioEmitterComponent;
+
+        //Gameplay Variables
+        public bool hasKey = false;
 
 
 
@@ -78,6 +92,12 @@ namespace PRedesign
             get { return game; }
             set { game = value; }
         }
+
+        public float InvulnerabilitySeconds
+        {
+            get { return invulnerabilitySeconds;  }
+            set { invulnerabilitySeconds = value;  }
+        }
         #endregion
 
         #region Initialization
@@ -96,33 +116,66 @@ namespace PRedesign
             collider.DrawColour = Color.Magenta;
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
             CollisionManager.ForceTreeConstruction();
+  
+            invulnerabilitySeconds = 5;
+            remainingDelay = invulnerabilitySeconds;
+            isInvulnerable = false;
+
+            health = 10;
 
             if (game != null)
                 if (game.Window != null)
                     Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
+
+            //Audio
+            audioListenerComponent = new AudioListenerComponent(this);
+            audioEmitterComponent = new AudioEmitterComponent(this);
+            //audioEmitterComponent.createSoundEffectInstance("bgMusic", game.Content.Load<SoundEffect>(@"Sounds/Music/The Lift"), false, true, true, 1f);
+            
         }
         #endregion
 
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
-            collider.updateColliderPos(position);
-
-            foreach (Collider collido in collider.getCollisions())
+            if (health > 0)
             {
-                if (collido.Tag.Equals(ObjectTag.hazard))
+                if (isInvulnerable)
                 {
-                    Console.WriteLine("Ow! Spikes!");
+                    var timer = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    remainingDelay -= timer;
+
+                    if (remainingDelay <= 0)
+                    {
+                        isInvulnerable = false;
+                        remainingDelay = 5.0f;
+                    }
                 }
+
+                collider.updateColliderPos(position);
+
+                foreach (Collider collido in collider.getCollisions())
+                {
+                    if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
+                    {
+                        Console.WriteLine("Ow! I recieved the ow factor!");
+                        health--;
+                        isInvulnerable = true;
+                    }
+                }
+
+                handleInput();
+                handleMovement(gameTime);
+
+                handleMouseSelection();
+                camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
+
+                base.Update(gameTime);
             }
-
-            handleInput();
-            handleMovement(gameTime);
-
-            handleMouseSelection();
-            camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
-
-            base.Update(gameTime);
+            else
+            {
+                //GAME OVER, YOU DEAD BOIIIIIIIII
+            }
         }
 
         private void handleInput()

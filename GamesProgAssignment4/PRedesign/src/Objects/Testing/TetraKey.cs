@@ -65,6 +65,20 @@ namespace PRedesign
         {
             if (!hasBeenCollected)
             {
+                //Check collisions
+                List<Collider> currentCollisions = collider.getCollisions();
+                if (currentCollisions.Count() > 0)
+                {
+                    foreach (Collider col in currentCollisions)
+                    {
+                        if (col.Tag == ObjectTag.player)
+                        {
+                            //Game is over
+                            LevelManager.ReloadLevel();
+                        }
+                    }
+                }
+
                 rotateKey(gameTime);
 
                 //Replace with proper state machine behaviour?

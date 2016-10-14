@@ -10,7 +10,6 @@ namespace PRedesign
 {
     class Spikes : BasicModel
     {
-        int damageAmount = 5; //placeholder - no idea how much HP we plan on having
         BoxCollider collider;
 
         public Spikes(Vector3 startPosition, Model model) : base(startPosition, ObjectManager.Camera, model)

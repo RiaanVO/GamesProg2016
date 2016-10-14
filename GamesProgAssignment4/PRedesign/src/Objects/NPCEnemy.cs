@@ -37,7 +37,7 @@ namespace PRedesign
 
         //Animation fields
         private float deltaTime;
-        private float rotationalSpeed;
+        private float rotationalSpeed = 1f;
         private float animationRotation;
         #endregion
 

@@ -40,7 +40,10 @@ namespace PRedesign
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
             Model tankModel = content.Load<Model>(@"Models/Enemy Model/tank");
             Texture2D crateTexture = content.Load<Texture2D>(@"Textures/blue stripe wall");
+            //New models
             Model tetraKeyModel = content.Load<Model>(@"Models/TetraKey Model/SplitDiamond");
+            Model tetraEnemyModel = content.Load<Model>(@"Models/Enemy Model/TetraEnemyRedv2");
+            Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15");
 
             //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
@@ -91,16 +94,17 @@ namespace PRedesign
 
             ObjectManager.addGameObject(new TetraKey(new Vector3(-15f,5f, -15f), tetraKeyModel, camera, player));
 
-            Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
+            /*Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
             tank.Scale = 0.2f;
-            player.Tank = tank;
+            player.Tank = tank;*/
 
-            NPCTank npc = new NPCTank(new Vector3(8, 0, 8), tankModel, player);
-            npc.Scale = 0.2f;
+            NPCEnemy npc = new NPCEnemy(new Vector3(8, 5, 8), tankModel, player);
+            npc.Scale = 0.02f;
+            npc.HasLighting = true;
             npc.PatrolPoints = new Vector3[] {
-                new Vector3(8, 0, 13),
-                new Vector3(8, 0, 48),
-                new Vector3(33, 0, 48),
+                new Vector3(8, 5, 13),
+                new Vector3(8, 5, 48),
+                new Vector3(33, 5, 48),
             };
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads

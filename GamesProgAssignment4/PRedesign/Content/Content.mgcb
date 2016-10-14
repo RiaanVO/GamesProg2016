@@ -420,3 +420,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Player model/SoundGun_NoSpec.fbx
 
+#begin Sounds/Music/The Lift.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Music/The Lift.mp3
+

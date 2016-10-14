@@ -124,6 +124,12 @@ namespace PRedesign {
             }
         }
 
+        public static void ReloadLevel()
+        {
+            UnloadLevel();
+            LoadLevel(currentLevel.Id);
+        }
+
         public static void NextLevel() {
             if(currentLevel.Id + 1 <= levels.Count) {
                 currentLevel = levels[levels.IndexOf(currentLevel) + 1];

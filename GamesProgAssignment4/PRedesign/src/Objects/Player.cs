@@ -39,6 +39,12 @@ namespace PRedesign
         float jumpHeight; //The height which the player falls back to after jumping (instead of zero)
         float fallRate = 200f; // Is gravity, is good
 
+        //Audio Components
+        AudioListenerComponent audioListenerComponent;
+        AudioEmitterComponent audioEmitterComponent;
+
+        //Gameplay Variables
+        public bool hasKey = false;
 
         /// <summary>
         /// For lab task
@@ -81,6 +87,11 @@ namespace PRedesign
             if (game != null)
                 if (game.Window != null)
                     Mouse.SetPosition(game.Window.ClientBounds.Width / 2, game.Window.ClientBounds.Height / 2);
+
+            //Audio
+            audioListenerComponent = new AudioListenerComponent(this);
+            audioEmitterComponent = new AudioEmitterComponent(this);
+            audioEmitterComponent.createSoundEffectInstance("footsteps", game.Content.Load<SoundEffect>(@"Sounds/footsteps"), false, true, false, 0.3f);
         }
         #endregion
 

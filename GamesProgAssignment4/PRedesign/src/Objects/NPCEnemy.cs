@@ -128,6 +128,10 @@ namespace PRedesign
                 {
                     loadFromFile = false;
                 }
+                catch (System.IO.DirectoryNotFoundException)
+                {
+                    loadFromFile = false;
+                }
 
                 if (!loadFromFile)
                 {

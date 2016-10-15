@@ -167,7 +167,7 @@ namespace PRedesign {
         /// Unloads the current level and attempts to load the next level
         /// </summary>
         public static void NextLevel() {
-            if(currentLevel.Id + 1 <= levels.Count) {
+            if(currentLevel.Id + 1 <= levels.Count - 1) {
                 currentLevel = levels[levels.IndexOf(currentLevel) + 1];
                 UnloadLevel();
                 LoadLevel(currentLevel.Id);

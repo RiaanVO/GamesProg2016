@@ -39,6 +39,12 @@ namespace PRedesign
         {
             get { return _parent == null; }
         }
+
+        public bool TreeBuilt {
+            set {
+                m_treeBuilt = m_treeReady = value;
+            }
+        }
         #endregion
 
         #region Initialization
@@ -129,19 +135,22 @@ namespace PRedesign
             }
         }
 
+        /*
         public void RemoveAll()
         {
+            m_objects.Clear();
+            m_pendingInsertion.Clear();
             foreach (QuadTree childNode in m_childNode)
             {
                 if (childNode != null)
                     RemoveAll();
             }
-            m_objects.Clear();
-            m_childNode = null;
-            _parent = null;
-            m_treeBuilt = false;
+            //m_childNode = null;
+            //_parent = null;
+            //m_treeBuilt = false;
             m_treeReady = false;
         }
+        */
 
         /// <summary>
         /// A tree has already been created, so we're going to try to insert an item into the tree without rebuilding the whole thing
@@ -249,6 +258,7 @@ namespace PRedesign
                 //FindEnclosingCube();
                 //dimensions = m_region.Max - m_region.Min;
                 Console.WriteLine("Quadrent is a zero cube???");
+                //return;
             }
 
             //Check to see if the dimensions of the box are greater than the minimum dimensions
@@ -416,7 +426,7 @@ namespace PRedesign
 
         public void RenderTree(Color colour, bool showRegions, bool showColliders)
         {
-            if(showRegions)
+            if(showRegions && m_region.Min - m_region.Max != Vector3.Zero)
                 WireShapeDrawer.AddBoundingBox(m_region, colour);
             if (m_objects != null && showColliders)
                 foreach (Collider collider in m_objects)

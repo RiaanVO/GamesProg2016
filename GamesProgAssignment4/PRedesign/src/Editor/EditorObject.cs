@@ -56,14 +56,47 @@ namespace PRedesign {
             this.xData = xData;
             this.yData = yData;
             this.id = id;
-            bounds = new Rectangle((int)position.X, (int)position.Y, size, size);           
+            bounds = new Rectangle((int)position.X, (int)position.Y, size, size);
+            setTextureFromType();     
+        }
+
+        private void setTextureFromType() {
+            switch (type) {
+                case LevelEditor.PaintObject.DOOR:
+                    texture = LevelEditor.DoorTexture;
+                    break;
+                case LevelEditor.PaintObject.KEY:
+                    texture = LevelEditor.KeyTexture;
+                    break;
+                case LevelEditor.PaintObject.PLAYER:
+                    texture = LevelEditor.PlayerTexture;
+                    break;
+                case LevelEditor.PaintObject.SPIKE:
+                    texture = LevelEditor.SpikeTexture;
+                    break;
+            }
         }
         #endregion
 
         #region Draw
         public void Draw(SpriteBatch spriteBatch) {
             if (texture != null) {
-                spriteBatch.Draw(texture, bounds, Color.Orange);
+                Color color = Color.White;
+                switch (type) {
+                    case LevelEditor.PaintObject.DOOR:
+                        color = Color.Cyan;
+                        break;
+                    case LevelEditor.PaintObject.KEY:
+                        color = Color.Lime;
+                        break;
+                    case LevelEditor.PaintObject.PLAYER:
+                        color = Color.Magenta;
+                        break;
+                    case LevelEditor.PaintObject.SPIKE:
+                        color = Color.Orange;
+                        break;
+                }
+                spriteBatch.Draw(texture, bounds, color);
             }
         }
         #endregion

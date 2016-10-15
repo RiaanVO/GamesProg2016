@@ -11,9 +11,19 @@ namespace PRedesign {
   /// </summary>
     class JSONLevel {
         
+        // Level data
         public int Id { get; set; }
         public int[,] Data { get; set; }
+
+        // Unique identifiers
+        public JSONGameObject Player { get; set; }
+        public JSONGameObject Door { get; set; }
+        public JSONGameObject Key { get; set; }
+
+        // All other objects
         public List<JSONGameObject> Objects { get; set; }
+
+        // List of enemies
         public List<JSONEnemy> Enemies { get; set; }
     }
 

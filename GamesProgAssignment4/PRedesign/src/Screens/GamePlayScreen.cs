@@ -36,77 +36,42 @@ namespace PRedesign
             //Load game play content here
             gameFont = content.Load<SpriteFont>(@"Fonts/GameFont");
 
-            //Load content
-            Texture2D groundTexture = content.Load<Texture2D>(@"Textures/white floor");
-            Texture2D ceilingTexture = content.Load<Texture2D>(@"Textures/ceiling v3");
-            Model skyModel = content.Load<Model>(@"Models/TechnoSkybox Model/technobox");
-            BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice);
-            Model tankModel = content.Load<Model>(@"Models/Enemy Model/tank");
-            Texture2D crateTexture = content.Load<Texture2D>(@"Textures/blue stripe wall");
-            //New models
-            Model tetraKeyModel = content.Load<Model>(@"Models/TetraKey Model/SplitDiamond");
-            Model tetraEnemyModel = content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed");
-            Model spikesModel = content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter");
-				//Music
+            //Load textures
+            ContentStore.loadedTextures.Add("ground", content.Load<Texture2D>(@"Textures/white floor"));
+            ContentStore.loadedTextures.Add("ceiling", content.Load<Texture2D>(@"Textures/ceiling v3"));
+            ContentStore.loadedTextures.Add("wall", content.Load<Texture2D>(@"Textures/blue stripe wall"));
+
+            //Load models
+            ContentStore.loadedModels.Add("skybox", content.Load<Model>(@"Models/TechnoSkybox Model/technobox"));
+            ContentStore.loadedModels.Add("tetraKey", content.Load<Model>(@"Models/TetraKey Model/SplitDiamond"));
+            ContentStore.loadedModels.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
+            ContentStore.loadedModels.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
+
+            //Load sounds
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
-            //Create camera and set up object manager
+
+            BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
+            
+            /* //Moved to LevelManager.LoadGameObjects()
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;
             ObjectManager.Camera = camera;
             ObjectManager.GraphicsDevice = ScreenManager.GraphicsDevice;
             ObjectManager.Game = ScreenManager.Game;
 
-            /*
-            int levelWidth = 100;
-            int tileSize = 3;
-            NavigationMap.CreateNavigationMap(levelWidth, levelWidth, tileSize);
-
-            Player player = new Player(Vector3.Zero);
-
-            Skybox skybox = new Skybox(Vector3.Zero, skyModel);
-            skybox.Player = player;
-
-            GroundPrimitive ground = new GroundPrimitive(Vector3.Zero, groundTexture, tileSize, levelWidth);
-            ground.CenterGridPlane = false;
-
-            Tank tank = new Tank(new Vector3(4,0,4), tankModel);
-            tank.Scale = 0.25f;
-            player.Tank = tank;
-
-            int numCrates = 10;
-            List<CubePrimitive> crates = new List<CubePrimitive>();
-            for(int x = 0; x < numCrates; x+=4){
-                for (int z = 0; z < numCrates; z+=4) {
-                    crates.Add(new CubePrimitive(new Vector3(x *tileSize, 0, z * tileSize), crateTexture, tileSize));
-                    crates.Add(new CubePrimitive(new Vector3((x + 1) * tileSize, 0, z * tileSize), crateTexture, tileSize));
-
-                }
-            }
-            foreach (CubePrimitive crate in crates) {
-                NavigationMap.setSearchNodeObstructed(crate.CenteredPosition, true);
-            }
-            */
             Player player = new Player(new Vector3(20, 3.5f, 20));
-
-            Skybox skybox = new Skybox(Vector3.Zero, skyModel);
-            skybox.Player = player;
-
-            LevelManager.GroundTexture = groundTexture;
-            LevelManager.WallTexture = crateTexture;
-            LevelManager.CeilingTexture = ceilingTexture;
-            LevelManager.EnemyModel = tetraEnemyModel;
             LevelManager.Player = player;
+
+            Skybox skybox = new Skybox(Vector3.Zero, ContentStore.loadedModels["skybox"]);
+            skybox.Player = player;
+            */
+            LevelManager.ScreenManager = ScreenManager;
             LevelManager.LoadLevel(1);
 
-            ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), tetraKeyModel, camera, player));
+            //ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), ContentStore.loadedModels["tetraKey"], camera, player));
 
-            ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), spikesModel));
-
-            /*Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
-            tank.Scale = 0.2f;
-            player.Tank = tank;*/
-
+            /* //Test code no longer needed due to level load
             NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 6, 20), tetraEnemyModel, player);
             Enemy.Scale = 0.08f;
             Enemy.HasLighting = true;
@@ -115,6 +80,7 @@ namespace PRedesign
                 new Vector3(8, 5, 48),
                 new Vector3(33, 5, 48),
             };
+            */
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();
@@ -179,10 +145,9 @@ namespace PRedesign
 
             ObjectManager.Draw(gameTime);
 
-
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
-            CollisionManager.Render(Color.Violet, false, true);
-            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
+            //CollisionManager.Render(Color.Violet, false, true);
+            //WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 
             //////////////////////////////////////
 

@@ -21,8 +21,10 @@ namespace PRedesign {
         public enum PaintObject {
             NONE,
             SPIKE,
+            KEY,
             DOOR,
-            KEY
+            PLAYER
+            
         }
         #endregion
 
@@ -69,9 +71,10 @@ namespace PRedesign {
         // Object Fields
         private static PaintObject selectedObject = PaintObject.NONE;
         private static bool isPaintingObject = false;
-        private static Texture2D spikeTexture;
+        private static Texture2D spikeTexture, keyTexture, doorTexture, playerTexture;
         private static IList<EditorObject> objectList = new List<EditorObject>();
-        private static EditorOptionButton spikeObjectButton;
+        private static EditorObject playerObject, keyObject, doorObject;
+        private static EditorOptionButton spikeObjectButton, keyObjectbutton, doorObjectButton, playerObjectButton;
 
         // Edit grid element fields
         private static Rectangle gridBounds;
@@ -140,6 +143,21 @@ namespace PRedesign {
             set { spikeTexture = value; }
             get { return spikeTexture; }
         }
+
+        public static Texture2D PlayerTexture {
+            set { playerTexture = value; }
+            get { return playerTexture; }
+        }
+
+        public static Texture2D KeyTexture {
+            set { keyTexture = value; }
+            get { return keyTexture; }
+        }
+
+        public static Texture2D DoorTexture {
+            set { doorTexture = value; }
+            get { return doorTexture; }
+        }
         #endregion
 
         #region Initialisation
@@ -149,11 +167,28 @@ namespace PRedesign {
         /// </summary>
         public static void LoadEditor() {
 
+            LoadTextures();
+
             gridElements = new EditorGridElement[gridSize, gridSize];
             elementSize = (device.Viewport.Width / 2) / gridSize;
             position = new Vector2(10, 10);
 
             levels = LevelManager.Levels;
+
+
+            InitialiseGrid();
+            InitialiseEditorButtons();
+
+            mouseState = Mouse.GetState();
+
+            isLoaded = true;
+        }
+
+
+        /// <summary>
+        /// Loads color-only textures for the editor
+        /// </summary>
+        private static void LoadTextures() {
 
             defaultTexture = new Texture2D(device, 1, 1);
             defaultTexture.SetData(new[] { Color.White });
@@ -170,12 +205,7 @@ namespace PRedesign {
             buttonSelectedTexture = new Texture2D(device, 1, 1);
             buttonSelectedTexture.SetData(new[] { Color.Red });
 
-            InitialiseGrid();
-            InitialiseEditorButtons();
 
-            mouseState = Mouse.GetState();
-
-            isLoaded = true;
         }
 
         /// <summary>
@@ -256,11 +286,29 @@ namespace PRedesign {
             optionButtonGroup.AddButton(pathButton);
             editorButtons.Add(pathButton);
 
-            spikeObjectButton = new EditorOptionButton("editor_obstacleSpike", new Vector2(pathButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Spikes", Color.White, buttonTexture, buttonSelectedTexture, spikeTexture, 50);
+            spikeObjectButton = new EditorOptionButton("editor_objectSpike", new Vector2(pathButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Spikes", Color.White, buttonTexture, buttonSelectedTexture, spikeTexture, 50);
             spikeObjectButton.Visible = true;
             spikeObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(spikeObjectButton);
             editorButtons.Add(spikeObjectButton);
+
+            keyObjectbutton = new EditorOptionButton("editor_objectKey", new Vector2(spikeObjectButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Key", Color.White, buttonTexture, buttonSelectedTexture, keyTexture, 50);
+            keyObjectbutton.Visible = true;
+            keyObjectbutton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
+            optionButtonGroup.AddButton(keyObjectbutton);
+            editorButtons.Add(keyObjectbutton);
+
+            doorObjectButton = new EditorOptionButton("editor_objectDoor", new Vector2(keyObjectbutton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Door", Color.White, buttonTexture, buttonSelectedTexture, doorTexture, 50);
+            doorObjectButton.Visible = true;
+            doorObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
+            optionButtonGroup.AddButton(doorObjectButton);
+            editorButtons.Add(doorObjectButton);
+
+            playerObjectButton = new EditorOptionButton("editor_objectPlayer", new Vector2(doorObjectButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Player", Color.White, buttonTexture, buttonSelectedTexture, playerTexture, 50);
+            playerObjectButton.Visible = true;
+            playerObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
+            optionButtonGroup.AddButton(playerObjectButton);
+            editorButtons.Add(playerObjectButton);
 
             // Text fields used by buttons methods
             levelSelectText = new UITextblock("levelSelectText", new Vector2(gridWidthEnd + (gridToEdge * 0.4f), GraphicsDevice.Viewport.Height * 0.2f), Vector2.Zero, editorFont, "Select a level to load", Color.White);
@@ -301,7 +349,17 @@ namespace PRedesign {
             } else if (sender == spikeObjectButton) {
                 selectedObject = PaintObject.SPIKE;
                 isPaintingObject = true;
+            } else if (sender == keyObjectbutton) {
+                selectedObject = PaintObject.KEY;
+                isPaintingObject = true;
+            } else if (sender == doorObjectButton) {
+                selectedObject = PaintObject.DOOR;
+                isPaintingObject = true;
+            } else if (sender == playerObjectButton) {
+                selectedObject = PaintObject.PLAYER;
+                isPaintingObject = true;
             }
+
             optionButtonGroup.ToggleButton(button);
         }
 
@@ -475,6 +533,7 @@ namespace PRedesign {
                 }
             }
             LoadLevelEnemies();
+            LoadLevelObjects();
         }
 
         /// <summary>
@@ -490,11 +549,37 @@ namespace PRedesign {
         }
 
         /// <summary>
+        /// Loads the object data from the level object - Unique objects and then the array
+        /// </summary>
+        private static void LoadLevelObjects() {
+            JSONGameObject key = currentEditLevel.Key;
+            keyObject = new EditorObject(position, elementSize, elementOffset, key.Type, key.X, key.Y, key.ID);
+
+            JSONGameObject door = currentEditLevel.Door;
+            doorObject = new EditorObject(position, elementSize, elementOffset, door.Type, door.X, door.Y, door.ID);
+
+            JSONGameObject player = currentEditLevel.Player;
+            playerObject = new EditorObject(position, elementSize, elementOffset, player.Type, player.X, player.Y, player.ID);
+
+            if (currentEditLevel.Objects.Count > 0) {
+                foreach(JSONGameObject obj in currentEditLevel.Objects) {
+                    EditorObject newObject = new EditorObject(position, elementSize, elementOffset, obj.Type, obj.X, obj.Y, obj.ID);
+                    objectList.Add(newObject);
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Removes the grid in preparation to load or generate a new grid
         /// </summary>
         private static void UnloadLevelGrid() {
             gridElements = new EditorGridElement[gridSize, gridSize];
             enemyList = new List<EditorEnemy>();
+            objectList = new List<EditorObject>();
+            doorObject = null;
+            keyObject = null;
+            playerObject = null;
         }
 
         #endregion
@@ -629,6 +714,9 @@ namespace PRedesign {
             LevelManager.WriteLevelsToFile();
         }
 
+        /// <summary>
+        /// Prepares the editor level array for JSON serialisation
+        /// </summary>
         private static void PrepareGridForSerialisation() {
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
@@ -647,6 +735,9 @@ namespace PRedesign {
             }
         }
 
+        /// <summary>
+        /// Prepares the objects array and unique objects for JSON serialisation
+        /// </summary>
         private static void PrepareObjectsForSerialisation() {
             currentEditLevel.Objects = new List<JSONGameObject>();
             foreach (EditorObject obj in objectList) {
@@ -657,8 +748,33 @@ namespace PRedesign {
                 newObject.ID = obj.ID;
                 currentEditLevel.Objects.Add(newObject);
             }
+
+            JSONGameObject key = new JSONGameObject();
+            key.Type = keyObject.Type;
+            key.X = keyObject.XData;
+            key.Y = keyObject.YData;
+            key.ID = keyObject.ID;
+            currentEditLevel.Key = key;
+
+            JSONGameObject door = new JSONGameObject();
+            door.Type = doorObject.Type;
+            door.X = doorObject.XData;
+            door.Y = doorObject.YData;
+            door.ID = doorObject.ID;
+            currentEditLevel.Door = door;
+
+            JSONGameObject player = new JSONGameObject();
+            player.Type = playerObject.Type;
+            player.X = playerObject.XData;
+            player.Y = playerObject.YData;
+            player.ID = playerObject.ID;
+            currentEditLevel.Player = player;
+
         }
 
+        /// <summary>
+        /// Prepares the enemy array for JSON serialisation
+        /// </summary>
         private static void PrepareEnemiesForSerialisation() {
             currentEditLevel.Enemies = new List<JSONEnemy>();
             foreach (EditorEnemy enemy in enemyList) {
@@ -678,6 +794,9 @@ namespace PRedesign {
             }
         }
 
+        /// <summary>
+        /// Dialog box for save confirmation
+        /// </summary>
         private static void SaveEditorLevel() {
             const string message = "Are you sure you want to save your changes?";
             MessageBoxScreen confirmSaveMessageBox = new MessageBoxScreen(message);
@@ -685,12 +804,45 @@ namespace PRedesign {
             screenReference.ScreenManager.AddScreen(confirmSaveMessageBox);
         }
 
+        /// <summary>
+        /// Event handler for save confirmation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void ConfirmSaveMessageBoxAccepted(object sender, EventArgs e) {
-            SaveLevel();
+            UniqueObjectsExist();
+        }
+
+        /// <summary>
+        /// Check to see if there is one of each unique object present
+        /// </summary>
+        private static void UniqueObjectsExist() {
+            if (playerObject != null && doorObject != null && keyObject != null) {
+                SaveLevel();
+            } else {
+                const string errorMessage = "Error saving! Map MUST have one player, door and key object \n ENTER to continue";
+                MessageBoxScreen errorSaveMessageBox = new MessageBoxScreen(errorMessage, false);
+                errorSaveMessageBox.Accepted += dummyErrorReceiver;
+                screenReference.ScreenManager.AddScreen(errorSaveMessageBox);
+            }
+        }
+
+        /// <summary>
+        /// Dummy method for handling the error message
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void dummyErrorReceiver(object sender, EventArgs e) {
+            // Do nothing
         }
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Helper method to place a new enemy in the editor grid
+        /// </summary>
+        /// <param name="element"></param>
         private static void PlaceEnemy(EditorGridElement element) {
             isPlacingEnemy = false;
             EditorEnemy enemy = new EditorEnemy(position, elementSize, elementOffset, enemyTexture, nodeTexture, element.XData, element.YData);
@@ -700,31 +852,47 @@ namespace PRedesign {
             isPlacingNode = true;
         }
 
+        /// <summary>
+        /// Helper method to place a new node in the editor grid
+        /// </summary>
+        /// <param name="element"></param>
         private static void PlaceNode(EditorGridElement element) {
             selectedEnemy.addNode(new Vector2((position.X + elementSize * element.XData) + elementOffset * element.XData, (position.Y + elementSize * element.YData) + elementOffset * element.YData), element.XData, element.YData);
 
         }
 
+        /// <summary>
+        /// Helper method to place an object in the editor grid
+        /// </summary>
+        /// <param name="element"></param>
         private static void PlaceObject(EditorGridElement element) {
-            EditorObject newObject = GetObjectAt(element.XData, element.YData);
-            if (newObject == null) {
-                newObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "");
-            }
-            newObject.Type = selectedObject;
-            objectList.Add(newObject);
+            if (selectedObject == PaintObject.DOOR) {
+                doorObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "DOOR");
+            } else if (selectedObject == PaintObject.KEY) {
+                keyObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "KEY");
+            } else if (selectedObject == PaintObject.PLAYER) {
+                playerObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "PLAYER");
+            } else {
+                EditorObject newObject = GetObjectAt(element.XData, element.YData);
+                if (newObject == null) {
+                    newObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "");
+                }
+                newObject.Type = selectedObject;
+                objectList.Add(newObject);
 
-            switch (selectedObject) {
-                case PaintObject.SPIKE:
-                    newObject.Texture = spikeTexture;
-                    newObject.ID = "SPIKE";
-                    break;
-                case PaintObject.DOOR:
-                    break;
-                case PaintObject.KEY:
-                    break;
+                // Switch for non-unique objects
+                switch (selectedObject) {
+                    case PaintObject.SPIKE:
+                        newObject.ID = "SPIKE";
+                        break;
+                }
             }
         }
 
+        /// <summary>
+        /// Helper method to clear an object when using the clear painter
+        /// </summary>
+        /// <param name="element"></param>
         private static void ClearObject(EditorGridElement element) {
             EditorObject obj = GetObjectAt(element.XData, element.YData);
             if (obj != null) {
@@ -735,6 +903,13 @@ namespace PRedesign {
         #endregion
 
         #region Object Methods
+
+        /// <summary>
+        /// Checks to see if an object already exists at the location of a grid element, to prevent stacking
+        /// </summary>
+        /// <param name="xData"></param>
+        /// <param name="yData"></param>
+        /// <returns></returns>
         private static EditorObject GetObjectAt(int xData, int yData) {
             if (objectList.Count == 0) {
                 return null;
@@ -747,34 +922,24 @@ namespace PRedesign {
             }
             return null;
         }
-
         #endregion
 
         #region Input Methods
 
-        /// <summary>
-        /// Checks for any input from the mouse - Mainly used to register clicks on buttons and the grid
-        /// </summary>
 
+        /// <summary>
+        /// Checks to see if ESCAPE has been pressed and quits the editor
+        /// </summary>
         private static void EscapeCheck() {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-                // QuitEditor();
                 LoadingScreen.Load(screenReference.ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
             }
         }
 
-        private static void QuitEditor() {
-            const string message = "Are you sure you want to quit the editor?";
-            MessageBoxScreen quitEditorMessageBox = new MessageBoxScreen(message);
-            quitEditorMessageBox.Accepted += QuitEditorMessageBoxAccepted;
-            screenReference.ScreenManager.AddScreen(quitEditorMessageBox);
-        }
-
-        private static void QuitEditorMessageBoxAccepted(object sender, EventArgs e) {
-            UnloadLevelGrid();
-            LoadingScreen.Load(screenReference.ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
-        }
-
+        /// <summary>
+        /// Checks for any input from the mouse - Mainly used to register clicks on buttons and the grid
+        /// Uses helper methods for placing the objects
+        /// </summary>
         private static void MouseInputCheck() {
             if (mouseState.LeftButton == ButtonState.Pressed) {
 
@@ -871,6 +1036,19 @@ namespace PRedesign {
             if (isPlacingNode) {
                 newNodeText.Draw(spriteBatch);
                 finishEnemyText.Draw(spriteBatch);
+            }
+
+            if (playerObject != null) {
+                playerObject.Draw(spriteBatch);
+            }
+
+            if (doorObject != null) {
+                doorObject.Draw(spriteBatch);
+            }
+
+
+            if (keyObject != null) {
+                keyObject.Draw(spriteBatch);
             }
 
 

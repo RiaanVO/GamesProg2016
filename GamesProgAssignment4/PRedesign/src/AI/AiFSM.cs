@@ -13,6 +13,7 @@ namespace PRedesign
     {
         private string currentState;
         private Dictionary<string, AiState> states = new Dictionary<string, AiState>();
+        private bool stateJustChanged;
         //Used to make sure that there is a state when updating and not accessing a null state
         private bool stateExists;
 
@@ -26,6 +27,10 @@ namespace PRedesign
             stateExists = false;
         }
 
+        public bool StateJustChanged {
+            get { return stateJustChanged; }
+        }
+
         /// <summary>
         /// Sets the state that will be updated
         /// </summary>
@@ -37,6 +42,7 @@ namespace PRedesign
             {
                 currentState = nextState;
                 stateExists = true;
+                stateJustChanged = true;
             }
         }
 
@@ -54,9 +60,11 @@ namespace PRedesign
         {
             if (stateExists)
             {
+                stateJustChanged = false;
                 AiState state = states[currentState];
-                state.checkTransitions();
                 state.update(gameTime);
+                state.checkTransitions();
+                
             }
         }
     }

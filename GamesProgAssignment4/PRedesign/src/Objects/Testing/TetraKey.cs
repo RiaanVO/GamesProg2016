@@ -18,7 +18,7 @@ namespace PRedesign
         bool hasBeenCollected;
         SphereCollider collider;
         //bool keyRelocated = false;
-
+        //Key needs  to have a door related with it
         AudioEmitterComponent audioEmitter;
 
         // animation variables
@@ -46,7 +46,7 @@ namespace PRedesign
             collider = new SphereCollider(this, ObjectTag.pickup, 3f);
             collider.DrawColour = Color.Yellow;
 
-            CollisionManager.ForceTreeConstruction();
+            //CollisionManager.ForceTreeConstruction();
 
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
@@ -75,6 +75,7 @@ namespace PRedesign
                         {
                             //Game is over
                             LevelManager.ReloadLevel();
+                            return;
                         }
                     }
                 }

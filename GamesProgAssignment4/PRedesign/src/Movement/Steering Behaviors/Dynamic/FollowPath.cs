@@ -203,7 +203,7 @@ namespace PRedesign
             seekBehavior.Target = targets[currentTargetIndex];
             SteeringOutput steering = seekBehavior.getSteering();
 
-            if((targets[currentTargetIndex] - gameObject.Position).Length() < changeRadius)
+            if(((targets[currentTargetIndex] + (Vector3.Up * gameObject.Position.Y)) - gameObject.Position).Length() < changeRadius)
                 currentTargetIndex++;
 
             if (currentTargetIndex >= targets.Length)

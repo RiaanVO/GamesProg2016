@@ -217,7 +217,7 @@ namespace PRedesign {
             }
 
             foreach (Enemy enemy in currentLevel.Enemies) {
-                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);
+                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 6, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);
                 newEnemy.Scale = 0.08f;
                 newEnemy.HasLighting = true;
                 Vector3[] patrolPoints = new Vector3[enemy.PatrolPoints.Count];

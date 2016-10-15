@@ -79,7 +79,8 @@ namespace PRedesign
                 new Vector3(8, 5, 13),
                 new Vector3(8, 5, 48),
                 new Vector3(33, 5, 48),
-            };*/
+            };
+            */
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();

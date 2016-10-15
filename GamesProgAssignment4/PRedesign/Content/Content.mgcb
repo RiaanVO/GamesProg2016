@@ -341,9 +341,6 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/TechnoSkybox Model/technobox.x
 
-#begin AIFSM/fsm_npc2.xml
-/copy:AIFSM/fsm_npc2.xml
-
 #begin Models/Enemy Model/TetraEnemyRed.fbx
 /importer:FbxImporter
 /processor:ModelProcessor

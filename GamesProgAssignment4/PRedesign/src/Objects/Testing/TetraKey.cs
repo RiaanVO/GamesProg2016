@@ -49,7 +49,7 @@ namespace PRedesign
             collider = new SphereCollider(this, ObjectTag.pickup, 3f);
             collider.DrawColour = Color.Yellow;
 
-            CollisionManager.ForceTreeConstruction();
+            //CollisionManager.ForceTreeConstruction();
 
             //Audio code
             audioEmitter = new AudioEmitterComponent(this);

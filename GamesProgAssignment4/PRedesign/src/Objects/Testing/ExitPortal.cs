@@ -80,6 +80,7 @@ namespace PRedesign.src.Objects.Testing
                     {
                         //Game is over
                         LevelManager.ReloadLevel();
+                        return;
                     }
                 }
             }

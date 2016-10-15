@@ -94,6 +94,12 @@ namespace PRedesign
             isInitalized = true;
         }
 
+        public static void clearAll() {
+            cachedShapes.Clear();
+            activeShapes.Clear();
+
+        }
+
         /// <summary>
         /// Adds a line to be rendered for just one frame.
         /// </summary>

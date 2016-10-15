@@ -36,9 +36,18 @@ namespace PRedesign {
         private static Level currentLevel;
         private static bool isLevelLoaded = false;
         private static BoundingBox levelEnclosure;
+        private static float levelWidth;
+        private static float levelDepth;
         #endregion
 
         #region Properties
+        public static float LevelWidth {
+            get { return levelWidth; }
+        }
+        public static float LevelDepth {
+            get { return levelDepth; }
+        }
+
 
         public static IList<Level> Levels {
             get { return levels; }
@@ -50,6 +59,11 @@ namespace PRedesign {
 
         public static Player Player {
             set { player = value; }
+        }
+
+        public static int PlayerHealth
+        {
+            get { return player.Health; }
         }
 
         public static BoundingBox LevelEnclosure {
@@ -137,6 +151,8 @@ namespace PRedesign {
 
                 //Construct the objects for the level
                 LoadLevelData();
+                Console.WriteLine("Level loaded");
+                CollisionManager.constructQuadTree();
             }
         }
 
@@ -159,6 +175,12 @@ namespace PRedesign {
                 // Completed Game screen?
             }
         }
+
+        public static void ShowGameOverScreen(double time)
+        {
+            ScreenManager.AddScreen(new GameOverScreen(time));
+        }
+
         #endregion
 
         #region Helper Methods
@@ -196,11 +218,12 @@ namespace PRedesign {
         /// </summary>
         private static void LoadLevelData() {
             int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
-            int currentLevelHeight = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
+            int currentLevelHeight = currentLevel.Data.GetUpperBound(1) * TILE_SIZE;
+            levelWidth = currentLevelWidth;
+            levelDepth = currentLevelHeight;
             int largestDimension = (currentLevelWidth > currentLevelHeight) ? currentLevelWidth : currentLevelHeight;
             int heightScale = 3;
             levelEnclosure = new BoundingBox(new Vector3(-TILE_SIZE, -TILE_SIZE * heightScale, -TILE_SIZE), new Vector3(largestDimension + TILE_SIZE, TILE_SIZE * heightScale, largestDimension + TILE_SIZE));
-
             for (int i = 0; i <= currentLevel.Data.GetUpperBound(0); i++) {
                 for (int j = 0; j <= currentLevel.Data.GetUpperBound(1); j++) {
                     switch (currentLevel.Data[j, i]) {
@@ -231,8 +254,6 @@ namespace PRedesign {
                 ObjectManager.addGameObject(newEnemy);                
             }
 
-            CollisionManager.ForceTreeConstruction();
-
             isLevelLoaded = true;
         }
 
@@ -243,6 +264,8 @@ namespace PRedesign {
             ObjectManager.clearAll();
             AudioManager.clearAll();
             CollisionManager.clearAll();
+            WireShapeDrawer.clearAll();
+            System.GC.Collect();
             isLevelLoaded = false;
         }
         #endregion

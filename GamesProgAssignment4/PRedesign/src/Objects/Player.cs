@@ -20,7 +20,6 @@ namespace PRedesign
         SphereMovementChecker movementCollider;
         List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
 
-
         float invulnerabilitySeconds;
         float remainingDelay;
         bool isInvulnerable;
@@ -72,6 +71,12 @@ namespace PRedesign
             get { return tank; }
             set { tank = value; }
         }
+
+        public int Health
+        {
+            get { return health; }
+            set { health = value; }
+        }
         #endregion
 
         #region Properties
@@ -115,7 +120,7 @@ namespace PRedesign
             collider.PositionOffset = colliderPositionOffset;
             collider.DrawColour = Color.Magenta;
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
-            CollisionManager.ForceTreeConstruction();
+            //CollisionManager.ForceTreeConstruction();
   
             invulnerabilitySeconds = 5;
             remainingDelay = invulnerabilitySeconds;
@@ -178,7 +183,7 @@ namespace PRedesign
             }
             else
             {
-                //GAME OVER, YOU DEAD BOIIIIIIIII
+                LevelManager.ShowGameOverScreen(gameTime.TotalGameTime.TotalSeconds);
             }
         }
 

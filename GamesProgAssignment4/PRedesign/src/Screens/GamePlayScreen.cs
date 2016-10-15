@@ -146,10 +146,18 @@ namespace PRedesign
 
             ObjectManager.Draw(gameTime);
 
+            if (IsActive)
+            {
+                SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+                spriteBatch.Begin();
+                spriteBatch.DrawString(gameFont, "Time Taken: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"), Vector2.Zero, Color.Black);
+                spriteBatch.DrawString(gameFont, "HP: " + LevelManager.PlayerHealth + " / 10", new Vector2(0f, 20f), Color.Red);
+                spriteBatch.End();
+            }
 
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
-            CollisionManager.Render(Color.Violet, false, true);
-            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
+            //CollisionManager.Render(Color.Violet, false, true);
+            //WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 
             //////////////////////////////////////
 

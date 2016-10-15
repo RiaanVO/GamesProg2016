@@ -32,10 +32,10 @@ namespace PRedesign {
         private static Player player;
 
         // Master list of levels
-        private static IList<Level> levels = new List<Level>();
+        private static IList<JSONLevel> levels = new List<JSONLevel>();
 
         // Current level data
-        private static Level currentLevel;
+        private static JSONLevel currentLevel;
         private static bool isLevelLoaded = false;
         private static BoundingBox levelEnclosure;
         #endregion
@@ -56,7 +56,7 @@ namespace PRedesign {
             set { ceilingTexture = value; }
         }
 
-        public static IList<Level> Levels {
+        public static IList<JSONLevel> Levels {
             get { return levels; }
         }
 		  
@@ -92,12 +92,12 @@ namespace PRedesign {
             // Loads all of the level data into a list, or a single level if only one object exists
             if (File.Exists(LEVEL_FILEPATH)) {
                 if (File.ReadLines(LEVEL_FILEPATH).Count() > 1) {
-                    levels = JsonConvert.DeserializeObject<List<Level>>(File.ReadAllText(LEVEL_FILEPATH));
+                    levels = JsonConvert.DeserializeObject<List<JSONLevel>>(File.ReadAllText(LEVEL_FILEPATH));
                 } else if (File.ReadLines(LEVEL_FILEPATH).Count() == 0) {
                     return;
                 } else { 
                     string test = File.ReadAllText(LEVEL_FILEPATH);
-                    levels.Add(JsonConvert.DeserializeObject<Level>(File.ReadAllText(LEVEL_FILEPATH)));
+                    levels.Add(JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(LEVEL_FILEPATH)));
                 }
             }
         }
@@ -116,7 +116,7 @@ namespace PRedesign {
                 using (JsonTextWriter writer = new JsonTextWriter(sw)) {
                     if (levels.Count > 1) {
                         writer.WriteStartArray();
-                        foreach (Level level in levels) {
+                        foreach (JSONLevel level in levels) {
                             if (levels.IndexOf(level) != 0) {
                                 writer.WriteRaw("\n");
                             }
@@ -202,7 +202,7 @@ namespace PRedesign {
                 }
             }
 
-            foreach (Enemy enemy in currentLevel.Enemies) {
+            foreach (JSONEnemy enemy in currentLevel.Enemies) {
                 NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), enemyModel, player);
                 newEnemy.Scale = 0.08f;
                 newEnemy.HasLighting = true;

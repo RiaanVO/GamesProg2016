@@ -20,18 +20,18 @@ namespace PRedesign
         //bool keyRelocated = false;
         //Key needs  to have a door related with it
         AudioEmitterComponent audioEmitter;
-
+        List<Collider> currentCollisions;
         private float deltaTime;
 
         //Unlock animation variables
-        private float diamondMaxDistance = 0.1f; //how far the diamond parts can move
+        private float diamondMaxDistance = 2.5f; //how far the diamond parts can move
         private float currentDistance; //how far the diamond parts are currently
-        private float diamondMovementSpeed = 0.1f; //how quickly the diamond parts move
+        private float diamondMovementSpeed = 3f; //how quickly the diamond parts move
         private bool opening;
         private bool unlockComplete;
 
         // Disc rotate animation variables
-        private float activateDistance = 20f; //distance between player and object to animate open
+        private float activateDistance = 40f; //distance between player and object to animate open
         private bool discRotated;
         private float discRotation;
         private float rotationalSpeed = 2f; //speed of rotation
@@ -49,7 +49,7 @@ namespace PRedesign
             orientation = 0f;
             scale = 0.15f;
             //translationMatrix = Matrix.CreateTranslation(startPosition) + Matrix.CreateTranslation(50f, 50f, 17f);
-            translationMatrix = Matrix.CreateTranslation(startPosition + new Vector3(LevelManager.TileSize / 2, LevelManager.TileSize / 2, LevelManager.TileSize / 4));
+            //translationMatrix = Matrix.CreateTranslation(startPosition + new Vector3(LevelManager.TileSize / 2, LevelManager.TileSize / 2, LevelManager.TileSize / 4));
             scaleMatrix = Matrix.CreateScale(scale);
 
             //Collision code. Will the door tag work correctly? Should we start this off being an obstacle and then make it a door tag?
@@ -85,7 +85,21 @@ namespace PRedesign
 
             //Doesn't do anything out of ordinary if locked
             if (isUnlocked)
-            { 
+            {
+                currentCollisions = collider.getCollisions();
+                if (currentCollisions.Count() > 0)
+                {
+                    foreach (Collider col in currentCollisions)
+                    {
+                        if (col.Tag == ObjectTag.player)
+                        {
+                            //Game is over
+                            LevelManager.NextLevel();
+                            return;
+                        }
+                    }
+                }
+
                 if (Vector3.Distance(this.position, player.Position) < activateDistance)
                     opening = true;
                 //Doens't close again.
@@ -104,6 +118,7 @@ namespace PRedesign
         public void unlockDoor()
         {
             collider.Remove();
+            collider = new BoxCollider(this, ObjectTag.exit, new Vector3(LevelManager.TileSize, LevelManager.TileSize, LevelManager.TileSize * 0.5f));
             isUnlocked = true;
         }
 
@@ -114,8 +129,8 @@ namespace PRedesign
                 if (currentDistance <= diamondMaxDistance)
                 {
                     currentDistance += diamondMovementSpeed * deltaTime;
-                    model.Bones["diamond_top_geo"].Transform *= Matrix.CreateTranslation(0f, currentDistance, 0f);
-                    model.Bones["diamond_bot_geo"].Transform *= Matrix.CreateTranslation(0f, -currentDistance, 0f);
+                    model.Bones["diamond_top_geo"].Transform = Matrix.CreateTranslation(0f, currentDistance, 0f);
+                    model.Bones["diamond_bot_geo"].Transform = Matrix.CreateTranslation(0f, -currentDistance, 0f);
                 }
                 else
                 {
@@ -132,7 +147,7 @@ namespace PRedesign
                 if (!discRotated)
                 {
                     //Continue animating the unlock sequence (rotation) until unlocked
-                    if (discRotation < MathHelper.PiOver2)
+                    if (discRotation < MathHelper.Pi)
                     {
                         discRotation += rotationalSpeed * deltaTime;
                     }
@@ -142,7 +157,10 @@ namespace PRedesign
                     }
                     //This will change depending on orientation, or will it work still?
                     //NEEDS TESTING when whole model is rotated 90 degrees
-                    model.Bones["disk_geo"].Transform = Matrix.CreateScale(0.4f) * Matrix.CreateRotationZ(discRotation);
+                    model.Bones["disk_geo"].Transform = Matrix.CreateTranslation(new Vector3(-50, -50, -17)) *  Matrix.CreateRotationZ(discRotation) * Matrix.CreateTranslation(new Vector3(50, 50, 17));
+                    model.Bones["diamond_top_geo"].Transform = Matrix.CreateTranslation(new Vector3(-50, -50, -17)) * Matrix.CreateRotationZ(discRotation) * Matrix.CreateTranslation(new Vector3(50, 50, 17));
+                    model.Bones["diamond_mid_geo"].Transform = Matrix.CreateTranslation(new Vector3(-50, -50, -17)) * Matrix.CreateRotationZ(discRotation) * Matrix.CreateTranslation(new Vector3(50, 50, 17));
+                    model.Bones["diamond_bot_geo"].Transform = Matrix.CreateTranslation(new Vector3(-50, -50, -17)) * Matrix.CreateRotationZ(discRotation) * Matrix.CreateTranslation(new Vector3(50, 50, 17));
                 }
                 else if (!doorsOpen)
                 {
@@ -155,12 +173,11 @@ namespace PRedesign
                         model.Bones["diamond_top_geo"].Transform *= Matrix.CreateTranslation(currentDoorDistance, 0f, 0f);
                         model.Bones["diamond_mid_geo"].Transform *= Matrix.CreateTranslation(currentDoorDistance, 0f, 0f);
                         model.Bones["diamond_bot_geo"].Transform *= Matrix.CreateTranslation(currentDoorDistance, 0f, 0f);
-                        model.Bones["door_L_geo"].Transform *= Matrix.CreateTranslation(-currentDoorDistance, 0f, 0f);
+                        model.Bones["door_L_geo "].Transform *= Matrix.CreateTranslation(-currentDoorDistance, 0f, 0f);
                     }
                     else
                     {
                         doorsOpen = true;
-                        //opening = false;?
                     }
                 }
             }

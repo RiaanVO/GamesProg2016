@@ -201,7 +201,7 @@ namespace PRedesign
                 orientation = 0f + overlap;
             }
             rotationMatrix = Matrix.CreateRotationY(orientation);
-            model.Bones["Spike"].Transform = Matrix.CreateRotationY(-orientation * 2);
+            model.Bones["spikes_geo"].Transform = Matrix.CreateRotationY(-orientation * 2);
         }
 
         public override void Draw(GameTime gameTime)

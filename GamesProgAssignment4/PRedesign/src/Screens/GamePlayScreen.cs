@@ -51,7 +51,6 @@ namespace PRedesign
             //Load sounds
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
             ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
-            ContentStore.Add("hover", content.Load<SoundEffect>(@"Sounds/Effects/hover"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
 
@@ -133,7 +132,6 @@ namespace PRedesign
                 //Stuff
 
                 ObjectManager.Update(gameTime);
-                AudioManager.Update(gameTime);
 
                 ////////////////////////////
             }

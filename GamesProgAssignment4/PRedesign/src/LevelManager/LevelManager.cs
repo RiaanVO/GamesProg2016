@@ -289,7 +289,6 @@ namespace PRedesign {
         /// </summary>
         public static void UnloadLevel() {
             ObjectManager.clearAll();
-            AudioManager.stopAll();
             AudioManager.clearAll();
             CollisionManager.clearAll();
             WireShapeDrawer.clearAll();

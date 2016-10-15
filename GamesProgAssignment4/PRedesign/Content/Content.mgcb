@@ -428,9 +428,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/TetraDoor model/TetraDoorRigged.fbx
 
-#begin Sounds/Effects/hover.wav
+#begin Sounds/hover.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sounds/Effects/hover.wav
+/build:Sounds/hover.wav
 

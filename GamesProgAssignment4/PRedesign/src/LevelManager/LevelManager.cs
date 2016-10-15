@@ -171,8 +171,11 @@ namespace PRedesign {
                 currentLevel = levels[levels.IndexOf(currentLevel) + 1];
                 UnloadLevel();
                 LoadLevel(currentLevel.Id);
+
             } else {
-                // Completed Game screen?
+                UnloadLevel();
+                ContentStore.Unload();
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
             }
         }
 

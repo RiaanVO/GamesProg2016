@@ -409,18 +409,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/editor_spike.png
 
-#begin Sounds/Music/footsteps.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Music/footsteps.wav
-
-#begin Sounds/Music/key.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Music/key.wav
-
 #begin Models/TetraDoor model/TetraDoorRigged.fbx
 /importer:FbxImporter
 /processor:ModelProcessor
@@ -439,4 +427,10 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/TetraDoor model/TetraDoorRigged.fbx
+
+#begin Sounds/hover.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/hover.wav
 

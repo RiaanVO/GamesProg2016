@@ -62,6 +62,14 @@ namespace PRedesign
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
 
+            //Reset door model
+            model.Bones["door_R_geo"].Transform = Matrix.Identity;
+            model.Bones["disk_geo"].Transform = Matrix.Identity;
+            model.Bones["diamond_top_geo"].Transform = Matrix.Identity;
+            model.Bones["diamond_mid_geo"].Transform = Matrix.Identity;
+            model.Bones["diamond_bot_geo"].Transform = Matrix.Identity;
+            model.Bones["door_L_geo "].Transform = Matrix.Identity;
+
             //Set up animation variables
             discRotated = false;
             opening = false;

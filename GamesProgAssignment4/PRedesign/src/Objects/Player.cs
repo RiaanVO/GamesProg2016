@@ -15,7 +15,7 @@ namespace PRedesign
     {
         #region Fields
         SphereCollider collider;
-        Vector3 colliderPositionOffset = new Vector3(0, 5, 0);
+        Vector3 colliderPositionOffset = new Vector3(0, 4.5f, 0);
         float colliderRadius = 1f;
         SphereMovementChecker movementCollider;
         List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
@@ -42,8 +42,8 @@ namespace PRedesign
         Vector3 acceleration;
         float accelerationRate = 500f;
         float decelerationRate = 400f;
-        float maxVelocity = 40f;//20f;
-        float minVelocity = 10f;
+        float maxVelocity = 30f;//40f;
+        float minVelocity = 15f;
         float deltaTime = 0;
 
 
@@ -51,7 +51,7 @@ namespace PRedesign
         bool grounded = true;
         float jumpVelocity = 60f;
         float jumpHeight; //The height which the player falls back to after jumping (instead of zero)
-        float fallRate = 200f; // Is gravity, is good
+        float fallRate = 220f; // Is gravity, is good
 
         //Audio Components
         AudioListenerComponent audioListenerComponent;

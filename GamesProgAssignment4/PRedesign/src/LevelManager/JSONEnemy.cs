@@ -22,6 +22,7 @@ namespace PRedesign {
         public int X { get; set; }
         public int Y { get; set; }
         public int ID { get; set; }
+        public string Behavior { get; set; }
         public List<PatrolPoint> PatrolPoints { get; set; }
     }
 }

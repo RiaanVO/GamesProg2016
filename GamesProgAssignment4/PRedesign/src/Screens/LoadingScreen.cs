@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace PRedesign
 {
@@ -62,10 +63,12 @@ namespace PRedesign
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            if (otherScreensAreGone) {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (otherScreensAreGone)
+            {
                 ScreenManager.RemoveScreen(this);
 
-                foreach (GameScreen screen in screensToLoad) 
+                foreach (GameScreen screen in screensToLoad)
                     if (screen != null)
                         ScreenManager.AddScreen(screen);
 

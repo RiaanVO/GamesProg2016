@@ -59,7 +59,8 @@ namespace PRedesign
 
         //Event handler for the message box to quite the game and return to the main menu
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e) {
-            ObjectManager.clearAll();
+            LevelManager.UnloadLevel();
+            ContentStore.Unload();
             ScreenManager.Game.Exit();
         }
 
@@ -77,7 +78,8 @@ namespace PRedesign
 
         //Event handler for the message box to return to the main menu
         void ConfirmMainMenuMessageBoxAccepted(object sender, EventArgs e) {
-            ObjectManager.clearAll();
+            LevelManager.UnloadLevel();
+            ContentStore.Unload();
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
         }
         #endregion

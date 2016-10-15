@@ -171,8 +171,11 @@ namespace PRedesign {
                 currentLevel = levels[levels.IndexOf(currentLevel) + 1];
                 UnloadLevel();
                 LoadLevel(currentLevel.Id);
+
             } else {
-                // Completed Game screen?
+                UnloadLevel();
+                ContentStore.Unload();
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
             }
         }
 
@@ -264,6 +267,7 @@ namespace PRedesign {
                     patrolPoints[i] = new Vector3(enemy.PatrolPoints[i].X * TileSize, 5, enemy.PatrolPoints[i].Y * TileSize);
                 }
                 newEnemy.PatrolPoints = patrolPoints;
+                newEnemy.AiFile = enemy.Behavior;
                 ObjectManager.addGameObject(newEnemy);                
             }
 
@@ -283,13 +287,17 @@ namespace PRedesign {
         /// <summary>
         /// Unloads the current level - cleaing all lists holding objects/references
         /// </summary>
-        private static void UnloadLevel() {
+        public static void UnloadLevel() {
             ObjectManager.clearAll();
             AudioManager.clearAll();
             CollisionManager.clearAll();
             WireShapeDrawer.clearAll();
             System.GC.Collect();
             isLevelLoaded = false;
+        }
+
+        public static void UnloadContent() {
+            
         }
         #endregion
     }

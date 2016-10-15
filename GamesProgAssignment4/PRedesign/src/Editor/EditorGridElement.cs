@@ -96,7 +96,7 @@ namespace PRedesign {
         public bool HitTest(Point location) {
             if (Contains(location)) {
                 // Prevent grid painting during the enemy creation process
-                if (!LevelEditor.PlacingEnemy && !LevelEditor.PlacingNode && !LevelEditor.PaintingObject) {
+                if (!LevelEditor.PlacingEnemy && !LevelEditor.PlacingNode && !LevelEditor.PaintingObject && !LevelEditor.SelectingBehavior) {
                     ChangeElement();
                 }
                 return true;

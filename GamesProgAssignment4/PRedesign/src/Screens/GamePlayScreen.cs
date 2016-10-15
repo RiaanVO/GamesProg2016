@@ -37,18 +37,20 @@ namespace PRedesign
             gameFont = content.Load<SpriteFont>(@"Fonts/GameFont");
 
             //Load textures
-            ContentStore.loadedTextures.Add("ground", content.Load<Texture2D>(@"Textures/white floor"));
-            ContentStore.loadedTextures.Add("ceiling", content.Load<Texture2D>(@"Textures/ceiling v3"));
-            ContentStore.loadedTextures.Add("wall", content.Load<Texture2D>(@"Textures/blue stripe wall"));
+            ContentStore.Add("ground", content.Load<Texture2D>(@"Textures/white floor"));
+            ContentStore.Add("ceiling", content.Load<Texture2D>(@"Textures/ceiling v3"));
+            ContentStore.Add("wall", content.Load<Texture2D>(@"Textures/blue stripe wall"));
 
             //Load models
-            ContentStore.loadedModels.Add("skybox", content.Load<Model>(@"Models/TechnoSkybox Model/technobox"));
-            ContentStore.loadedModels.Add("tetraKey", content.Load<Model>(@"Models/TetraKey Model/SplitDiamond"));
-            ContentStore.loadedModels.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
-            ContentStore.loadedModels.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
-            ContentStore.loadedModels.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRigged"));
+            ContentStore.Add("skybox", content.Load<Model>(@"Models/TechnoSkybox Model/technobox"));
+            ContentStore.Add("tetraKey", content.Load<Model>(@"Models/TetraKey Model/SplitDiamond"));
+            ContentStore.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
+            ContentStore.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
+            ContentStore.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRigged"));
 
             //Load sounds
+            ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
+            ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
 

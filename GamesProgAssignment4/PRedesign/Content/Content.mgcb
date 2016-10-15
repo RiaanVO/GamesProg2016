@@ -349,6 +349,18 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Spikes Model/red_spikes_v15_shorter.fbx
 
+#begin Sounds/Effects/footsteps.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Effects/footsteps.wav
+
+#begin Sounds/Effects/key.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Effects/key.wav
+
 #begin Textures/editor_door.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -403,23 +415,11 @@
 /processorParam:Quality=Best
 /build:Sounds/Music/footsteps.wav
 
-#begin Sounds/Music/heartbeat.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Music/heartbeat.wav
-
 #begin Sounds/Music/key.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Music/key.wav
-
-#begin Sounds/Music/scaryscream.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Sounds/Music/scaryscream.wav
 
 #begin Models/TetraDoor model/TetraDoorRigged.fbx
 /importer:FbxImporter

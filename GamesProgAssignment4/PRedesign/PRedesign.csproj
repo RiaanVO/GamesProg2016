@@ -44,6 +44,7 @@
     <Compile Include="src\AudioManager\AudioComponent.cs" />
     <Compile Include="src\AudioManager\AudioEmitterComponent.cs" />
     <Compile Include="src\AudioManager\AudioListenerComponent.cs" />
+    <Compile Include="src\ContentManager\ContentStore.cs" />
     <Compile Include="src\Editor\EditorEnemy.cs" />
     <Compile Include="src\LevelManager\Enemy.cs" />
     <Compile Include="src\Collision\BoxCollider.cs" />

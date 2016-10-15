@@ -115,7 +115,7 @@ namespace PRedesign
             collider.PositionOffset = colliderPositionOffset;
             collider.DrawColour = Color.Magenta;
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
-            CollisionManager.ForceTreeConstruction();
+            //CollisionManager.ForceTreeConstruction();
   
             invulnerabilitySeconds = 5;
             remainingDelay = invulnerabilitySeconds;

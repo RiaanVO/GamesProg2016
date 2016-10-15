@@ -33,6 +33,7 @@ namespace PRedesign
         List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall }; //obstical and player maybe
 
         //AI FSM fields
+        private string aiFile = "Content / AIFSM / StandardPatrol.xml";
         AiFSM brain;
         string previousState;
         bool loadFromFile = false;
@@ -48,7 +49,7 @@ namespace PRedesign
         float randomWanderChangeRadius = 3;
         Vector3 homeBase = Vector3.Zero;
         double minDistanceToHome = 10;
-        
+
 
         //Animation fields
         private float deltaTime;
@@ -84,8 +85,65 @@ namespace PRedesign
             set
             {
                 patrolPoints = value;
-                CurrentTarget = patrolPoints[0];
+                if(patrolPoints.Length != 0)
+                    CurrentTarget = patrolPoints[0];
 
+            }
+        }
+
+        public string AiFile {
+            set {
+                aiFile = value;
+                try
+                {
+                    loadFromFile = false;
+                    System.IO.Stream stream = TitleContainer.OpenStream(aiFile);
+                    XDocument xdoc = XDocument.Load(stream);
+
+                    string startState = xdoc.Root.Attribute("startState").Value;
+                    brain = new AiFSM(startState);
+
+                    foreach (XElement variable in xdoc.Root.Element("variables").Elements("variable"))
+                        valueSetting(variable.Attribute("name").Value, variable.Attribute("value").Value);
+
+                    foreach (XElement stateElement in xdoc.Root.Elements("state"))
+                    {
+                        string stateName = stateElement.Attribute("state").Value; //Get state name
+                        string updateFunctionName = stateElement.Attribute("updateFunction").Value; // getUpdate fuction name
+                        AiState state = new AiState(brain, stateName, getUpdateFunction(updateFunctionName));
+
+                        //Loop through conditions
+                        foreach (XElement transitionElement in stateElement.Elements())
+                        {
+                            string nextState = transitionElement.Attribute("toState").Value;
+                            string conditionFunction = transitionElement.Attribute("condition").Value;
+                            state.addTransition(nextState, getConditionFunction(conditionFunction));
+                        }
+                        brain.addState(state);
+                    }
+                    Console.WriteLine("AILoaded: " + position);
+                    loadFromFile = true;
+                }
+                catch (System.IO.FileNotFoundException)
+                {
+                    loadFromFile = false;
+                }
+
+                if (!loadFromFile)
+                {
+                    brain = new AiFSM("IDLE");
+                    //Setup the states and add them to the fsm
+                    AiState PatrolState = new AiState(brain, "PATROL", updatePatrol);
+                    PatrolState.addTransition("SEEK", playerNear);
+                    AiState SeekState = new AiState(brain, "SEEK", updateSeek);
+                    SeekState.addTransition("IDLE", playerFar);
+                    AiState IdleState = new AiState(brain, "IDLE", updateIdle);
+                    IdleState.addTransition("PATROL", idleTimeUp);
+                    IdleState.addTransition("SEEK", playerNear);
+                    brain.addState(PatrolState);
+                    brain.addState(SeekState);
+                    brain.addState(IdleState);
+                }
             }
         }
         #endregion
@@ -99,56 +157,14 @@ namespace PRedesign
             modelBaseOrientation = 0;
 
             this.player = player;
-            
-            string aiFile = "Content/AIFSM/StandardPatrol.xml";
-            try {
-                System.IO.Stream stream = TitleContainer.OpenStream(aiFile);
-                XDocument xdoc = XDocument.Load(stream);
-                
-                string startState = xdoc.Root.Attribute("startState").Value;
-                brain = new AiFSM(startState);
 
-                foreach (XElement variable in xdoc.Root.Element("variables").Elements("variable"))
-                    valueSetting(variable.Attribute("name").Value, variable.Attribute("value").Value);
+            //string aiFile;
+            //aiFile = "Content/AIFSM/StandardPatrol.xml"; yes
+            //aiFile = "Content/AIFSM/ChasePlayer.xml"; yes
+            //aiFile = "Content/AIFSM/GuardLocation.xml"; yes
+            //aiFile = "Content/AIFSM/RandomWander.xml"; yes
+            AiFile = "Content/AIFSM/StandardPatrol.xml";
 
-                foreach (XElement stateElement in xdoc.Root.Elements("state"))
-                {
-                    string stateName = stateElement.Attribute("state").Value; //Get state name
-                    string updateFunctionName = stateElement.Attribute("updateFunction").Value; // getUpdate fuction name
-                    AiState state = new AiState(brain, stateName, getUpdateFunction(updateFunctionName));
-
-                    //Loop through conditions
-                    foreach (XElement transitionElement in stateElement.Elements())
-                    {
-                        string nextState = transitionElement.Attribute("toState").Value;
-                        string conditionFunction = transitionElement.Attribute("condition").Value;
-                        state.addTransition(nextState, getConditionFunction(conditionFunction));
-                    }
-                    brain.addState(state);
-                }
-
-                loadFromFile = true;
-            }
-            catch (System.IO.FileNotFoundException)
-            {
-                loadFromFile = false;
-            }
-
-            if (!loadFromFile)
-            {
-                brain = new AiFSM("IDLE");
-                //Setup the states and add them to the fsm
-                AiState PatrolState = new AiState(brain, "PATROL", updatePatrol);
-                PatrolState.addTransition("SEEK", playerNear);
-                AiState SeekState = new AiState(brain, "SEEK", updateSeek);
-                SeekState.addTransition("IDLE", playerFar);
-                AiState IdleState = new AiState(brain, "IDLE", updateIdle);
-                IdleState.addTransition("PATROL", idleTimeUp);
-                IdleState.addTransition("SEEK", playerNear);
-                brain.addState(PatrolState);
-                brain.addState(SeekState);
-                brain.addState(IdleState);
-            }
 
             //Set up the path following steering behavior
             pathSteering = new FollowPath(this, pathPoints, 0, false, 3);
@@ -246,7 +262,7 @@ namespace PRedesign
             if (!movementCollider.canMoveZ(position, velocity * deltaTime))
                 velocity.Z = -Velocity.Z * deltaTime;
         }
-        
+
         #endregion
 
         #region FSM Construction
@@ -286,7 +302,8 @@ namespace PRedesign
             }
         }
 
-        private void valueSetting(string valueName, string value) {
+        private void valueSetting(string valueName, string value)
+        {
             switch (valueName)
             {
                 case "patrolChangeRadius":
@@ -333,16 +350,19 @@ namespace PRedesign
             }
         }
 
-        private float stringToFloat(string value) {
+        private float stringToFloat(string value)
+        {
             try
             {
                 return float.Parse(value);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 return float.MinValue;
             }
         }
-        private double stringToDouble(string value) {
+        private double stringToDouble(string value)
+        {
             try
             {
                 return double.Parse(value);
@@ -352,14 +372,15 @@ namespace PRedesign
                 return double.MinValue;
             }
         }
-        private Vector3 stringToVector3(string value) {
+        private Vector3 stringToVector3(string value)
+        {
             string[] values = value.Split(',');
             if (values.Length != 3)
                 return new Vector3(float.MinValue);
             float x = stringToFloat(values[0]);
             float y = stringToFloat(values[1]);
             float z = stringToFloat(values[2]);
-            if(x == float.MinValue || y == float.MinValue || z == float.MinValue)
+            if (x == float.MinValue || y == float.MinValue || z == float.MinValue)
                 return new Vector3(float.MinValue);
             return new Vector3(x, y, z);
         }
@@ -468,7 +489,7 @@ namespace PRedesign
                 update(pathSteering.getSteering(), deltaTime);
             }
         }
-        
+
         private Vector3 randomPathablePosition()
         {
             Random rand = new Random();
@@ -482,7 +503,7 @@ namespace PRedesign
                 testPosition = new Vector3((float)rand.NextDouble() * LevelManager.LevelWidth, 0, (float)rand.NextDouble() * LevelManager.LevelDepth);
                 if (Vector3.Distance(position, testPosition) > randomPositionMinDistance)
                 {
-                    positionFound = NavigationMap.isPositionObstructed(testPosition);
+                    positionFound = !NavigationMap.isPositionObstructed(testPosition);
                 }
             }
             while (!positionFound);
@@ -490,7 +511,8 @@ namespace PRedesign
             return testPosition;
         }
 
-        private void updateReturnToBase(GameTime gameTIme) {
+        private void updateReturnToBase(GameTime gameTIme)
+        {
             if (!previousState.Equals(brain.CurrentState))
             {
                 if (homeBase != Vector3.Zero)
@@ -506,6 +528,6 @@ namespace PRedesign
         }
         #endregion
 
-        
+
     }
 }

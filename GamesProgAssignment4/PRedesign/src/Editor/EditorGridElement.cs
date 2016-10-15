@@ -16,11 +16,6 @@ namespace PRedesign {
             WALL,
             PATH
         }
-
-        public enum ElementObstacle {
-            NONE,
-            SPIKE
-        }
         #endregion
 
         #region Fields
@@ -31,7 +26,7 @@ namespace PRedesign {
         Color DefaultColor = Color.White;
         Color CurrentColor;
         LevelEditor.PaintSelection type = LevelEditor.PaintSelection.EMPTY;
-        ElementObstacle obstacle = ElementObstacle.NONE;
+
 
         Texture2D Texture;
         #endregion
@@ -40,11 +35,6 @@ namespace PRedesign {
         public LevelEditor.PaintSelection Type {
             get { return type; }
             set { type = value; }
-        }
-
-        public ElementObstacle Obstacle {
-            get { return obstacle; }
-            set { obstacle = value; }
         }
 
         public Vector2 Position {
@@ -106,7 +96,7 @@ namespace PRedesign {
         public bool HitTest(Point location) {
             if (Contains(location)) {
                 // Prevent grid painting during the enemy creation process
-                if (!LevelEditor.PlacingEnemy && !LevelEditor.PlacingNode) {
+                if (!LevelEditor.PlacingEnemy && !LevelEditor.PlacingNode && !LevelEditor.PaintingObject) {
                     ChangeElement();
                 }
                 return true;
@@ -118,21 +108,23 @@ namespace PRedesign {
         /// Changes the clicked element to the type of the current selected paint in the editor
         /// </summary>
         public void ChangeElement() {
-            if (!LevelEditor.SelectedPaint.Equals(type)) {
-                switch (LevelEditor.SelectedPaint) {
-                    case LevelEditor.PaintSelection.EMPTY:
-                        Texture = LevelEditor.DefaultTexture;
-                        break;
-                    case LevelEditor.PaintSelection.WALL:
-                        Texture = LevelEditor.WallTexture;
-                        break;
-                    case LevelEditor.PaintSelection.PATH:
-                        Texture = LevelEditor.PathTexture;
-                        break;
+                if (!LevelEditor.SelectedPaint.Equals(type)) {
+                    switch (LevelEditor.SelectedPaint) {
+                        case LevelEditor.PaintSelection.EMPTY:
+                            Texture = LevelEditor.DefaultTexture;
+                            break;
+                        case LevelEditor.PaintSelection.WALL:
+                            Texture = LevelEditor.WallTexture;
+                            break;
+                        case LevelEditor.PaintSelection.PATH:
+                            Texture = LevelEditor.PathTexture;
+                            break;
+                    }
+                    type = LevelEditor.SelectedPaint;
                 }
-                type = LevelEditor.SelectedPaint;
-            }
         }
+            
+        
         #endregion
 
         #region Update and Draw

@@ -46,6 +46,7 @@ namespace PRedesign
             ContentStore.loadedModels.Add("tetraKey", content.Load<Model>(@"Models/TetraKey Model/SplitDiamond"));
             ContentStore.loadedModels.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
             ContentStore.loadedModels.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
+            ContentStore.loadedModels.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRot"));
 
             //Load sounds
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");

@@ -17,6 +17,7 @@ namespace PRedesign
         float maxSpeed = 7;
         float dragPercentage = 0.05f;
 
+        AudioEmitterComponent audioEmitterComponent;
 
         //Steering Behaviours and fields
         FollowPath pathSteering;
@@ -161,6 +162,9 @@ namespace PRedesign
             modelBaseOrientation = 0;
 
             this.player = player;
+
+            audioEmitterComponent = new AudioEmitterComponent(this);
+            audioEmitterComponent.createSoundEffectInstance("hover", ContentStore.loadedSounds["hover"], true, true, true, 1f);
 
             //string aiFile;
             //aiFile = "Content/AIFSM/StandardPatrol.xml"; yes

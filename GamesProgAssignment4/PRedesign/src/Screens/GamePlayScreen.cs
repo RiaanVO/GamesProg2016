@@ -49,6 +49,8 @@ namespace PRedesign
             ContentStore.loadedModels.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRot"));
 
             //Load sounds
+            ContentStore.loadedSounds.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
+            ContentStore.loadedSounds.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
 

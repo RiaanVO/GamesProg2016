@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace PRedesign
 {
@@ -62,15 +63,20 @@ namespace PRedesign
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            if (otherScreensAreGone) {
-                ScreenManager.RemoveScreen(this);
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Enter))
+            {
+                if (otherScreensAreGone)
+                {
+                    ScreenManager.RemoveScreen(this);
 
-                foreach (GameScreen screen in screensToLoad) 
-                    if (screen != null)
-                        ScreenManager.AddScreen(screen);
+                    foreach (GameScreen screen in screensToLoad)
+                        if (screen != null)
+                            ScreenManager.AddScreen(screen);
 
-                //After a long load tell the game not to try an catch up frames
-                ScreenManager.Game.ResetElapsedTime();
+                    //After a long load tell the game not to try an catch up frames
+                    ScreenManager.Game.ResetElapsedTime();
+                }
             }
         }
 

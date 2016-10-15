@@ -11,7 +11,7 @@ namespace PRedesign {
     /// <summary>
     /// Data model for the enemy object in preparation for JSON serialisation
     /// </summary>
-    class Enemy {
+    class JSONEnemy {
 
         // PatrolPoint class for storing the enemy node positions using raw array coordinates
         public class PatrolPoint {
@@ -21,6 +21,7 @@ namespace PRedesign {
 
         public int X { get; set; }
         public int Y { get; set; }
+        public int ID { get; set; }
         public List<PatrolPoint> PatrolPoints { get; set; }
     }
 }

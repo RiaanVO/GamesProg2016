@@ -110,7 +110,7 @@ namespace PRedesign {
         /// <param name="xData"> raw array data for x coordinate</param>
         /// <param name="yData">raw array data for y coordinate</param>
         /// <param name="nodes"> List of nodes beloning to the enemy object</param>
-        public EditorEnemy(Vector2 editorPos, int size, int offset, Texture2D enemyTexture, Texture2D nodeTexture, int xData, int yData, IList<Enemy.PatrolPoint> nodes) {
+        public EditorEnemy(Vector2 editorPos, int size, int offset, Texture2D enemyTexture, Texture2D nodeTexture, int xData, int yData, IList<JSONEnemy.PatrolPoint> nodes) {
             enemyPosition = new Vector2((editorPos.X + size * xData) + offset * xData, (editorPos.Y + size * yData) + offset * yData);
             this.enemyTexture = enemyTexture;
             this.nodeTexture = nodeTexture;
@@ -120,7 +120,7 @@ namespace PRedesign {
             bounds = new Rectangle((int)enemyPosition.X, (int)enemyPosition.Y, size, size);
 
             // Load a new node for each patrol point found in the JSON file
-            foreach (Enemy.PatrolPoint node in nodes) {
+            foreach (JSONEnemy.PatrolPoint node in nodes) {
                 addNode(new Vector2((editorPos.X + size * node.X) + offset * node.X, (editorPos.Y + size * node.Y) + offset * node.Y), node.X, node.Y);
             }
         }

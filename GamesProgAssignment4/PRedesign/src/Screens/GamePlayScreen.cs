@@ -145,10 +145,9 @@ namespace PRedesign
 
             ObjectManager.Draw(gameTime);
 
-
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
-            CollisionManager.Render(Color.Violet, false, true);
-            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
+            //CollisionManager.Render(Color.Violet, false, true);
+            //WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
 
             //////////////////////////////////////
 

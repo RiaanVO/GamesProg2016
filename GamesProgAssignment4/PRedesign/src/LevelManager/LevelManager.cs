@@ -137,6 +137,8 @@ namespace PRedesign {
 
                 //Construct the objects for the level
                 LoadLevelData();
+                Console.WriteLine("Level loaded");
+                CollisionManager.constructQuadTree();
             }
         }
 
@@ -193,11 +195,10 @@ namespace PRedesign {
         /// </summary>
         private static void LoadLevelData() {
             int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
-            int currentLevelHeight = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
+            int currentLevelHeight = currentLevel.Data.GetUpperBound(1) * TILE_SIZE;
             int largestDimension = (currentLevelWidth > currentLevelHeight) ? currentLevelWidth : currentLevelHeight;
             int heightScale = 3;
             levelEnclosure = new BoundingBox(new Vector3(-TILE_SIZE, -TILE_SIZE * heightScale, -TILE_SIZE), new Vector3(largestDimension + TILE_SIZE, TILE_SIZE * heightScale, largestDimension + TILE_SIZE));
-
             for (int i = 0; i <= currentLevel.Data.GetUpperBound(0); i++) {
                 for (int j = 0; j <= currentLevel.Data.GetUpperBound(1); j++) {
                     switch (currentLevel.Data[j, i]) {
@@ -228,8 +229,6 @@ namespace PRedesign {
                 ObjectManager.addGameObject(newEnemy);                
             }
 
-            CollisionManager.ForceTreeConstruction();
-
             isLevelLoaded = true;
         }
 
@@ -240,6 +239,8 @@ namespace PRedesign {
             ObjectManager.clearAll();
             AudioManager.clearAll();
             CollisionManager.clearAll();
+            WireShapeDrawer.clearAll();
+            System.GC.Collect();
             isLevelLoaded = false;
         }
         #endregion

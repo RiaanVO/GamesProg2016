@@ -135,7 +135,7 @@ namespace PRedesign
             //Audio
             audioListenerComponent = new AudioListenerComponent(this);
             audioEmitterComponent = new AudioEmitterComponent(this);
-            //audioEmitterComponent.createSoundEffectInstance("bgMusic", game.Content.Load<SoundEffect>(@"Sounds/Music/The Lift"), false, true, true, 1f);
+            audioEmitterComponent.createSoundEffectInstance("footsteps", ContentStore.loadedSounds["footsteps"], false, true, false, 1f);
             
         }
         #endregion
@@ -163,13 +163,16 @@ namespace PRedesign
                 {
                     if (collido.Tag == ObjectTag.pickup)
                     {
-
+                        //pickup key! yay!
                     }
                     if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
                     {
-                        Console.WriteLine("Ow! I recieved the ow factor!");
                         health--;
                         isInvulnerable = true;
+                    }
+                    if (collido.Tag == ObjectTag.door && hasKey)
+                    {
+                        //load next level
                     }
                 }
 
@@ -178,6 +181,15 @@ namespace PRedesign
 
                 handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
+
+                if (velocity.Length() > 0)
+                {
+                    audioEmitterComponent.setInstancePlayback("footsteps", true);
+                }
+                else
+                {
+                    audioEmitterComponent.setInstancePlayback("footsteps", false);
+                }
 
                 base.Update(gameTime);
             }

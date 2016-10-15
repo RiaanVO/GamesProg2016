@@ -488,3 +488,15 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Spikes Model/red_spikes_v15_shorter.fbx
 
+#begin Sounds/Effects/footsteps.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Effects/footsteps.wav
+
+#begin Sounds/Effects/key.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Effects/key.wav
+

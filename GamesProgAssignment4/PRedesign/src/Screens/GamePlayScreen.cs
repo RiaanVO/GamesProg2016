@@ -48,6 +48,8 @@ namespace PRedesign
             ContentStore.loadedModels.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
 
             //Load sounds
+            ContentStore.loadedSounds.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
+            ContentStore.loadedSounds.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
 

@@ -1,6 +1,6 @@
 ﻿<!---
 For all names, use exactly as shown in this description
-Allowed states:
+Allowed states: General, You can name them what you want
 - IDLE
 - PATROL
 - SEEK
@@ -68,17 +68,21 @@ Any values not set will we set to the defauts in the code
     <variable name="dragPercentage" value="0.2" />
   </variables>
   
-  <state state="PATROL" updateFunction="updatePatrol">
-    <transition condition="playerNear" toState="SEEK" />
+  <state state="RETURNTOBASE" updateFunction="updateReturnToBase">
+    <transition condition="atHomeBase" toState="IDLE" />
   </state>
 
   <state state="SEEK" updateFunction="updateSeek">
-    <transition condition="playerFar" toState="IDLE" />
+    <transition condition="playerFar" toState="IDLEO" />
+  </state>
+
+  <state state="IDLEO" updateFunction="updateIdle">
+    <transition condition="idleTimeUp" toState="RETURNTOBASE" />
+    <transition condition="playerNear" toState="SEEK" />
   </state>
 
   <state state="IDLE" updateFunction="updateIdle">
     <transition condition="playerNear" toState="SEEK" />
-    <transition condition="idleTimeUp" toState="PATROL" />
   </state>
 
 </fsm>

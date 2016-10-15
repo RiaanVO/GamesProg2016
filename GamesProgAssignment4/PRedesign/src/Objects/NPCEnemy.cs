@@ -22,8 +22,9 @@ namespace PRedesign
         FollowPath pathSteering;
         Vector3 currentTarget;
         Vector3[] pathPoints;
-
+        bool endPointExact = false;
         Player player;
+        Vector3 tileDimenstions = new Vector3(LevelManager.TileSize, 0, LevelManager.TileSize) / 2;
 
         //Collision
         SphereCollider collider;
@@ -35,11 +36,11 @@ namespace PRedesign
         AiFSM brain;
         Vector3[] patrolPoints;
         int patrolIndex = 0;
-        float patrolChangeRadius = 1;
-        double playerNearDistance = LevelManager.TileSize * 4;
-        double playerFarDistance = LevelManager.TileSize * 6;
-        float idleDelayTime = 5;
-        float currentIdleTime;
+        float patrolChangeRadius = 3;
+        double playerNearDistance = LevelManager.TileSize * 2;
+        double playerFarDistance = LevelManager.TileSize * 4;
+        float idleDelayTime = 3;
+        float currentIdleTime = 0;
         string previousState;
         bool loadFromFile = false;
 
@@ -66,7 +67,8 @@ namespace PRedesign
             set
             {
                 currentTarget = value;
-                PathPoints = NavigationMap.FindPath(position, currentTarget).ToArray();
+                PathPoints = NavigationMap.FindPath(position, currentTarget, endPointExact).ToArray();
+                
             }
         }
 
@@ -76,6 +78,7 @@ namespace PRedesign
             {
                 patrolPoints = value;
                 CurrentTarget = patrolPoints[0];
+                
             }
         }
         #endregion
@@ -86,12 +89,12 @@ namespace PRedesign
             velocity = Vector3.Zero;
             currentTarget = position;
             rotation = 0;
-            maxSpeed = 5;
+            maxSpeed = 7;
             modelBaseOrientation = 0;
-            dragPercentage = 0.2f;
+            dragPercentage = 0.05f;
 
             //Set up the path following steering behavior
-            pathSteering = new FollowPath(this, pathPoints, 1, false, 1);
+            pathSteering = new FollowPath(this, pathPoints, 0, false, 3);
             pathSteering.TargetRadius = 0.5f;
             pathSteering.SlowRadius = 5;
             pathSteering.MaxSpeed = maxSpeed;
@@ -122,7 +125,7 @@ namespace PRedesign
             }
             else
             {
-                brain = new AiFSM("PATROL");
+                brain = new AiFSM("IDLE");
                 //Setup the states and add them to the fsm
                 AiState PatrolState = new AiState(brain, "PATROL", updatePatrol);
                 PatrolState.addTransition("SEEK", playerNear);
@@ -145,7 +148,8 @@ namespace PRedesign
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
-            previousState = brain.CurrentState;
+            if(!brain.StateJustChanged)
+                previousState = brain.CurrentState;
             brain.update(gameTime);
             
             //Animation
@@ -212,6 +216,7 @@ namespace PRedesign
 
             rotationMatrix = Matrix.CreateRotationY(orientation + modelBaseOrientation);
             translationMatrix = Matrix.CreateTranslation(position);
+            collider.updateColliderPos(position);
         }
 
         private void checkMovementCollisions(float deltaTime)
@@ -281,24 +286,25 @@ namespace PRedesign
         private void updatePatrol(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            endPointExact = false;
             if (!previousState.Equals(brain.CurrentState))
             {
-                
                 CurrentTarget = patrolPoints[patrolIndex];
             }
 
             if (NavigationMap.isPositionObstructed(patrolPoints[patrolIndex]))
                 patrolIndex++;
-
-            if (Vector3.Distance(position, patrolPoints[patrolIndex]) < patrolChangeRadius)
+            
+            if (Vector3.Distance(position, patrolPoints[patrolIndex] + tileDimenstions) < patrolChangeRadius)
             {
                 patrolIndex++;
                 if (patrolIndex >= patrolPoints.Count())
                     patrolIndex = 0;
                 CurrentTarget = patrolPoints[patrolIndex];
+                //Console.WriteLine("Position changed to " + currentTarget);
+
             }
-            
+
             if (pathSteering != null)
             {
                 update(pathSteering.getSteering(), deltaTime);
@@ -312,6 +318,7 @@ namespace PRedesign
         private void updateSeek(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            endPointExact = true;
             if (CurrentTarget != player.Position)
                 CurrentTarget = player.Position;
             if (pathSteering != null)
@@ -330,6 +337,7 @@ namespace PRedesign
             if (!previousState.Equals(brain.CurrentState))
             {
                 currentIdleTime = 0;
+                velocity = Vector3.Zero;
             }
             currentIdleTime += deltaTime;
         }

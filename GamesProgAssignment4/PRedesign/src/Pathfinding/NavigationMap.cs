@@ -10,7 +10,8 @@ namespace PRedesign
 {
     //Adapted from:
     //http://xnatd.blogspot.com.au/2011/12/pathfinding-tutorial-part-3.html
-    class SearchNode {
+    class SearchNode
+    {
         public Vector2 Position;
         public bool Obstructed;
         public SearchNode[] Neighbours;
@@ -39,7 +40,8 @@ namespace PRedesign
         #endregion
 
         #region Initialization
-        public static void CreateNavigationMap(int newLevelWidth, int newLevelHeight, int newNodeWidth) {
+        public static void CreateNavigationMap(int newLevelWidth, int newLevelHeight, int newNodeWidth)
+        {
             levelWidth = newLevelWidth;
             levelHeight = newLevelHeight;
             nodeWidth = newNodeWidth;
@@ -50,14 +52,17 @@ namespace PRedesign
             verts.Clear();
         }
 
-        private static void InitializeSearchNodes() {
+        private static void InitializeSearchNodes()
+        {
             if (levelWidth == 0 || levelHeight == 0 || nodeWidth == 0)
                 return;
             //Create the search nodes
             searchNodes = new SearchNode[numNodesWidth, numNodesHeight];
             Vector3 nodeRegionOffset = new Vector3(nodeWidth * regionScale, nodeWidth * regionScale, nodeWidth * regionScale);
-            for (int x = 0; x < numNodesWidth; x ++) {
-                for (int y = 0; y < numNodesHeight; y ++) {
+            for (int x = 0; x < numNodesWidth; x++)
+            {
+                for (int y = 0; y < numNodesHeight; y++)
+                {
                     SearchNode node = new SearchNode();
                     node.Position = new Vector2(halfNodeWidth + x * nodeWidth, halfNodeWidth + y * nodeWidth);
                     node.Obstructed = false;
@@ -68,8 +73,10 @@ namespace PRedesign
                 }
             }
             //connect up the search nodes
-            for (int x = 0; x < numNodesWidth; x++) {
-                for (int y = 0; y < numNodesHeight; y++) {
+            for (int x = 0; x < numNodesWidth; x++)
+            {
+                for (int y = 0; y < numNodesHeight; y++)
+                {
                     SearchNode node = searchNodes[x, y];
                     SearchNode[] neighbours = new SearchNode[4];
                     if (x - 1 >= 0)
@@ -163,6 +170,28 @@ namespace PRedesign
             return new List<Vector3>();
         }
 
+        public static List<Vector3> FindPath(Vector3 startPointV3, Vector3 endPointV3, bool endPointExact)
+        {
+            //Get the desired path
+            List<Vector3> path = FindPath(startPointV3, endPointV3);
+            Vector3 adjustedEndpoint = new Vector3(endPointV3.X, 0, endPointV3.Z);
+            if (path.Count == 0)
+            {
+                SearchNode startNode = positionToSearchNode(startPointV3);
+                SearchNode endNode = positionToSearchNode(endPointV3);
+                if (startNode != null && endNode != null)
+                    if (startNode == endNode)
+                        if (endPointExact)
+                            path.Add(adjustedEndpoint);
+            }
+            else
+            {
+                if (endPointExact)
+                    path[path.Count - 1] = adjustedEndpoint;
+            }
+            return path;
+        }
+
         /// <summary>
         /// Sets the search node in that position to be obstructed
         /// </summary>
@@ -182,18 +211,21 @@ namespace PRedesign
         /// <param name="isObstructed"></param>
         //public static void setSearchNodeObstructed(BoundingBox obstructedRegion, bool isObstructed) { }
 
-        public static bool isPositionObstructed(Vector3 position) {
+        public static bool isPositionObstructed(Vector3 position)
+        {
             SearchNode node = positionToSearchNode(position);
             if (node == null)
                 return true;
             return node.Obstructed;
         }
 
-        public static List<VertexPositionColor> getNodesVerts() {
+        public static List<VertexPositionColor> getNodesVerts()
+        {
             if (verts.Count != 0)
                 return verts;
             float halfNodeSmall = halfNodeWidth * 0.95f;
-            foreach (SearchNode node in searchNodes) {
+            foreach (SearchNode node in searchNodes)
+            {
                 Vector3 blCorner = new Vector3(node.Position.X - halfNodeSmall, 0.01f, node.Position.Y - halfNodeSmall);
                 Vector3 brCorner = new Vector3(node.Position.X + halfNodeSmall, 0.01f, node.Position.Y - halfNodeSmall);
                 Vector3 tlCorner = new Vector3(node.Position.X - halfNodeSmall, 0.01f, node.Position.Y + halfNodeSmall);
@@ -229,18 +261,22 @@ namespace PRedesign
         /// <param name="position1"></param>
         /// <param name="position2"></param>
         /// <returns></returns>
-        private static float Heuristic(Vector2 position1, Vector2 position2) {
+        private static float Heuristic(Vector2 position1, Vector2 position2)
+        {
             //return Vector2.Distance(position1, position2); //More computing intensive
             return Math.Abs(position1.X - position2.X) + Math.Abs(position1.Y - position2.Y);
         }
-        
+
         //Resets the state of the search nodes
-        private static void ResetSearchNodes() {
+        private static void ResetSearchNodes()
+        {
             openList.Clear();
             closedList.Clear();
 
-            for(int x = 0; x < numNodesWidth; x++){
-                for (int y = 0; y < numNodesHeight; y++) {
+            for (int x = 0; x < numNodesWidth; x++)
+            {
+                for (int y = 0; y < numNodesHeight; y++)
+                {
                     SearchNode node = searchNodes[x, y];
                     node.InClosedList = false;
                     node.InOpenList = false;
@@ -254,13 +290,15 @@ namespace PRedesign
         /// Returns the node wiht the smallest distance to the goal and ensures it is not obstructed
         /// </summary>
         /// <returns></returns>
-        private static SearchNode FindBestNode() {
+        private static SearchNode FindBestNode()
+        {
             SearchNode currentTile = openList[0];
             float smallestDistanceToGoal = float.MaxValue;
 
-            for(int i = 0; i < openList.Count; i++)
+            for (int i = 0; i < openList.Count; i++)
             {
-                if (openList[i].DistanceToGoal < smallestDistanceToGoal && !openList[i].Obstructed) {
+                if (openList[i].DistanceToGoal < smallestDistanceToGoal && !openList[i].Obstructed)
+                {
                     currentTile = openList[i];
                     smallestDistanceToGoal = currentTile.DistanceToGoal;
                 }
@@ -285,7 +323,8 @@ namespace PRedesign
         /// <param name="startNode"></param>
         /// <param name="endNode"></param>
         /// <returns></returns>
-        private static List<Vector3> FindFinalPath(SearchNode startNode, SearchNode endNode) {
+        private static List<Vector3> FindFinalPath(SearchNode startNode, SearchNode endNode)
+        {
             closedList.Add(endNode);
             SearchNode parentTile = endNode.Parent;
             List<Vector3> finalPath = new List<Vector3>();
@@ -293,13 +332,15 @@ namespace PRedesign
             if (startNode == endNode)
                 return finalPath;
 
-            while (parentTile != startNode) {
+            while (parentTile != startNode)
+            {
                 closedList.Add(parentTile);
                 parentTile = parentTile.Parent;
             }
 
 
-            for (int i = closedList.Count - 1; i >= 0; i--) {
+            for (int i = closedList.Count - 1; i >= 0; i--)
+            {
                 Vector3 position = new Vector3(closedList[i].Position.X, 0, closedList[i].Position.Y);
                 finalPath.Add(position);
             }

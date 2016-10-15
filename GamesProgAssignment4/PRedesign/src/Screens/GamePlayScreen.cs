@@ -106,7 +106,7 @@ namespace PRedesign
             /*Tank tank = new Tank(new Vector3(3, 0, 8), tankModel);
             tank.Scale = 0.2f;
             player.Tank = tank;*/
-
+            /*
             NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 6, 20), tetraEnemyModel, player);
             Enemy.Scale = 0.08f;
             Enemy.HasLighting = true;
@@ -115,6 +115,7 @@ namespace PRedesign
                 new Vector3(8, 5, 48),
                 new Vector3(33, 5, 48),
             };
+            */
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();

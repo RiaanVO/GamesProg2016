@@ -172,9 +172,10 @@ namespace PRedesign
 
         public override void Draw(GameTime gameTime)
         {
+            /*
             if (pathPoints != null && (brain.CurrentState.Equals("PATROL") || brain.CurrentState.Equals("SEEK")))
                 if (pathPoints.Count() > 1)
-                    ObjectMetaDrawer.RenderPath(pathPoints, Color.Yellow);
+                    ObjectMetaDrawer.RenderPath(pathPoints, Color.Yellow); */
             base.Draw(gameTime);
         }
 
@@ -223,11 +224,11 @@ namespace PRedesign
         {
             //Check movement directions
             if (!movementCollider.canMoveX(position, velocity * deltaTime))
-                velocity.X = 0;
+                velocity.X = -Velocity.X * deltaTime;
             //if (!movementCollider.canMoveY(position, velocity * deltaTime))
-              //  velocity.Y = 0;
+            //velocity.Y = 0;
             if (!movementCollider.canMoveZ(position, velocity * deltaTime))
-                velocity.Z = 0;
+                velocity.Z = -Velocity.Z * deltaTime;
         }
 
 

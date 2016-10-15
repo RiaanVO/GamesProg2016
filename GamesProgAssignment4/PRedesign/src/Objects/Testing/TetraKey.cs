@@ -100,7 +100,7 @@ namespace PRedesign
         {
             //Unlocks the linked door
             hasBeenCollected = true;
-            audioEmitter.setInstancePlayback("footsteps", true);
+            audioEmitter.setInstancePlayback("key", true);
             collider.Remove();
             door.unlockDoor();
         }

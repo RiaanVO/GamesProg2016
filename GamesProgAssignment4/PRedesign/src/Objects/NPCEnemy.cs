@@ -161,7 +161,7 @@ namespace PRedesign
         {
             orientation += rotationalSpeed * deltaTime;
             //resets to zero + overlap
-            if (orientation > MathHelper.TwoPi)
+            if (Math.Abs(orientation) > MathHelper.TwoPi)
             {
                 float overlap = orientation - MathHelper.TwoPi;
                 orientation = 0f + overlap;
@@ -286,6 +286,7 @@ namespace PRedesign
         private void updatePatrol(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rotationalSpeed = 1f;
             endPointExact = false;
             if (!previousState.Equals(brain.CurrentState))
             {
@@ -301,8 +302,6 @@ namespace PRedesign
                 if (patrolIndex >= patrolPoints.Count())
                     patrolIndex = 0;
                 CurrentTarget = patrolPoints[patrolIndex];
-                //Console.WriteLine("Position changed to " + currentTarget);
-
             }
 
             if (pathSteering != null)
@@ -318,6 +317,7 @@ namespace PRedesign
         private void updateSeek(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rotationalSpeed = -3f;
             endPointExact = true;
             if (CurrentTarget != player.Position)
                 CurrentTarget = player.Position;
@@ -334,6 +334,7 @@ namespace PRedesign
         private void updateIdle(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            rotationalSpeed = -0.3f;
             if (!previousState.Equals(brain.CurrentState))
             {
                 currentIdleTime = 0;

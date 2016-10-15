@@ -170,10 +170,6 @@ namespace PRedesign
                         health--;
                         isInvulnerable = true;
                     }
-                    if (collido.Tag == ObjectTag.door && hasKey)
-                    {
-                        //load next level
-                    }
                 }
 
                 handleInput();

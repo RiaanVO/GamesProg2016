@@ -53,6 +53,7 @@ namespace PRedesign
 
             //Audio code
             audioEmitter = new AudioEmitterComponent(this);
+            audioEmitter.createSoundEffectInstance("key", ContentStore.loadedSounds["key"], false, false, false, 1f);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
 
             //Animation code
@@ -99,6 +100,7 @@ namespace PRedesign
         {
             //Unlocks the linked door
             hasBeenCollected = true;
+            audioEmitter.setInstancePlayback("footsteps", true);
             collider.Remove();
             door.unlockDoor();
         }

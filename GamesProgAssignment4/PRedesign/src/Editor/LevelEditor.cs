@@ -255,7 +255,7 @@ namespace PRedesign {
             doneEnemyButton.Clicked += new UIButton.ClickHandler(EditorButtonOnClick);
             editorButtons.Add(doneEnemyButton);
 
-            removeEnemyButton = new UIButton("editor_doneEnemiesButton", new Vector2(newEnemyButton.Position.X, newEnemyButton.Position.Y + 50), Vector2.Zero, editorFont, "Remove Enemy", Color.White, buttonTexture);
+            removeEnemyButton = new UIButton("editor_removeEnemiesButton", new Vector2(newEnemyButton.Position.X, newEnemyButton.Position.Y - 50), Vector2.Zero, editorFont, "Remove Enemy", Color.White, buttonTexture);
             removeEnemyButton.Visible = false;
             removeEnemyButton.Padding = editorButtonPadding;
             removeEnemyButton.Clicked += new UIButton.ClickHandler(EditorButtonOnClick);

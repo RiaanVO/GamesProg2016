@@ -16,6 +16,7 @@ namespace PRedesign
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;
         string menuTitle;
+        string menuSubtitle;
         float titleScale;
         #endregion
 
@@ -31,11 +32,18 @@ namespace PRedesign
             get { return titleScale; }
             set { titleScale = value; }
         }
+
+        protected string SubTitle
+        {
+            get { return menuSubtitle; }
+            set { menuSubtitle = value; }
+        }
         #endregion
 
         #region Initialization
         public MenuScreen(string menuTitle) {
             this.menuTitle = menuTitle;
+            menuSubtitle = "";
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -165,6 +173,15 @@ namespace PRedesign
             titlePosition.Y -= transitionOffset * 100;
 
             spriteBatch.DrawString(font, menuTitle, titlePosition, titleColour, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+
+            if (SubTitle != "")
+            {
+                Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+                Vector2 textSize = font.MeasureString(SubTitle);
+                Vector2 textPosition = new Vector2((viewport.Width - textSize.X) / 2, (viewport.Height - textSize.Y) / 3);
+
+                spriteBatch.DrawString(font, menuSubtitle, textPosition, Color.White);
+            }
 
             spriteBatch.End();
         }

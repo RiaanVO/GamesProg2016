@@ -61,6 +61,11 @@ namespace PRedesign {
             set { player = value; }
         }
 
+        public static int PlayerHealth
+        {
+            get { return player.Health; }
+        }
+
         public static BoundingBox LevelEnclosure {
             get {
                 if (levelEnclosure == null)
@@ -170,6 +175,12 @@ namespace PRedesign {
                 // Completed Game screen?
             }
         }
+
+        public static void ShowGameOverScreen(double time)
+        {
+            ScreenManager.AddScreen(new GameOverScreen(time));
+        }
+
         #endregion
 
         #region Helper Methods

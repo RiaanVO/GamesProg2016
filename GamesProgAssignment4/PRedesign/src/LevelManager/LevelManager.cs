@@ -23,7 +23,7 @@ namespace PRedesign {
         private const int TILE_PATH = 1;
 
         private const int TILE_SIZE = 15;
-
+        //These will be replaced with the static content manager
         private static Texture2D groundTexture;
         private static Texture2D wallTexture;
         private static Texture2D ceilingTexture;
@@ -191,11 +191,12 @@ namespace PRedesign {
                         case TILE_EMPTY:
                             break;
                         case TILE_WALL:
-                            ObjectManager.addGameObject(new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), wallTexture, TILE_SIZE));
+                            //Adam - can replace the "wall" string here with a variable to allow for more detailed configuration. 
+                            ObjectManager.addGameObject(new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), ContentStore.loadedTextures["wall"], TILE_SIZE));
                             break;
                         case TILE_PATH:
-                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2f, 0, (float)(TILE_SIZE * i) / 2f), groundTexture, TILE_SIZE, 1));
-                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ceilingTexture, TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2f, 0, (float)(TILE_SIZE * i) / 2f), ContentStore.loadedTextures["ground"], TILE_SIZE, 1));
+                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ContentStore.loadedTextures["ceiling"], TILE_SIZE, 1));
 
                             break;
                     }
@@ -203,7 +204,7 @@ namespace PRedesign {
             }
 
             foreach (Enemy enemy in currentLevel.Enemies) {
-                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), enemyModel, player);
+                NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);
                 newEnemy.Scale = 0.08f;
                 newEnemy.HasLighting = true;
                 Vector3[] patrolPoints = new Vector3[enemy.PatrolPoints.Count];

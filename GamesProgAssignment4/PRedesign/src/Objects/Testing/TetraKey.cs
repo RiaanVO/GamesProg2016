@@ -18,7 +18,7 @@ namespace PRedesign
         bool hasBeenCollected;
         SphereCollider collider;
         //bool keyRelocated = false;
-
+        //Key needs  to have a door related with it
         AudioEmitterComponent audioEmitter;
 
         // animation variables

@@ -204,11 +204,7 @@ namespace PRedesign
                 node.Obstructed = isObstructed;
         }
 
-        /// <summary>
-        /// Do not use. Unless apsolutly nessasary. Very inefficant.
-        /// </summary>
-        /// <param name="obstructedRegion"></param>
-        /// <param name="isObstructed"></param>
+        
         //public static void setSearchNodeObstructed(BoundingBox obstructedRegion, bool isObstructed) { }
 
         public static bool isPositionObstructed(Vector3 position)

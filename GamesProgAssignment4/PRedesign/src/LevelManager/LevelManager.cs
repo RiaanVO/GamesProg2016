@@ -36,9 +36,18 @@ namespace PRedesign {
         private static JSONLevel currentLevel;
         private static bool isLevelLoaded = false;
         private static BoundingBox levelEnclosure;
+        private static float levelWidth;
+        private static float levelDepth;
         #endregion
 
         #region Properties
+        public static float LevelWidth {
+            get { return levelWidth; }
+        }
+        public static float LevelDepth {
+            get { return levelDepth; }
+        }
+
 
         public static IList<JSONLevel> Levels {
             get { return levels; }
@@ -50,6 +59,11 @@ namespace PRedesign {
 
         public static Player Player {
             set { player = value; }
+        }
+
+        public static int PlayerHealth
+        {
+            get { return player.Health; }
         }
 
         public static BoundingBox LevelEnclosure {
@@ -145,7 +159,7 @@ namespace PRedesign {
 
         public static void ReloadLevel()
         {
-            UnloadLevel();
+            //UnloadLevel();
             LoadLevel(currentLevel.Id);
         }
 
@@ -161,6 +175,12 @@ namespace PRedesign {
                 // Completed Game screen?
             }
         }
+
+        public static void ShowGameOverScreen(double time)
+        {
+            ScreenManager.AddScreen(new GameOverScreen(time));
+        }
+
         #endregion
 
         #region Helper Methods
@@ -179,7 +199,8 @@ namespace PRedesign {
             ObjectManager.GraphicsDevice = ScreenManager.GraphicsDevice;
             ObjectManager.Game = ScreenManager.Game;
 
-            Player player = new Player(new Vector3(20, 3.5f, 20));
+            //Player player = new Player(new Vector3(20, 3.5f, 20));
+            Player player = new Player(new Vector3(-20, 3.5f, -20));
             Player = player;
 
 
@@ -190,6 +211,10 @@ namespace PRedesign {
             //This should be replaced with actual loading later
             //ObjectManager.addGameObject(new TetraKey(new Vector3(-5f, 5f, -5f), ContentStore.loadedModels["tetraKey"], camera, player));
             //ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), ContentStore.loadedModels["spikes"]));
+            //TetraDoor door1 = new TetraDoor(new Vector3(TILE_SIZE, 0f, 0f), ContentStore.loadedModels["tetraDoor"], camera, player);
+            //ObjectManager.addGameObject(door1);
+            //ObjectManager.addGameObject(new TetraKey(new Vector3(TILE_SIZE, 5f, -20f), ContentStore.loadedModels["tetraKey"], camera, player, door1));
+            //ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), ContentStore.loadedModels["spikes"]));
         }
 
         /// <summary>
@@ -198,6 +223,8 @@ namespace PRedesign {
         private static void LoadLevelData() {
             int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
             int currentLevelHeight = currentLevel.Data.GetUpperBound(1) * TILE_SIZE;
+            levelWidth = currentLevelWidth;
+            levelDepth = currentLevelHeight;
             int largestDimension = (currentLevelWidth > currentLevelHeight) ? currentLevelWidth : currentLevelHeight;
             int heightScale = 3;
             levelEnclosure = new BoundingBox(new Vector3(-TILE_SIZE, -TILE_SIZE * heightScale, -TILE_SIZE), new Vector3(largestDimension + TILE_SIZE, TILE_SIZE * heightScale, largestDimension + TILE_SIZE));
@@ -221,12 +248,12 @@ namespace PRedesign {
             JSONGameObject jsonPlayer = currentLevel.Player;
             player.Position = new Vector3(jsonPlayer.X * TileSize + (TileSize / 2), 0, jsonPlayer.Y * TileSize + (TileSize / 2));
 
-            JSONGameObject jsonKey = currentLevel.Key;
-            ObjectManager.addGameObject(new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], ObjectManager.Camera, player));
-
             JSONGameObject jsonDoor = currentLevel.Door;
-            // Add door spawn here
+            TetraDoor door = new TetraDoor(new Vector3(jsonDoor.X * TileSize, 0f, jsonDoor.Y * TileSize), ContentStore.loadedModels["tetraDoor"], ObjectManager.Camera, player);
+            ObjectManager.addGameObject(door);
 
+            JSONGameObject jsonKey = currentLevel.Key;
+            ObjectManager.addGameObject(new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], ObjectManager.Camera, player, door));
 
             foreach (JSONEnemy enemy in currentLevel.Enemies) {
                 NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);

@@ -10,9 +10,14 @@ namespace PRedesign
 {
     class GameOverScreen : MenuScreen
     {
-        public GameOverScreen() : base("Game Over")
+        string timeScore;
+
+        public GameOverScreen(double time) : base("Game Over")
         {
             //Show player score... how?
+
+            timeScore = time.ToString("0.00");
+            SubTitle = "You survived the maze for " + timeScore + " seconds.";
 
             MenuEntry restartGameEntry = new MenuEntry("Restart Game");
             MenuEntry returnToMainMenuEntry = new MenuEntry("Main Menu");
@@ -33,6 +38,8 @@ namespace PRedesign
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.SpriteFont;
+
+            Color color = Color.White * TransitionAlpha;
 
             ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
 

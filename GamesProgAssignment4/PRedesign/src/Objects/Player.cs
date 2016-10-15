@@ -20,7 +20,6 @@ namespace PRedesign
         SphereMovementChecker movementCollider;
         List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
 
-
         float invulnerabilitySeconds;
         float remainingDelay;
         bool isInvulnerable;
@@ -59,7 +58,7 @@ namespace PRedesign
         AudioEmitterComponent audioEmitterComponent;
 
         //Gameplay Variables
-        public bool hasKey = false;
+        //public bool hasKey = false;
 
 
 
@@ -71,6 +70,12 @@ namespace PRedesign
         {
             get { return tank; }
             set { tank = value; }
+        }
+
+        public int Health
+        {
+            get { return health; }
+            set { health = value; }
         }
         #endregion
 
@@ -178,7 +183,7 @@ namespace PRedesign
             }
             else
             {
-                //GAME OVER, YOU DEAD BOIIIIIIIII
+                LevelManager.ShowGameOverScreen(gameTime.TotalGameTime.TotalSeconds);
             }
         }
 

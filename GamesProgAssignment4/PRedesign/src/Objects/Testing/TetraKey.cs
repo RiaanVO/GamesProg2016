@@ -20,6 +20,7 @@ namespace PRedesign
         //bool keyRelocated = false;
         //Key needs  to have a door related with it
         AudioEmitterComponent audioEmitter;
+        TetraDoor door;
 
         // animation variables
         private bool isSplit;
@@ -28,32 +29,34 @@ namespace PRedesign
         private float activateDistance = 35f; //distance between player and object to activate
         private float outerMaxDistance = 25f; //how far the outer parts can move
         private float currentDistance; //how far the outers are currently
-        private float outerMovementSpeed = 2f; //how quickly the outer parts move
+        private float outerMovementSpeed = 90f; //how quickly the outer parts move
         
         // hover animation variables
         private float hoverHeight;
         private float originalYPosition;
         private float hoverSpeed = 0.8f;
 
-        public TetraKey(Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(startPosition, camera, model)
+        public TetraKey(Vector3 startPosition, Model model, BasicCamera camera, Player player, TetraDoor door) : base(startPosition, camera, model)
         {
             this.player = player;
             hasBeenCollected = false; //false
             orientation = 0f;
             scale = 0.03f;
             scaleMatrix = Matrix.CreateScale(scale);
+            this.door = door;
 
+            //Collision code
             collider = new SphereCollider(this, ObjectTag.pickup, 3f);
             collider.DrawColour = Color.Yellow;
 
             //CollisionManager.ForceTreeConstruction();
 
+            //Audio code
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
 
-            //Set up animation variables
+            //Animation code
             isSplit = false;
-            //scaleMatrix = Matrix.CreateScale(0.05f);
             currentDistance = 0f;
             hoverHeight = 0f;
             originalYPosition = startPosition.Y;
@@ -73,9 +76,7 @@ namespace PRedesign
                     {
                         if (col.Tag == ObjectTag.player)
                         {
-                            //Game is over
-                            LevelManager.ReloadLevel();
-                            return;
+                            keyPickedUp();
                         }
                     }
                 }
@@ -92,6 +93,14 @@ namespace PRedesign
                 hoverAnimation();
                 base.Update(gameTime);
             }
+        }
+
+        private void keyPickedUp()
+        {
+            //Unlocks the linked door
+            hasBeenCollected = true;
+            collider.Remove();
+            door.unlockDoor();
         }
 
         private void rotateKey(GameTime gameTime)
@@ -126,11 +135,11 @@ namespace PRedesign
             //Needs to accelerate and decelerate as they go past? or just move it out until it hits the limit
             if (isSplit && currentDistance <= outerMaxDistance)
             {
-                currentDistance += outerMovementSpeed;
+                currentDistance += outerMovementSpeed * deltaTime;
             }
             if (!isSplit && currentDistance > 0)
             {
-                currentDistance -= outerMovementSpeed;
+                currentDistance -= outerMovementSpeed * deltaTime;
             }
             //currentDistance += (isSplit ? outerMovementSpeed : -outerMovementSpeed);
             model.Bones["top_geo"].Transform *= Matrix.CreateTranslation(0f, currentDistance, 0f);

@@ -68,7 +68,7 @@ Any values not set will we set to the defauts in the code
     <variable name="dragPercentage" value="0.2" />
   </variables>
   
-  <state state="PATROL" updateFunction="updatePatrol">
+  <state state="RANDOMWANDER" updateFunction="updateRandomWander">
     <transition condition="playerNear" toState="SEEK" />
   </state>
 
@@ -77,8 +77,7 @@ Any values not set will we set to the defauts in the code
   </state>
 
   <state state="IDLE" updateFunction="updateIdle">
-    <transition condition="playerNear" toState="SEEK" />
-    <transition condition="idleTimeUp" toState="PATROL" />
+    <transition condition="idleTimeUp" toState="RANDOMWANDER" />
   </state>
 
 </fsm>

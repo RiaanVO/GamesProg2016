@@ -22,6 +22,7 @@ namespace PRedesign
         float targetRadius;
         float slowRadius;
         float timeToTarget;
+        float changeSlowRadius;
 
         float maxAngularAcceleration;
         float maxRotation;
@@ -148,7 +149,7 @@ namespace PRedesign
             this.currentTargetIndex = currentTargetIndex;
             this.isLooping = isLooping;
             this.changeRadius = changeRadius;
-
+            changeSlowRadius = 2 * changeRadius;
             seekBehavior = new Seek();
             arriveBehavior = new Arrive();
             faceBehavior = new Face();
@@ -203,7 +204,11 @@ namespace PRedesign
             seekBehavior.Target = targets[currentTargetIndex];
             SteeringOutput steering = seekBehavior.getSteering();
 
-            if(((targets[currentTargetIndex] + (Vector3.Up * gameObject.Position.Y)) - gameObject.Position).Length() < changeRadius)
+            float length = ((targets[currentTargetIndex] + (Vector3.Up * gameObject.Position.Y)) - gameObject.Position).Length();
+            //if (length < changeSlowRadius && length > changeRadius)
+              //  steering.Velocity = steering.Velocity * (length / changeSlowRadius);
+
+            if(length < changeRadius)
                 currentTargetIndex++;
 
             if (currentTargetIndex >= targets.Length)

@@ -13,9 +13,9 @@ namespace PRedesign
     class NPCEnemy : BasicModel
     {
         #region Fields
-        float rotation;
-        float maxSpeed;
-        float dragPercentage;
+        float rotation = 0;
+        float maxSpeed = 7;
+        float dragPercentage = 0.05f;
 
 
         //Steering Behaviours and fields
@@ -30,10 +30,13 @@ namespace PRedesign
         SphereCollider collider;
         float colliderRadius = 4.5f;
         SphereMovementChecker movementCollider;
-        List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle, ObjectTag.player};
+        List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall }; //obstical and player maybe
 
         //AI FSM fields
         AiFSM brain;
+        string previousState;
+        bool loadFromFile = false;
+
         Vector3[] patrolPoints;
         int patrolIndex = 0;
         float patrolChangeRadius = 3;
@@ -41,8 +44,11 @@ namespace PRedesign
         double playerFarDistance = LevelManager.TileSize * 4;
         float idleDelayTime = 3;
         float currentIdleTime = 0;
-        string previousState;
-        bool loadFromFile = false;
+        float randomPositionMinDistance = 50;
+        float randomWanderChangeRadius = 3;
+        Vector3 homeBase = Vector3.Zero;
+        double minDistanceToHome = 10;
+        
 
         //Animation fields
         private float deltaTime;
@@ -60,7 +66,7 @@ namespace PRedesign
                 pathSteering.Targets = pathPoints;
             }
         }
-        
+
         public Vector3 CurrentTarget
         {
             get { return currentTarget; }
@@ -68,17 +74,18 @@ namespace PRedesign
             {
                 currentTarget = value;
                 PathPoints = NavigationMap.FindPath(position, currentTarget, endPointExact).ToArray();
-                
+
             }
         }
 
-        public Vector3[] PatrolPoints {
+        public Vector3[] PatrolPoints
+        {
             get { return patrolPoints; }
             set
             {
                 patrolPoints = value;
                 CurrentTarget = patrolPoints[0];
-                
+
             }
         }
         #endregion
@@ -88,42 +95,46 @@ namespace PRedesign
         {
             velocity = Vector3.Zero;
             currentTarget = position;
-            rotation = 0;
-            maxSpeed = 7;
+            homeBase = position;
             modelBaseOrientation = 0;
-            dragPercentage = 0.05f;
-
-            //Set up the path following steering behavior
-            pathSteering = new FollowPath(this, pathPoints, 0, false, 3);
-            pathSteering.TargetRadius = 0.5f;
-            pathSteering.SlowRadius = 5;
-            pathSteering.MaxSpeed = maxSpeed;
-            pathSteering.MaxAcceleration = maxSpeed * 2;
 
             this.player = player;
-
-            if (loadFromFile) {
-                System.IO.Stream stream = TitleContainer.OpenStream("Content\\AIFSM\\fsm_npc2.xml");
+            
+            string aiFile = "Content/AIFSM/StandardPatrol.xml";
+            try {
+                System.IO.Stream stream = TitleContainer.OpenStream(aiFile);
                 XDocument xdoc = XDocument.Load(stream);
-
+                
                 string startState = xdoc.Root.Attribute("startState").Value;
                 brain = new AiFSM(startState);
-                Console.WriteLine(startState);
 
-                foreach (XElement stateElement in xdoc.Root.Elements()) {
+                foreach (XElement variable in xdoc.Root.Element("variables").Elements("variable"))
+                    valueSetting(variable.Attribute("name").Value, variable.Attribute("value").Value);
 
-                    string updateFunctionName = stateElement.Attribute("state").Value;
-                    AiState state = new AiState(brain, stateElement.Attribute("state").Value, getUpdateFunction(updateFunctionName));
+                foreach (XElement stateElement in xdoc.Root.Elements("state"))
+                {
+                    string stateName = stateElement.Attribute("state").Value; //Get state name
+                    string updateFunctionName = stateElement.Attribute("updateFunction").Value; // getUpdate fuction name
+                    AiState state = new AiState(brain, stateName, getUpdateFunction(updateFunctionName));
 
-                    foreach (XElement transitionElement in stateElement.Elements()) {
+                    //Loop through conditions
+                    foreach (XElement transitionElement in stateElement.Elements())
+                    {
                         string nextState = transitionElement.Attribute("toState").Value;
                         string conditionFunction = transitionElement.Attribute("condition").Value;
                         state.addTransition(nextState, getConditionFunction(conditionFunction));
                     }
                     brain.addState(state);
                 }
+
+                loadFromFile = true;
             }
-            else
+            catch (System.IO.FileNotFoundException)
+            {
+                loadFromFile = false;
+            }
+
+            if (!loadFromFile)
             {
                 brain = new AiFSM("IDLE");
                 //Setup the states and add them to the fsm
@@ -139,6 +150,13 @@ namespace PRedesign
                 brain.addState(IdleState);
             }
 
+            //Set up the path following steering behavior
+            pathSteering = new FollowPath(this, pathPoints, 0, false, 3);
+            pathSteering.TargetRadius = 0.5f;
+            pathSteering.SlowRadius = 5;
+            pathSteering.MaxSpeed = maxSpeed;
+            pathSteering.MaxAcceleration = maxSpeed * 2;
+
             collider = new SphereCollider(this, ObjectTag.enemy, colliderRadius);
             collider.PositionOffset = new Vector3(0, -1.5f, 0);
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
@@ -148,10 +166,10 @@ namespace PRedesign
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
-            if(!brain.StateJustChanged)
+            if (!brain.StateJustChanged)
                 previousState = brain.CurrentState;
             brain.update(gameTime);
-            
+
             //Animation
             deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
             animateRotation(gameTime);
@@ -186,9 +204,6 @@ namespace PRedesign
         #endregion
 
         #region Helper Methods
-
-        
-
         public void update(SteeringOutput steering, float deltaTime)
         {
             if (steering == null)
@@ -197,7 +212,6 @@ namespace PRedesign
             }
             else
             {
-                velocity *= 1 - dragPercentage * dragPercentage;
 
                 checkMovementCollisions(deltaTime);
                 velocity.Y = 0;
@@ -206,6 +220,8 @@ namespace PRedesign
                 position += velocity * deltaTime;
                 collider.updateColliderPos(position);
                 orientation += rotation * deltaTime;
+
+                velocity *= 1 - dragPercentage * dragPercentage;
 
                 //Update the velocity and rotation
                 velocity += steering.Velocity * deltaTime;
@@ -230,8 +246,7 @@ namespace PRedesign
             if (!movementCollider.canMoveZ(position, velocity * deltaTime))
                 velocity.Z = -Velocity.Z * deltaTime;
         }
-
-
+        
         #endregion
 
         #region FSM Construction
@@ -241,11 +256,14 @@ namespace PRedesign
         /// </summary>
         /// <param name="functionName"></param>
         /// <returns></returns>
-        private Func<bool> getConditionFunction(string functionName) {
-            switch (functionName) {
+        private Func<bool> getConditionFunction(string functionName)
+        {
+            switch (functionName)
+            {
                 case "playerNear": return playerNear;
                 case "idleTimeUp": return idleTimeUp;
                 case "playerFar": return playerFar;
+                case "atHomeBase": return atHomeBase;
                 default: return idleTimeUp;
             }
         }
@@ -255,27 +273,117 @@ namespace PRedesign
         /// </summary>
         /// <param name="updateName"></param>
         /// <returns></returns>
-        private Action<GameTime> getUpdateFunction(string updateName) {
-            switch (updateName) {
+        private Action<GameTime> getUpdateFunction(string updateName)
+        {
+            switch (updateName)
+            {
                 case "updatePatrol": return updatePatrol;
                 case "updateSeek": return updateSeek;
                 case "updateIdle": return updateIdle;
+                case "updateRandomWander": return updateRandomWander;
+                case "updateReturnToBase": return updateReturnToBase;
                 default: return updateIdle;
             }
+        }
+
+        private void valueSetting(string valueName, string value) {
+            switch (valueName)
+            {
+                case "patrolChangeRadius":
+                    if (stringToFloat(value) != float.MinValue)
+                        patrolChangeRadius = stringToFloat(value);
+                    break;
+                case "playerNearDistance":
+                    if (stringToDouble(value) != double.MinValue)
+                        playerNearDistance = stringToDouble(value);
+                    break;
+                case "playerFarDistance":
+                    if (stringToDouble(value) != double.MinValue)
+                        playerFarDistance = stringToDouble(value);
+                    break;
+                case "idleDelayTime":
+                    if (stringToFloat(value) != float.MinValue)
+                        idleDelayTime = stringToFloat(value);
+                    break;
+                case "randomPositionMinDistance":
+                    if (stringToFloat(value) != float.MinValue)
+                        randomPositionMinDistance = stringToFloat(value);
+                    break;
+                case "randomWanderChangeRadius":
+                    if (stringToFloat(value) != float.MinValue)
+                        randomWanderChangeRadius = stringToFloat(value);
+                    break;
+                case "homeBase":
+                    if (stringToVector3(value) != new Vector3(float.MinValue))
+                        homeBase = stringToVector3(value);
+                    break;
+                case "minDistanceToHome":
+                    if (stringToDouble(value) != double.MinValue)
+                        minDistanceToHome = stringToDouble(value);
+                    break;
+                case "maxSpeed":
+                    if (stringToFloat(value) != float.MinValue)
+                        maxSpeed = stringToFloat(value);
+                    break;
+                case "dragPercentage":
+                    if (stringToFloat(value) != float.MinValue)
+                        dragPercentage = stringToFloat(value);
+                    break;
+                default: break;
+            }
+        }
+
+        private float stringToFloat(string value) {
+            try
+            {
+                return float.Parse(value);
+            }
+            catch (Exception e) {
+                return float.MinValue;
+            }
+        }
+        private double stringToDouble(string value) {
+            try
+            {
+                return double.Parse(value);
+            }
+            catch (Exception e)
+            {
+                return double.MinValue;
+            }
+        }
+        private Vector3 stringToVector3(string value) {
+            string[] values = value.Split(',');
+            if (values.Length != 3)
+                return new Vector3(float.MinValue);
+            float x = stringToFloat(values[0]);
+            float y = stringToFloat(values[1]);
+            float z = stringToFloat(values[2]);
+            if(x == float.MinValue || y == float.MinValue || z == float.MinValue)
+                return new Vector3(float.MinValue);
+            return new Vector3(x, y, z);
         }
         #endregion
 
         #region FSM condition Functions 
-        public bool playerNear() {
+        public bool playerNear()
+        {
             return Vector3.Distance(position, player.Position) < playerNearDistance;
         }
 
-        public bool idleTimeUp() {
+        public bool idleTimeUp()
+        {
             return currentIdleTime > idleDelayTime;
         }
 
-        public bool playerFar() {
+        public bool playerFar()
+        {
             return Vector3.Distance(position, player.Position) > playerFarDistance;
+        }
+
+        public bool atHomeBase()
+        {
+            return Vector3.Distance(position, homeBase) < minDistanceToHome;
         }
         #endregion
 
@@ -286,7 +394,6 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updatePatrol(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             rotationalSpeed = 1f;
             endPointExact = false;
             if (!previousState.Equals(brain.CurrentState))
@@ -296,7 +403,7 @@ namespace PRedesign
 
             if (NavigationMap.isPositionObstructed(patrolPoints[patrolIndex]))
                 patrolIndex++;
-            
+
             if (Vector3.Distance(position, patrolPoints[patrolIndex] + tileDimenstions) < patrolChangeRadius)
             {
                 patrolIndex++;
@@ -317,7 +424,6 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updateSeek(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             rotationalSpeed = -3f;
             endPointExact = true;
             if (CurrentTarget != player.Position)
@@ -334,7 +440,6 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updateIdle(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             rotationalSpeed = -0.3f;
             if (!previousState.Equals(brain.CurrentState))
             {
@@ -343,6 +448,64 @@ namespace PRedesign
             }
             currentIdleTime += deltaTime;
         }
+
+        private void updateRandomWander(GameTime gameTime)
+        {
+            rotationalSpeed = 1f;
+            endPointExact = false;
+            if (!previousState.Equals(brain.CurrentState))
+            {
+                CurrentTarget = randomPathablePosition();
+            }
+
+            if (Vector3.Distance(position, currentTarget + tileDimenstions) < randomWanderChangeRadius)
+            {
+                CurrentTarget = randomPathablePosition();
+            }
+
+            if (pathSteering != null)
+            {
+                update(pathSteering.getSteering(), deltaTime);
+            }
+        }
+        
+        private Vector3 randomPathablePosition()
+        {
+            Random rand = new Random();
+            Vector3 testPosition;
+            bool positionFound = false;
+            if (LevelManager.LevelDepth == 0 || LevelManager.LevelWidth == 0)
+                return Vector3.Zero;
+
+            do
+            {
+                testPosition = new Vector3((float)rand.NextDouble() * LevelManager.LevelWidth, 0, (float)rand.NextDouble() * LevelManager.LevelDepth);
+                if (Vector3.Distance(position, testPosition) > randomPositionMinDistance)
+                {
+                    positionFound = NavigationMap.isPositionObstructed(testPosition);
+                }
+            }
+            while (!positionFound);
+
+            return testPosition;
+        }
+
+        private void updateReturnToBase(GameTime gameTIme) {
+            if (!previousState.Equals(brain.CurrentState))
+            {
+                if (homeBase != Vector3.Zero)
+                    CurrentTarget = homeBase;
+                else
+                    CurrentTarget = position;
+            }
+
+            if (pathSteering != null)
+            {
+                update(pathSteering.getSteering(), deltaTime);
+            }
+        }
         #endregion
+
+        
     }
 }

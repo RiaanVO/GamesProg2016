@@ -36,9 +36,18 @@ namespace PRedesign {
         private static Level currentLevel;
         private static bool isLevelLoaded = false;
         private static BoundingBox levelEnclosure;
+        private static float levelWidth;
+        private static float levelDepth;
         #endregion
 
         #region Properties
+        public static float LevelWidth {
+            get { return levelWidth; }
+        }
+        public static float LevelDepth {
+            get { return levelDepth; }
+        }
+
 
         public static IList<Level> Levels {
             get { return levels; }
@@ -196,6 +205,8 @@ namespace PRedesign {
         private static void LoadLevelData() {
             int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
             int currentLevelHeight = currentLevel.Data.GetUpperBound(1) * TILE_SIZE;
+            levelWidth = currentLevelWidth;
+            levelDepth = currentLevelHeight;
             int largestDimension = (currentLevelWidth > currentLevelHeight) ? currentLevelWidth : currentLevelHeight;
             int heightScale = 3;
             levelEnclosure = new BoundingBox(new Vector3(-TILE_SIZE, -TILE_SIZE * heightScale, -TILE_SIZE), new Vector3(largestDimension + TILE_SIZE, TILE_SIZE * heightScale, largestDimension + TILE_SIZE));

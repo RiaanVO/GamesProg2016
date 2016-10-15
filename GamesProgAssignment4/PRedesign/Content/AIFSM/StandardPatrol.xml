@@ -1,0 +1,85 @@
+﻿<!---
+For all names, use exactly as shown in this description
+Allowed states:
+- IDLE
+- PATROL
+- SEEK
+- RANDOMWANDER
+- RETURNTOBASE
+
+Allowed conditions:
+- playerNear
+- PLAYER_FAR
+- idleTimeUp
+- atHomeBase
+
+Allowed Update Functions
+- updatePatrol
+- updateSeek
+- updateIdle
+- updateRandomWander
+- updateReturnToBase
+
+Allowed variables and their types, examples of use shown below
+- patrolChangeRadius (float)
+    <variable name="patrolChangeRadius" value="3" />
+
+- playerNearDistance (double)
+    <variable name="playerNearDistance" value="30" />
+
+- playerFarDistance (double)
+    <variable name="playerFarDistance" value="60" />
+
+- idleDelayTime (float) in seconds
+    <variable name="idleDelayTime" value="3" />
+
+- randomPositionMinDistance (float)
+    <variable name="randomPositionMinDistance" value="50" />
+
+- randomWanderChangeRadius (float)
+    <variable name="randomWanderChangeRadius" value="3" />
+
+- homeBase (Vector 3) value is writen as "x,y,z" with no spaces
+    <variable name="homeBase" value="10,20,10" />
+    
+- minDistanceToHome (double)
+    <variable name="minDistanceToHome" value="10" />
+
+- maxSpeed (float)
+    <variable name="maxSpeed" value="7" />
+
+- dragPercentage (float) - must be less than 1
+    <variable name="dragPercentage" value="0.05" />
+    
+    
+Any values not set will we set to the defauts in the code
+-->
+
+<fsm startState="IDLE">
+  <variables>
+    <variable name="patrolChangeRadius" value="2" />
+    <variable name="playerNearDistance" value="30" />
+    <variable name="playerFarDistance" value="60" />
+    <variable name="idleDelayTime" value="3" />
+    <variable name="randomPositionMinDistance" value="50" />
+    <variable name="randomWanderChangeRadius" value="3" />
+    <variable name="homeBase" value="10,20,10" />
+    <variable name="minDistanceToHome" value="10" />
+    <variable name="maxSpeed" value="14" />
+    <variable name="dragPercentage" value="0.2" />
+  </variables>
+  
+  <state state="PATROL" updateFunction="updatePatrol">
+    <transition condition="playerNear" toState="SEEK" />
+  </state>
+
+  <state state="SEEK" updateFunction="updateSeek">
+    <transition condition="playerFar" toState="IDLE" />
+  </state>
+
+  <state state="IDLE" updateFunction="updateIdle">
+    <transition condition="playerNear" toState="SEEK" />
+    <transition condition="idleTimeUp" toState="PATROL" />
+  </state>
+
+</fsm>

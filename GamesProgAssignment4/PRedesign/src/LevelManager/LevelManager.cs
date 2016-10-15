@@ -264,6 +264,7 @@ namespace PRedesign {
                     patrolPoints[i] = new Vector3(enemy.PatrolPoints[i].X * TileSize, 5, enemy.PatrolPoints[i].Y * TileSize);
                 }
                 newEnemy.PatrolPoints = patrolPoints;
+                newEnemy.AiFile = enemy.Behavior;
                 ObjectManager.addGameObject(newEnemy);                
             }
 

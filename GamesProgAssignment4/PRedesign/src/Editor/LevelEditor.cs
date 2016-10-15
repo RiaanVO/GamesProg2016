@@ -59,11 +59,13 @@ namespace PRedesign {
         private static bool isEnemySelectLoaded = false;
 
         // Editor Text Fields
-        private static UITextblock levelSelectText, enemySelectText, newEnemyText, newNodeText, finishEnemyText;
+        private static UITextblock levelSelectText, enemySelectText, newEnemyText, newNodeText, finishEnemyText, selectBehaviorText;
 
         // Enemy/Node fields
+        private static UIButton chasePlayerButton, guardLocationButton, randomWanderButton, standardPatrolButton;
+        private static IList<UIButton> behaviorButtons = new List<UIButton>();
         private static Texture2D enemyTexture, nodeTexture;
-        private static bool isPlacingEnemy, isPlacingNode = false;
+        private static bool isPlacingEnemy, isPlacingNode, isSelectingBehavior = false;
         private static IList<EditorEnemy> enemyList = new List<EditorEnemy>();
         private static EditorEnemy selectedEnemy;
         private static int enemyLimit = 5;
@@ -129,6 +131,10 @@ namespace PRedesign {
 
         public static bool PaintingObject {
             get { return isPaintingObject; }
+        }
+
+        public static bool SelectingBehavior {
+            get { return isSelectingBehavior; }
         }
 
         public static bool Loaded {
@@ -261,6 +267,34 @@ namespace PRedesign {
             removeEnemyButton.Clicked += new UIButton.ClickHandler(EditorButtonOnClick);
             editorButtons.Add(removeEnemyButton);
 
+            // Enemy Behavior Buttons
+
+            chasePlayerButton = new UIButton("ChasePlayer", new Vector2(newEnemyButton.Position.X, newEnemyButton.Position.Y - 50), Vector2.Zero, editorFont, "Chase Player", Color.White, buttonTexture);
+            chasePlayerButton.Visible = true;
+            chasePlayerButton.Padding = editorButtonPadding;
+            chasePlayerButton.Clicked += new UIButton.ClickHandler(BehaviorSelectOnClick);
+            behaviorButtons.Add(chasePlayerButton);
+
+            guardLocationButton = new UIButton("GuardLocation", new Vector2(chasePlayerButton.Position.X, chasePlayerButton.Position.Y - 50), Vector2.Zero, editorFont, "Guard Location", Color.White, buttonTexture);
+            guardLocationButton.Visible = true;
+            guardLocationButton.Padding = editorButtonPadding;
+            guardLocationButton.Clicked += new UIButton.ClickHandler(BehaviorSelectOnClick);
+            behaviorButtons.Add(guardLocationButton);
+
+            randomWanderButton = new UIButton("RandomWander", new Vector2(guardLocationButton.Position.X, guardLocationButton.Position.Y - 50), Vector2.Zero, editorFont, "Random Wander", Color.White, buttonTexture);
+            randomWanderButton.Visible = true;
+            randomWanderButton.Padding = editorButtonPadding;
+            randomWanderButton.Clicked += new UIButton.ClickHandler(BehaviorSelectOnClick);
+            behaviorButtons.Add(randomWanderButton);
+
+            standardPatrolButton = new UIButton("StandardPatrol", new Vector2(randomWanderButton.Position.X, randomWanderButton.Position.Y - 50), Vector2.Zero, editorFont, "Standard Patrol", Color.White, buttonTexture);
+            standardPatrolButton.Visible = true;
+            standardPatrolButton.Padding = editorButtonPadding;
+            standardPatrolButton.Clicked += new UIButton.ClickHandler(BehaviorSelectOnClick);
+            behaviorButtons.Add(standardPatrolButton);
+
+
+
             // Painting Buttons
             float optionButtonSpacing = gridWidthEnd / 8;
 
@@ -325,6 +359,9 @@ namespace PRedesign {
 
             finishEnemyText = new UITextblock("enemySelectText", new Vector2(gridWidthEnd + (gridToEdge * 0.1f), GraphicsDevice.Viewport.Height * 0.9f), Vector2.Zero, editorFont, "Press to finalise enemy creation", Color.White);
             finishEnemyText.Visible = true;
+
+            selectBehaviorText = new UITextblock("selectBehaviorText", new Vector2(gridWidthEnd + (gridToEdge * 0.1f), GraphicsDevice.Viewport.Height * 0.6f), Vector2.Zero, editorFont, "Select enemy behavior", Color.White);
+            selectBehaviorText.Visible = true;
         }
         #endregion
 
@@ -408,6 +445,16 @@ namespace PRedesign {
                 FinaliseEnemyCreation();
                 return;
             }
+        }
+
+        private static void BehaviorSelectOnClick(Object sender, EventArgs e) {
+            const string behavior_prefix = "Content/AIFSM/";
+            const string behavior_suffix = ".xml";
+            UIButton button = (UIButton)sender;
+            selectedEnemy.Behavior = behavior_prefix + button.ID + behavior_suffix;
+            isSelectingBehavior = false;
+            doneEnemyButton.Visible = true;
+            isPlacingNode = true;            
         }
 
         /// <summary>
@@ -659,6 +706,9 @@ namespace PRedesign {
             enemyList.Remove(selectedEnemy);
             selectedEnemy = null;
             removeEnemyButton.Visible = false;
+            if (enemyList.Count == 0) {
+                browseEnemiesButton.Visible = false;
+            }
         }
 
 
@@ -783,6 +833,7 @@ namespace PRedesign {
                 newEnemy.Y = enemy.YData;
                 newEnemy.PatrolPoints = new List<JSONEnemy.PatrolPoint>();
                 newEnemy.ID = enemyList.IndexOf(enemy) + 1;
+                newEnemy.Behavior = enemy.Behavior;
 
                 foreach (EditorEnemy.Node node in enemy.Nodes) {
                     JSONEnemy.PatrolPoint patrolPoint = new JSONEnemy.PatrolPoint();
@@ -848,8 +899,7 @@ namespace PRedesign {
             EditorEnemy enemy = new EditorEnemy(position, elementSize, elementOffset, enemyTexture, nodeTexture, element.XData, element.YData);
             selectedEnemy = enemy;
             enemyList.Add(enemy);
-            doneEnemyButton.Visible = true;
-            isPlacingNode = true;
+            isSelectingBehavior = true;
         }
 
         /// <summary>
@@ -894,10 +944,12 @@ namespace PRedesign {
         /// </summary>
         /// <param name="element"></param>
         private static void ClearObject(EditorGridElement element) {
-            EditorObject obj = GetObjectAt(element.XData, element.YData);
-            if (obj != null) {
-                objectList.Remove(obj);
-                obj = null;
+            if (!isPlacingEnemy && !isPlacingNode && !isPaintingObject && !isSelectingBehavior) {
+                EditorObject obj = GetObjectAt(element.XData, element.YData);
+                if (obj != null) {
+                    objectList.Remove(obj);
+                    obj = null;
+                }
             }
         }
         #endregion
@@ -957,6 +1009,12 @@ namespace PRedesign {
 
                 if (isEnemySelectLoaded) {
                     foreach (UIButton btn in enemySelectButtons) {
+                        btn.HitTest(mouseState.Position);
+                    }
+                }
+
+                if (isSelectingBehavior) {
+                    foreach (UIButton btn in behaviorButtons) {
                         btn.HitTest(mouseState.Position);
                     }
                 }
@@ -1036,6 +1094,13 @@ namespace PRedesign {
             if (isPlacingNode) {
                 newNodeText.Draw(spriteBatch);
                 finishEnemyText.Draw(spriteBatch);
+            }
+
+            if (isSelectingBehavior) {
+                foreach (UIButton btn in behaviorButtons) {
+                    selectBehaviorText.Draw(spriteBatch);
+                    btn.Draw(spriteBatch);
+                }
             }
 
             if (playerObject != null) {

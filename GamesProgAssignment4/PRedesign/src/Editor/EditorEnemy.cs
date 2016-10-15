@@ -57,6 +57,7 @@ namespace PRedesign {
         Rectangle bounds;
         IList<Node> nodes = new List<Node>();
         int xData, yData;
+        string behavior;
         #endregion
 
         #region Properties
@@ -74,6 +75,11 @@ namespace PRedesign {
 
         public int YData {
             get { return yData; }
+        }
+
+        public string Behavior {
+            get { return behavior; }
+            set { behavior = value; }
         }
         #endregion
 

@@ -155,7 +155,7 @@ namespace PRedesign
                         model.Bones["diamond_top_geo"].Transform *= Matrix.CreateTranslation(currentDoorDistance, 0f, 0f);
                         model.Bones["diamond_mid_geo"].Transform *= Matrix.CreateTranslation(currentDoorDistance, 0f, 0f);
                         model.Bones["diamond_bot_geo"].Transform *= Matrix.CreateTranslation(currentDoorDistance, 0f, 0f);
-                        model.Bones["door_L_geo"].Transform *= Matrix.CreateTranslation(-currentDoorDistance, 0f, 0f);
+                        //model.Bones["door_L_geo"].Transform *= Matrix.CreateTranslation(-currentDoorDistance, 0f, 0f);
                     }
                     else
                     {

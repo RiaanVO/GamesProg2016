@@ -16,7 +16,7 @@ namespace PRedesign
         {
             scale = 0.4f;
             scaleMatrix = Matrix.CreateScale(scale);
-            collider = new BoxCollider(this, ObjectTag.hazard, new Vector3(15, 3, 15));
+            collider = new BoxCollider(this, ObjectTag.hazard, new Vector3(15, 8, 15));
             collider.DrawColour = Color.Blue;
             //CollisionManager.ForceTreeConstruction();
             hasLighting = true;

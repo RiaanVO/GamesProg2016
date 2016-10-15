@@ -29,7 +29,7 @@ namespace PRedesign
         BasicCamera camera;
 
         Vector3 lookDirection;
-        Vector3 headHeightOffset = new Vector3(0, 5, 0);
+        Vector3 headHeightOffset = new Vector3(0, 1.5f, 0);
         MouseState prevMouseState;
         float pitchRotationRate = MathHelper.PiOver4 / 150;
         float currentPitch = 0;// = MathHelper.PiOver2;
@@ -42,14 +42,14 @@ namespace PRedesign
         Vector3 acceleration;
         float accelerationRate = 500f;
         float decelerationRate = 400f;
-        float maxVelocity = 30f;//20f;
-        float minVelocity = 5f;
+        float maxVelocity = 40f;//20f;
+        float minVelocity = 10f;
         float deltaTime = 0;
 
 
         bool jumped = false;
         bool grounded = true;
-        float jumpVelocity = 50f;
+        float jumpVelocity = 60f;
         float jumpHeight; //The height which the player falls back to after jumping (instead of zero)
         float fallRate = 200f; // Is gravity, is good
 
@@ -249,6 +249,8 @@ namespace PRedesign
                 if (horizontalVelocity.Length() < minVelocity)
                 {
                     velocity = Vector3.Zero;
+                    acceleration = Vector3.Zero;
+                    Console.WriteLine("Zeroed");
                 }
             }
             //Remove y component to be calculated seperatly;

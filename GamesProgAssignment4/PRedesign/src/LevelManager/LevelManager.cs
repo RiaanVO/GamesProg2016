@@ -284,13 +284,17 @@ namespace PRedesign {
         /// <summary>
         /// Unloads the current level - cleaing all lists holding objects/references
         /// </summary>
-        private static void UnloadLevel() {
+        public static void UnloadLevel() {
             ObjectManager.clearAll();
             AudioManager.clearAll();
             CollisionManager.clearAll();
             WireShapeDrawer.clearAll();
             System.GC.Collect();
             isLevelLoaded = false;
+        }
+
+        public static void UnloadContent() {
+            
         }
         #endregion
     }

@@ -18,8 +18,35 @@ namespace PRedesign
     /// </summary>
     static class ContentStore
     {
+        
         public static Dictionary<string, Model> loadedModels = new Dictionary<string, Model>();
         public static Dictionary<string, Texture2D> loadedTextures = new Dictionary<string, Texture2D>();
         public static Dictionary<string, SoundEffect> loadedSounds = new Dictionary<string, SoundEffect>();
+
+        public static void Add(string name, Model model) {
+            if (loadedModels.ContainsKey(name))
+                return;
+            loadedModels.Add(name, model);
+        }
+
+        public static void Add(string name, Texture2D texture)
+        {
+            if (loadedTextures.ContainsKey(name))
+                return;
+            loadedTextures.Add(name, texture);
+        }
+
+        public static void Add(string name, SoundEffect soundEffect)
+        {
+            if (loadedSounds.ContainsKey(name))
+                return;
+            loadedSounds.Add(name, soundEffect);
+        }
+
+        public static void Unload() {
+            loadedModels.Clear();
+            loadedTextures.Clear();
+            loadedSounds.Clear();
+        }
     }
 }

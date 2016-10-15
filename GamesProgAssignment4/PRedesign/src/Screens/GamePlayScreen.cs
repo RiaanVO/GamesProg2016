@@ -43,20 +43,17 @@ namespace PRedesign
 
             //Load models
             ContentStore.loadedModels.Add("skybox", content.Load<Model>(@"Models/TechnoSkybox Model/technobox"));
-            //ContentStore.loadedModels.Add("tank", content.Load<Model>(@"Models/Enemy Model/tank"));
             ContentStore.loadedModels.Add("tetraKey", content.Load<Model>(@"Models/TetraKey Model/SplitDiamond"));
             ContentStore.loadedModels.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
             ContentStore.loadedModels.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
-            //Example for copy/paste: ContentStore.loadedModels.Add("", );
 
             //Load sounds
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
-
             
-            //Create camera and set up object manager
+            /* //Moved to LevelManager.LoadGameObjects()
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;
             ObjectManager.Camera = camera;
@@ -64,16 +61,15 @@ namespace PRedesign
             ObjectManager.Game = ScreenManager.Game;
 
             Player player = new Player(new Vector3(20, 3.5f, 20));
-            //Should be moved to level manager?
+            LevelManager.Player = player;
+
             Skybox skybox = new Skybox(Vector3.Zero, ContentStore.loadedModels["skybox"]);
             skybox.Player = player;
-            
-            LevelManager.Player = player;
+            */
+            LevelManager.ScreenManager = ScreenManager;
             LevelManager.LoadLevel(1);
 
             //ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), ContentStore.loadedModels["tetraKey"], camera, player));
-            ObjectManager.addGameObject(new TetraKey(new Vector3(-5f, 5f, -5f), ContentStore.loadedModels["tetraKey"], camera, player));
-            ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), ContentStore.loadedModels["spikes"]));
 
             /* //Test code no longer needed due to level load
             NPCEnemy Enemy = new NPCEnemy(new Vector3(20, 6, 20), tetraEnemyModel, player);

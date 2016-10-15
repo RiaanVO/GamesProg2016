@@ -91,6 +91,8 @@
     <Compile Include="src\Objects\Deprecated\Tank.cs" />
     <Compile Include="src\Objects\NPCEnemy.cs" />
     <Compile Include="src\Objects\Spikes.cs" />
+    <Compile Include="src\Objects\Testing\ExitPortal.cs" />
+    <Compile Include="src\Objects\Testing\TetraDoor.cs" />
     <Compile Include="src\Objects\Testing\TetraKey.cs" />
     <Compile Include="src\Objects\Wall.cs" />
     <Compile Include="src\Pathfinding\NavigationMap.cs" />

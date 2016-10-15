@@ -59,7 +59,7 @@ namespace PRedesign
         AudioEmitterComponent audioEmitterComponent;
 
         //Gameplay Variables
-        public bool hasKey = false;
+        //public bool hasKey = false;
 
 
 

@@ -143,7 +143,7 @@ namespace PRedesign {
 
         public static void ReloadLevel()
         {
-            UnloadLevel();
+            //UnloadLevel();
             LoadLevel(currentLevel.Id);
         }
 
@@ -177,14 +177,17 @@ namespace PRedesign {
             ObjectManager.GraphicsDevice = ScreenManager.GraphicsDevice;
             ObjectManager.Game = ScreenManager.Game;
 
-            Player player = new Player(new Vector3(20, 3.5f, 20));
+            //Player player = new Player(new Vector3(20, 3.5f, 20));
+            Player player = new Player(new Vector3(-20, 3.5f, -20));
             Player = player;
 
             Skybox skybox = new Skybox(Vector3.Zero, ContentStore.loadedModels["skybox"]);
             skybox.Player = player;
 
             //This should be replaced with actual loading later
-            ObjectManager.addGameObject(new TetraKey(new Vector3(-5f, 5f, -5f), ContentStore.loadedModels["tetraKey"], camera, player));
+            TetraDoor door1 = new TetraDoor(new Vector3(TILE_SIZE, 0f, 0f), ContentStore.loadedModels["tetraDoor"], camera, player);
+            ObjectManager.addGameObject(door1);
+            ObjectManager.addGameObject(new TetraKey(new Vector3(TILE_SIZE, 5f, -20f), ContentStore.loadedModels["tetraKey"], camera, player, door1));
             ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), ContentStore.loadedModels["spikes"]));
         }
 

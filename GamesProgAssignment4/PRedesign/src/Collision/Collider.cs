@@ -18,7 +18,8 @@ namespace PRedesign
         pickup,
         movementChecker,
         floor,
-        roof
+        roof,
+        exit
     }
 
     abstract class Collider

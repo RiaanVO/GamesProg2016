@@ -19,6 +19,7 @@ namespace PRedesign {
         public JSONGameObject Player { get; set; }
         public JSONGameObject Door { get; set; }
         public JSONGameObject Key { get; set; }
+        public JSONGameObject SoundGun { get; set; }
 
         // All other objects
         public List<JSONGameObject> Objects { get; set; }

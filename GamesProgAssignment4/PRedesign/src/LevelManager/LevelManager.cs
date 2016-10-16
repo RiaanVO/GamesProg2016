@@ -263,6 +263,15 @@ namespace PRedesign {
             JSONGameObject jsonKey = currentLevel.Key;
             ObjectManager.addGameObject(new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], ObjectManager.Camera, player, door));
 
+            //Harry - Sound gun load below - There is a null check as I assumed that a level doens't have to have a gun
+
+            /*
+            JSONGameObject jsonGun = currentLevel.SoundGun;
+            if (jsonGun.ID != null) {
+                ObjectManager.addGameObject(new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera));
+            }
+            */
+
             foreach (JSONEnemy enemy in currentLevel.Enemies) {
                 NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);
                 newEnemy.Scale = 0.08f;

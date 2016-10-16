@@ -23,7 +23,8 @@ namespace PRedesign {
             SPIKE,
             KEY,
             DOOR,
-            PLAYER
+            PLAYER,
+            GUN
             
         }
         #endregion
@@ -73,10 +74,10 @@ namespace PRedesign {
         // Object Fields
         private static PaintObject selectedObject = PaintObject.NONE;
         private static bool isPaintingObject = false;
-        private static Texture2D spikeTexture, keyTexture, doorTexture, playerTexture;
+        private static Texture2D spikeTexture, keyTexture, doorTexture, playerTexture, gunTexture;
         private static IList<EditorObject> objectList = new List<EditorObject>();
-        private static EditorObject playerObject, keyObject, doorObject;
-        private static EditorOptionButton spikeObjectButton, keyObjectbutton, doorObjectButton, playerObjectButton;
+        private static EditorObject playerObject, keyObject, doorObject, gunObject;
+        private static EditorOptionButton spikeObjectButton, keyObjectbutton, doorObjectButton, playerObjectButton, gunObjectButton;
 
         // Edit grid element fields
         private static Rectangle gridBounds;
@@ -164,6 +165,11 @@ namespace PRedesign {
             set { doorTexture = value; }
             get { return doorTexture; }
         }
+
+        public static Texture2D GunTexture {
+            set { gunTexture = value; }
+            get { return gunTexture; }
+        }
         #endregion
 
         #region Initialisation
@@ -177,7 +183,7 @@ namespace PRedesign {
 
             gridElements = new EditorGridElement[gridSize, gridSize];
             elementSize = (device.Viewport.Width / 2) / gridSize;
-            position = new Vector2(10, 10);
+            position = new Vector2(100, 10);
 
             levels = LevelManager.Levels;
 
@@ -220,6 +226,7 @@ namespace PRedesign {
         private static void InitialiseEditorButtons() {
 
             float gridWidthEnd = position.X + (32 * elementSize) + 32 * elementOffset;
+            float gridHeightEnd = position.Y + (32 * elementSize) + 32 * elementOffset;
 
             // Menu Buttons
             float gridToEdge = GraphicsDevice.Viewport.Width - gridWidthEnd;
@@ -296,53 +303,59 @@ namespace PRedesign {
 
 
             // Painting Buttons
-            float optionButtonSpacing = gridWidthEnd / 8;
+            float optionButtonSpacing = gridWidthEnd / 20;
 
             optionButtonGroup = new EditorButtonGroup();
 
 
-            emptyButton = new EditorOptionButton("editor_emptyOptionButton", new Vector2(position.X + 30, gridWidthEnd + 10), Vector2.Zero, editorFont, "Clear", Color.White, buttonTexture, buttonSelectedTexture, defaultTexture, 50);
+            emptyButton = new EditorOptionButton("editor_emptyOptionButton", new Vector2(40, position.Y), Vector2.Zero, editorFont, "Clear", Color.White, buttonTexture, buttonSelectedTexture, defaultTexture, 50);
             emptyButton.Visible = true;
             emptyButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             emptyButton.Selected = true;
             optionButtonGroup.AddButton(emptyButton);
             editorButtons.Add(emptyButton);
 
-            wallButton = new EditorOptionButton("editor_wallOptionButton", new Vector2(emptyButton.Position.X + optionButtonSpacing, emptyButton.Position.Y), Vector2.Zero, editorFont, "Wall", Color.White, buttonTexture, buttonSelectedTexture, wallTexture, 50);
+            wallButton = new EditorOptionButton("editor_wallOptionButton", new Vector2(emptyButton.Position.X, emptyButton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Wall", Color.White, buttonTexture, buttonSelectedTexture, wallTexture, 50);
             wallButton.Visible = true;
             wallButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(wallButton);
             editorButtons.Add(wallButton);
 
-            pathButton = new EditorOptionButton("editor_pathOptionButton", new Vector2(wallButton.Position.X + optionButtonSpacing, wallButton.Position.Y), Vector2.Zero, editorFont, "Path", Color.White, buttonTexture, buttonSelectedTexture, pathTexture, 50);
+            pathButton = new EditorOptionButton("editor_pathOptionButton", new Vector2(wallButton.Position.X, wallButton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Path", Color.White, buttonTexture, buttonSelectedTexture, pathTexture, 50);
             pathButton.Visible = true;
             pathButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(pathButton);
             editorButtons.Add(pathButton);
 
-            spikeObjectButton = new EditorOptionButton("editor_objectSpike", new Vector2(pathButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Spikes", Color.White, buttonTexture, buttonSelectedTexture, spikeTexture, 50);
+            spikeObjectButton = new EditorOptionButton("editor_objectSpike", new Vector2(pathButton.Position.X, pathButton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Spikes", Color.White, buttonTexture, buttonSelectedTexture, spikeTexture, 50);
             spikeObjectButton.Visible = true;
             spikeObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(spikeObjectButton);
             editorButtons.Add(spikeObjectButton);
 
-            keyObjectbutton = new EditorOptionButton("editor_objectKey", new Vector2(spikeObjectButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Key", Color.White, buttonTexture, buttonSelectedTexture, keyTexture, 50);
+            keyObjectbutton = new EditorOptionButton("editor_objectKey", new Vector2(spikeObjectButton.Position.X, spikeObjectButton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Key", Color.White, buttonTexture, buttonSelectedTexture, keyTexture, 50);
             keyObjectbutton.Visible = true;
             keyObjectbutton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(keyObjectbutton);
             editorButtons.Add(keyObjectbutton);
 
-            doorObjectButton = new EditorOptionButton("editor_objectDoor", new Vector2(keyObjectbutton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Door", Color.White, buttonTexture, buttonSelectedTexture, doorTexture, 50);
+            doorObjectButton = new EditorOptionButton("editor_objectDoor", new Vector2(keyObjectbutton.Position.X, keyObjectbutton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Door", Color.White, buttonTexture, buttonSelectedTexture, doorTexture, 50);
             doorObjectButton.Visible = true;
             doorObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(doorObjectButton);
             editorButtons.Add(doorObjectButton);
 
-            playerObjectButton = new EditorOptionButton("editor_objectPlayer", new Vector2(doorObjectButton.Position.X + optionButtonSpacing, pathButton.Position.Y), Vector2.Zero, editorFont, "Player", Color.White, buttonTexture, buttonSelectedTexture, playerTexture, 50);
+            playerObjectButton = new EditorOptionButton("editor_objectPlayer", new Vector2(doorObjectButton.Position.X, doorObjectButton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Player", Color.White, buttonTexture, buttonSelectedTexture, playerTexture, 50);
             playerObjectButton.Visible = true;
             playerObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
             optionButtonGroup.AddButton(playerObjectButton);
             editorButtons.Add(playerObjectButton);
+
+            gunObjectButton = new EditorOptionButton("editor_gunPlayer", new Vector2(playerObjectButton.Position.X, playerObjectButton.Position.Y + optionButtonSpacing), Vector2.Zero, editorFont, "Gun", Color.White, buttonTexture, buttonSelectedTexture, gunTexture, 50);
+            gunObjectButton.Visible = true;
+            gunObjectButton.Clicked += new UIButton.ClickHandler(OptionButtonOnClick);
+            optionButtonGroup.AddButton(gunObjectButton);
+            editorButtons.Add(gunObjectButton);
 
             // Text fields used by buttons methods
             levelSelectText = new UITextblock("levelSelectText", new Vector2(gridWidthEnd + (gridToEdge * 0.4f), GraphicsDevice.Viewport.Height * 0.2f), Vector2.Zero, editorFont, "Select a level to load", Color.White);
@@ -394,6 +407,9 @@ namespace PRedesign {
                 isPaintingObject = true;
             } else if (sender == playerObjectButton) {
                 selectedObject = PaintObject.PLAYER;
+                isPaintingObject = true;
+            } else if (sender == gunObjectButton) {
+                selectedObject = PaintObject.GUN;
                 isPaintingObject = true;
             }
 
@@ -528,7 +544,6 @@ namespace PRedesign {
         private static EditorGridElement CreateNewElement(Texture2D texture, PaintSelection selection, int i, int j) {
             EditorGridElement element = new EditorGridElement(texture, (position.X + elementSize * i) + elementOffset * i, (position.Y + elementSize * j) + elementOffset * j, elementSize, i, j);
             element.Type = selection;
-            //element.Obstacle = EditorGridElement.ElementObstacle.NONE;
             return element;
         }
 
@@ -599,6 +614,7 @@ namespace PRedesign {
         /// Loads the object data from the level object - Unique objects and then the array
         /// </summary>
         private static void LoadLevelObjects() {
+            
             JSONGameObject key = currentEditLevel.Key;
             keyObject = new EditorObject(position, elementSize, elementOffset, key.Type, key.X, key.Y, key.ID);
 
@@ -607,6 +623,12 @@ namespace PRedesign {
 
             JSONGameObject player = currentEditLevel.Player;
             playerObject = new EditorObject(position, elementSize, elementOffset, player.Type, player.X, player.Y, player.ID);
+
+            JSONGameObject soundgun = currentEditLevel.SoundGun;
+            if (soundgun != null) {
+                gunObject = new EditorObject(position, elementSize, elementOffset, soundgun.Type, soundgun.X, soundgun.Y, soundgun.ID);
+            }
+            
 
             if (currentEditLevel.Objects.Count > 0) {
                 foreach(JSONGameObject obj in currentEditLevel.Objects) {
@@ -627,6 +649,8 @@ namespace PRedesign {
             doorObject = null;
             keyObject = null;
             playerObject = null;
+            gunObject = null;
+            System.GC.Collect();
         }
 
         #endregion
@@ -799,13 +823,6 @@ namespace PRedesign {
                 currentEditLevel.Objects.Add(newObject);
             }
 
-            JSONGameObject key = new JSONGameObject();
-            key.Type = keyObject.Type;
-            key.X = keyObject.XData;
-            key.Y = keyObject.YData;
-            key.ID = keyObject.ID;
-            currentEditLevel.Key = key;
-
             JSONGameObject door = new JSONGameObject();
             door.Type = doorObject.Type;
             door.X = doorObject.XData;
@@ -813,12 +830,29 @@ namespace PRedesign {
             door.ID = doorObject.ID;
             currentEditLevel.Door = door;
 
+            JSONGameObject key = new JSONGameObject();
+            key.Type = keyObject.Type;
+            key.X = keyObject.XData;
+            key.Y = keyObject.YData;
+            key.ID = keyObject.ID;
+            currentEditLevel.Key = key;
+
             JSONGameObject player = new JSONGameObject();
             player.Type = playerObject.Type;
             player.X = playerObject.XData;
             player.Y = playerObject.YData;
             player.ID = playerObject.ID;
             currentEditLevel.Player = player;
+
+            JSONGameObject gun = new JSONGameObject();
+            if (gunObject != null) {
+                gun.Type = gunObject.Type;
+                gun.X = gunObject.XData;
+                gun.Y = gunObject.YData;
+                gun.ID = gunObject.ID;
+            }
+            currentEditLevel.SoundGun = gun;
+
 
         }
 
@@ -908,7 +942,6 @@ namespace PRedesign {
         /// <param name="element"></param>
         private static void PlaceNode(EditorGridElement element) {
             selectedEnemy.addNode(new Vector2((position.X + elementSize * element.XData) + elementOffset * element.XData, (position.Y + elementSize * element.YData) + elementOffset * element.YData), element.XData, element.YData);
-
         }
 
         /// <summary>
@@ -922,6 +955,8 @@ namespace PRedesign {
                 keyObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "KEY");
             } else if (selectedObject == PaintObject.PLAYER) {
                 playerObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "PLAYER");
+            } else if (selectedObject == PaintObject.GUN) {
+                gunObject = new EditorObject(position, elementSize, elementOffset, selectedObject, element.XData, element.YData, "GUN");
             } else {
                 EditorObject newObject = GetObjectAt(element.XData, element.YData);
                 if (newObject == null) {
@@ -951,6 +986,10 @@ namespace PRedesign {
                     obj = null;
                 }
             }
+
+            if (gunObject != null && (gunObject.XData == element.XData && gunObject.YData == element.YData)) {
+                gunObject = null;
+            }
         }
         #endregion
 
@@ -966,9 +1005,9 @@ namespace PRedesign {
             if (objectList.Count == 0) {
                 return null;
             } else {
-                foreach (EditorObject obstacle in objectList) {
-                    if (obstacle.XData == xData && obstacle.YData == yData) {
-                        return obstacle;
+                foreach (EditorObject obj in objectList) {
+                    if (obj.XData == xData && obj.YData == yData) {
+                        return obj;
                     }
                 }
             }
@@ -984,6 +1023,7 @@ namespace PRedesign {
         /// </summary>
         private static void EscapeCheck() {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
+                UnloadLevelGrid();
                 LoadingScreen.Load(screenReference.ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
             }
         }
@@ -1021,7 +1061,7 @@ namespace PRedesign {
 
                 if (gridBounds.Contains(mouseState.Position)) {
                     int xStart, yStart;
-                    xStart = MathHelper.Clamp(((mouseState.Position.X) / (elementSize + elementOffset) - 1), 0, gridSize - 1);
+                    xStart = MathHelper.Clamp(((mouseState.Position.X - gridBounds.X) / (elementSize + elementOffset) - 1), 0, gridSize - 1);
                     yStart = MathHelper.Clamp(((mouseState.Position.Y) / (elementSize + elementOffset) - 1), 0, gridSize - 1);
 
                     for (int y = yStart; y <= MathHelper.Clamp(y + 2, yStart, gridSize - 1); y++) {
@@ -1036,7 +1076,7 @@ namespace PRedesign {
                                         PlaceObject(gridElements[x, y]);
                                     }
                                 }
-                                if (selectedPaint == PaintSelection.EMPTY) {
+                                if (selectedPaint == PaintSelection.EMPTY && !isPaintingObject) {
                                     ClearObject(gridElements[x, y]);
                                 }
                                 return;
@@ -1075,13 +1115,17 @@ namespace PRedesign {
         /// <param name="spriteBatch"></param>
         public static void Draw(SpriteBatch spriteBatch) {
 
+            // Grid Draw
             foreach (EditorGridElement element in gridElements) {
                 element.Draw(spriteBatch);
             }
 
+            // Object Draw
             foreach(EditorObject obj in objectList) {
                 obj.Draw(spriteBatch);
             }
+
+            // Enemy / Node Draw
 
             if (selectedEnemy != null) {
                 selectedEnemy.Draw(spriteBatch);
@@ -1103,6 +1147,8 @@ namespace PRedesign {
                 }
             }
 
+            // Unique Object Draw
+            
             if (playerObject != null) {
                 playerObject.Draw(spriteBatch);
             }
@@ -1116,6 +1162,11 @@ namespace PRedesign {
                 keyObject.Draw(spriteBatch);
             }
 
+            if(gunObject != null) {
+                gunObject.Draw(spriteBatch);
+            }          
+
+            // UI Button Draw
 
             foreach (UIButton btn in editorButtons) {
                 btn.Draw(spriteBatch);

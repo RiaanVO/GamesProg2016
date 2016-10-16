@@ -74,6 +74,9 @@ namespace PRedesign {
                 case LevelEditor.PaintObject.SPIKE:
                     texture = LevelEditor.SpikeTexture;
                     break;
+                case LevelEditor.PaintObject.GUN:
+                    texture = LevelEditor.GunTexture;
+                    break;
             }
         }
         #endregion
@@ -94,6 +97,9 @@ namespace PRedesign {
                         break;
                     case LevelEditor.PaintObject.SPIKE:
                         color = Color.Orange;
+                        break;
+                    case LevelEditor.PaintObject.GUN:
+                        color = Color.MediumPurple;
                         break;
                 }
                 spriteBatch.Draw(texture, bounds, color);

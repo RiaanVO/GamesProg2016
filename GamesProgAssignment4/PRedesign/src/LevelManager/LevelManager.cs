@@ -208,7 +208,8 @@ namespace PRedesign {
 
             //Player player = new Player(new Vector3(20, 3.5f, 20));
             Player player = new Player(new Vector3(-20, 3.5f, -20));
-            player.soundGun = new SoundGun(player.Position, ContentStore.loadedModels["soundGun"]);
+            //SoundGun soundGun = new SoundGun(new Vector3(0, 0f, 0), ContentStore.loadedModels["soundGun"]);
+            //player.soundGun = soundGun;
             Player = player;
             
             Skybox skybox = new Skybox(Vector3.Zero, ContentStore.loadedModels["skybox"]);
@@ -264,14 +265,12 @@ namespace PRedesign {
             //ObjectManager.addGameObject(new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], player, door));
 
             //Harry - Sound gun load below - There is a null check as I assumed that a level doens't have to have a gun
-
-            
             JSONGameObject jsonGun = currentLevel.SoundGun;
             if (jsonGun.ID != null) {
                 new GunPickup(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
+                new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 7f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
                 //ObjectManager.addGameObject(new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera));
             }
-            
 
             foreach (JSONEnemy enemy in currentLevel.Enemies) {
                 NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);

@@ -33,6 +33,8 @@ namespace PRedesign
         MouseState prevMouseState;
         float pitchRotationRate = MathHelper.PiOver4 / 150;
         float currentPitch = 0;// = MathHelper.PiOver2;
+        float yawAngle = 0;
+        float currentYaw = 0;
         float maxPitch = MathHelper.PiOver2 * (19 / 20f);
 
         Game game;
@@ -94,6 +96,12 @@ namespace PRedesign
         {
             get { return invulnerabilitySeconds;  }
             set { invulnerabilitySeconds = value;  }
+        }
+
+        public float CurrentYaw
+        {
+            get { return currentYaw; }
+            set { }
         }
         #endregion
 
@@ -169,7 +177,7 @@ namespace PRedesign
 
                 handleInput();
                 handleMovement(gameTime);
-                soundGun.updateMatrices(position, orientation);
+                //soundGun.updateMatrices(position, CurrentYaw);
                 //handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
 
@@ -201,7 +209,9 @@ namespace PRedesign
                 lookDirection.Normalize();
 
             //Sets the yaw rotation of the cameras' look direction
-            lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X)));
+            float yawAngle = (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X);
+            currentYaw += yawAngle;
+            lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, yawAngle));
 
             //Sets the pitch rotation of the cameras look direction, maxes out so that the player cant look directly up or down
             float pitchAngle = (pitchRotationRate) * (mouseState.Y - prevMouseState.Y);
@@ -313,7 +323,7 @@ namespace PRedesign
         {
             //Now has the soundGun
             hasSoundGun = true;
-            soundGun.isVisible = true;
+            soundGun.Enable();
         }
 
         private void handleMouseSelection()

@@ -451,7 +451,7 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updateSeek(GameTime gameTime)
         {
-            rotationalSpeed = -3f;
+            rotationalSpeed = -8f;
             endPointExact = true;
             if (CurrentTarget != player.Position)
                 CurrentTarget = player.Position;

@@ -47,12 +47,15 @@ namespace PRedesign
             ContentStore.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
             ContentStore.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
             ContentStore.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRigged"));
+            ContentStore.Add("soundGun", content.Load<Model>(@"Models/Soundgun Model/SoundGunV2"));
 
             //Load sounds
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
             ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
+            ContentStore.Add("choir", content.Load<SoundEffect>(@"Sounds/Effects/choir"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
-            //MediaPlayer.Play(bgMusic);
+            MediaPlayer.Play(bgMusic);
+            MediaPlayer.Volume = 0.1f;
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
             

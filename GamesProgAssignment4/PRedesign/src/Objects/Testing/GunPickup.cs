@@ -8,32 +8,49 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
-namespace PRedesign.src.Objects.Testing
+namespace PRedesign
 {
-    class Pickup : BasicModel
+    class GunPickup : BasicModel
     {
-        float rotationalSpeed = 2f;
         bool hasBeenCollected;
         SphereCollider collider;
+        //BasicModel itemToPickUp //Holds the actual item that the pickup represents
         AudioEmitterComponent audioEmitter;
 
-        public Pickup(Vector3 startPosition, Model model) : base(startPosition, model)
+        //Animation variables
+        float deltaTime;
+        float rotationalSpeed = 1f;
+
+        // hover animation variables
+        private float hoverHeight;
+        private float originalYPosition;
+        private float hoverSpeed = 1f;
+
+        //Tilt effect variables
+        private Matrix tiltMatrix = Matrix.CreateRotationX(-0.5f);
+
+        public GunPickup(Vector3 startPosition, Model model) : base(startPosition, model)
         {
             hasBeenCollected = false; //false
-            scale = 0.03f;
+            scale = 0.08f;
             scaleMatrix = Matrix.CreateScale(scale);
 
             //Collision code
-            collider = new SphereCollider(this, ObjectTag.pickup, 3f);
+            collider = new SphereCollider(this, ObjectTag.gun, 3f);
             collider.DrawColour = Color.Yellow;
             
             //Audio code
-            //audioEmitter = new AudioEmitterComponent(game, this);
-            //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
+            audioEmitter = new AudioEmitterComponent(this);
+            audioEmitter.addSoundEffect("pickup", ContentStore.loadedSounds["choir"]);
 
             //Animation code
             orientation = 0f;
+            hoverHeight = 0f;
+            originalYPosition = startPosition.Y;
+
+            hasLighting = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -41,6 +58,7 @@ namespace PRedesign.src.Objects.Testing
             //temporary work-around to show key has been collected:
             if (!hasBeenCollected)
             {
+                deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
                 List<Collider> currentCollisions = collider.getCollisions();
                 if (currentCollisions.Count() > 0)
                 {
@@ -53,7 +71,8 @@ namespace PRedesign.src.Objects.Testing
                     }
                 }
 
-                rotateKey(gameTime);
+                rotateKey();
+                hoverAnimation();
                 base.Update(gameTime);
             }
         }
@@ -61,18 +80,31 @@ namespace PRedesign.src.Objects.Testing
         private void pickedUp()
         {
             hasBeenCollected = true;
+            collider.Remove();
         }
 
-        private void rotateKey(GameTime gameTime)
+        private void rotateKey()
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
-
             orientation += rotationalSpeed * deltaTime;
-            rotationMatrix = Matrix.CreateRotationY(orientation);
+            rotationMatrix = tiltMatrix * Matrix.CreateRotationY(orientation);
+        }
+
+        private void hoverAnimation()
+        {
+            hoverHeight += hoverSpeed * deltaTime;
+            //resets to zero + overlap
+            if (hoverHeight > MathHelper.TwoPi)
+            {
+                float overlap = hoverHeight - MathHelper.TwoPi;
+                hoverHeight = 0f + overlap;
+            }
+
+            position.Y = originalYPosition + (float)Math.Sin(hoverHeight);
         }
 
         public override Matrix GetWorld()
         {
+            translationMatrix = Matrix.CreateTranslation(position); //Handles the hovering
             return scaleMatrix * rotationMatrix * translationMatrix;
         }
 

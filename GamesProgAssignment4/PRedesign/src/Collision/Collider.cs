@@ -19,7 +19,9 @@ namespace PRedesign
         movementChecker,
         floor,
         roof,
-        exit
+        exit,
+        gun,
+        sound
     }
 
     abstract class Collider

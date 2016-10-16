@@ -208,20 +208,11 @@ namespace PRedesign {
 
             //Player player = new Player(new Vector3(20, 3.5f, 20));
             Player player = new Player(new Vector3(-20, 3.5f, -20));
+            player.soundGun = new SoundGun(player.Position, ContentStore.loadedModels["soundGun"]);
             Player = player;
-
-
-
+            
             Skybox skybox = new Skybox(Vector3.Zero, ContentStore.loadedModels["skybox"]);
             skybox.Player = player;
-
-            //This should be replaced with actual loading later
-            //ObjectManager.addGameObject(new TetraKey(new Vector3(-5f, 5f, -5f), ContentStore.loadedModels["tetraKey"], camera, player));
-            //ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), ContentStore.loadedModels["spikes"]));
-            //TetraDoor door1 = new TetraDoor(new Vector3(TILE_SIZE, 0f, 0f), ContentStore.loadedModels["tetraDoor"], camera, player);
-            //ObjectManager.addGameObject(door1);
-            //ObjectManager.addGameObject(new TetraKey(new Vector3(TILE_SIZE, 5f, -20f), ContentStore.loadedModels["tetraKey"], camera, player, door1));
-            //ObjectManager.addGameObject(new Spikes(new Vector3(0f, 0f, 15f), ContentStore.loadedModels["spikes"]));
         }
 
         /// <summary>
@@ -274,13 +265,13 @@ namespace PRedesign {
 
             //Harry - Sound gun load below - There is a null check as I assumed that a level doens't have to have a gun
 
-            /*
+            
             JSONGameObject jsonGun = currentLevel.SoundGun;
             if (jsonGun.ID != null) {
-                new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera)
+                new GunPickup(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
                 //ObjectManager.addGameObject(new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera));
             }
-            */
+            
 
             foreach (JSONEnemy enemy in currentLevel.Enemies) {
                 NPCEnemy newEnemy = new NPCEnemy(new Vector3(enemy.X * TileSize + (TileSize / 2), 5, enemy.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraEnemy"], player);

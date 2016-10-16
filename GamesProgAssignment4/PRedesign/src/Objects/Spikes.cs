@@ -16,8 +16,9 @@ namespace PRedesign
         {
             scale = 0.4f;
             scaleMatrix = Matrix.CreateScale(scale, 0.3f, scale);
-            collider = new BoxCollider(this, ObjectTag.hazard, new Vector3(12, 7f, 12));
-            collider.PositionOffset = new Vector3(1.5f, 0f, 1.5f);
+            collider = new BoxCollider(this, ObjectTag.hazard, new Vector3(12, 2.5f, 12));
+            //collider.PositionOffset = new Vector3(0f, 0f, 20f);
+            collider.updateColliderPos(position + new Vector3(1.5f, 0f, 1.5f));
             collider.DrawColour = Color.Blue;
             hasLighting = true;
         }

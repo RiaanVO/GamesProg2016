@@ -465,3 +465,9 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/SoundGun Model/SoundGunV2.fbx
 
+#begin Sounds/Effects/choir.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Effects/choir.wav
+

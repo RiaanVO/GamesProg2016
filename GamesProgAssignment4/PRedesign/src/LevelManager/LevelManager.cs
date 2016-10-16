@@ -66,6 +66,10 @@ namespace PRedesign {
             get { return player.Health; }
         }
 
+        public static bool Loaded {
+            get { return isLevelLoaded; }
+        }
+
         public static BoundingBox LevelEnclosure {
             get {
                 if (levelEnclosure == null)
@@ -167,10 +171,10 @@ namespace PRedesign {
         /// Unloads the current level and attempts to load the next level
         /// </summary>
         public static void NextLevel() {
-            if(currentLevel.Id + 1 <= levels.Count - 1) {
+            if(currentLevel.Id + 1 <= levels.Count) {
                 currentLevel = levels[levels.IndexOf(currentLevel) + 1];
                 UnloadLevel();
-                LoadLevel(currentLevel.Id);
+                LoadLevel(currentLevel.Id + 1);
 
             } else {
                 UnloadLevel();

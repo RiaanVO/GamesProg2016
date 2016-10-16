@@ -12,14 +12,13 @@ namespace PRedesign
     {
         BoxCollider collider;
 
-        public Spikes(Vector3 startPosition, Model model) : base(startPosition, ObjectManager.Camera, model)
+        public Spikes(Vector3 startPosition, Model model) : base(startPosition, model)
         {
             scale = 0.4f;
             scaleMatrix = Matrix.CreateScale(scale, 0.3f, scale);
             collider = new BoxCollider(this, ObjectTag.hazard, new Vector3(12, 7f, 12));
             collider.PositionOffset = new Vector3(1.5f, 0f, 1.5f);
             collider.DrawColour = Color.Blue;
-            //CollisionManager.ForceTreeConstruction();
             hasLighting = true;
         }
 

@@ -34,16 +34,7 @@ namespace PRedesign
         #endregion
 
         #region Initialization
-        public CubePrimitive(Vector3 startPosition, Texture2D texture, float size) : base(startPosition, ObjectManager.Camera, ObjectManager.GraphicsDevice, texture) {
-            Size = size;
-            centeredPosition = startPosition;
-            centeredPosition.X += size / 2;
-            centeredPosition.Y += size / 2;
-            centeredPosition.Z += size / 2;
-        }
-
-        public CubePrimitive(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Texture2D texture, float size) : base(startPosition, camera, graphicsDevice, texture)
-        {
+        public CubePrimitive(Vector3 startPosition, Texture2D texture, float size) : base(startPosition, texture) {
             Size = size;
             centeredPosition = startPosition;
             centeredPosition.X += size / 2;

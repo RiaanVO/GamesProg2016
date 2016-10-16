@@ -11,9 +11,6 @@ namespace PRedesign
     class BasicTexturePrimitive : GameObject
     {
         #region Fields
-        protected BasicCamera camera;
-        protected BasicEffect basicEffect;
-        protected GraphicsDevice graphicsDevice;
         protected Matrix worldMatrix, scaleMatrix, rotationMatrix, translationMatrix;
 
         protected VertexPositionNormalTexture[] vertexData;
@@ -24,22 +21,6 @@ namespace PRedesign
         #endregion
 
         #region Properties
-        public BasicCamera Camera
-        {
-            get { return camera; }
-            set { camera = value; }
-        }
-
-        public GraphicsDevice GraphicsDevice {
-            get { return graphicsDevice; }
-            set { graphicsDevice = value; }
-        }
-
-        public BasicEffect BasicEffect {
-            get { return basicEffect; }
-            set { basicEffect = value; }
-        }
-
         public VertexPositionNormalTexture[] VertexData
         {
             get { return vertexData; }
@@ -99,14 +80,12 @@ namespace PRedesign
         /// <param name="camera"></param>
         /// <param name="graphicsDevice"></param>
         /// <param name="texture"></param>
-        public BasicTexturePrimitive(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Texture2D texture) : base(startPosition)
+        public BasicTexturePrimitive(Vector3 startPosition, Texture2D texture) : base(startPosition)
         {
             translationMatrix = Matrix.CreateTranslation(startPosition);
             scaleMatrix = Matrix.CreateScale(1);
             rotationMatrix = Matrix.Identity;
             worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
-            this.camera = camera;
-            this.graphicsDevice = graphicsDevice;
             this.texture = texture;
         }
         #endregion
@@ -118,10 +97,10 @@ namespace PRedesign
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
-            if (vertexData == null || indexData == null || graphicsDevice == null || camera == null)
+            BasicCamera camera = ObjectManager.Camera;
+            BasicEffect basicEffect = ObjectManager.BasicEffect; //Will be null if there is no graphics device
+            if (vertexData == null || indexData == null || basicEffect == null || camera == null)
                 return;
-            if (basicEffect == null)
-                basicEffect = new BasicEffect(graphicsDevice);
 
             basicEffect.World = getWorld();
             basicEffect.View = camera.View;
@@ -138,7 +117,7 @@ namespace PRedesign
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                graphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, vertexData, 0, vertexData.Length, indexData, 0, indexData.Length / 3);
+                ObjectManager.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, vertexData, 0, vertexData.Length, indexData, 0, indexData.Length / 3);
             }
         }
 

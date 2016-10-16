@@ -216,8 +216,6 @@ namespace PRedesign {
 
             buttonSelectedTexture = new Texture2D(device, 1, 1);
             buttonSelectedTexture.SetData(new[] { Color.Red });
-
-
         }
 
         /// <summary>
@@ -1086,11 +1084,7 @@ namespace PRedesign {
                 }
             }
         }
-
-
-            
-
-
+        
         #endregion
 
         #endregion
@@ -1187,7 +1181,6 @@ namespace PRedesign {
             }
         }
         #endregion
-
     }
 
 }

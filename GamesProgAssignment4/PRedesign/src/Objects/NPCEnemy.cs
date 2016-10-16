@@ -121,7 +121,7 @@ namespace PRedesign
                         }
                         brain.addState(state);
                     }
-                    Console.WriteLine("AILoaded: " + position);
+                    Console.WriteLine("AILoaded: " + position + " -- Will print twice per ai");
                     loadFromFile = true;
                 }
                 catch (System.IO.FileNotFoundException)
@@ -153,7 +153,7 @@ namespace PRedesign
         #endregion
 
         #region Initialize
-        public NPCEnemy(Vector3 startPosition, Model model, Player player) : base(startPosition, ObjectManager.Camera, model)
+        public NPCEnemy(Vector3 startPosition, Model model, Player player) : base(startPosition, model)
         {
             velocity = Vector3.Zero;
             currentTarget = position;
@@ -362,6 +362,7 @@ namespace PRedesign
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return float.MinValue;
             }
         }
@@ -373,6 +374,7 @@ namespace PRedesign
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return double.MinValue;
             }
         }

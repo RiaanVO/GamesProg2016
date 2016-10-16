@@ -21,6 +21,7 @@ namespace PRedesign
         //Need to find a better location for these varibles
         private static GraphicsDevice graphicsDevice;
         private static BasicCamera camera;
+        private static BasicEffect basicEffect;
         private static Game game;
         #endregion
 
@@ -38,6 +39,14 @@ namespace PRedesign
         public static Game Game {
             get { return game; }
             set { game = value; }
+        }
+
+        public static BasicEffect BasicEffect {
+            get {
+                if (basicEffect == null && graphicsDevice != null)
+                    basicEffect = new BasicEffect(graphicsDevice);
+                return basicEffect; }
+            set { basicEffect = value; }
         }
         #endregion
 
@@ -91,5 +100,8 @@ namespace PRedesign
         }
         #endregion
 
+        public static string Stats() {
+            return "Number of game objects: " + objectsMaster.Count;
+        }
     }
 }

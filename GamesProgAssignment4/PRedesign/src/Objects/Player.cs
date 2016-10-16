@@ -60,18 +60,6 @@ namespace PRedesign
         //Gameplay Variables
         //public bool hasKey = false;
 
-
-
-        /// <summary>
-        /// For lab task
-        /// </summary>
-        Tank tank;
-        public Tank Tank
-        {
-            get { return tank; }
-            set { tank = value; }
-        }
-
         public int Health
         {
             get { return health; }
@@ -120,7 +108,6 @@ namespace PRedesign
             collider.PositionOffset = colliderPositionOffset;
             collider.DrawColour = Color.Magenta;
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
-            //CollisionManager.ForceTreeConstruction();
   
             invulnerabilitySeconds = 5;
             remainingDelay = invulnerabilitySeconds;
@@ -175,7 +162,7 @@ namespace PRedesign
                 handleInput();
                 handleMovement(gameTime);
 
-                handleMouseSelection();
+                //handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
 
                 if (velocity.Length() > 0)
@@ -258,7 +245,6 @@ namespace PRedesign
                 {
                     velocity = Vector3.Zero;
                     acceleration = Vector3.Zero;
-                    Console.WriteLine("Zeroed");
                 }
             }
             //Remove y component to be calculated seperatly;
@@ -312,7 +298,7 @@ namespace PRedesign
 
 
         #region Helper Methods
-        private void handleMouseSelection()
+        /*private void handleMouseSelection()
         {
             MouseState mouseState = Mouse.GetState();
             if (tank != null && mouseState.LeftButton == ButtonState.Pressed)
@@ -324,7 +310,7 @@ namespace PRedesign
                     tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;
                 }
             }
-        }
+        } */
 
         public Ray calculateRay(Vector2 mouseLocation, Matrix view, Matrix projection, Viewport viewport)
         {

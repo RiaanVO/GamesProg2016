@@ -36,7 +36,7 @@ namespace PRedesign
         private float originalYPosition;
         private float hoverSpeed = 0.8f;
 
-        public TetraKey(Vector3 startPosition, Model model, BasicCamera camera, Player player, TetraDoor door) : base(startPosition, camera, model)
+        public TetraKey(Vector3 startPosition, Model model, Player player, TetraDoor door) : base(startPosition, model)
         {
             this.player = player;
             hasBeenCollected = false; //false
@@ -48,8 +48,6 @@ namespace PRedesign
             //Collision code
             collider = new SphereCollider(this, ObjectTag.pickup, 3f);
             collider.DrawColour = Color.Yellow;
-
-            //CollisionManager.ForceTreeConstruction();
 
             //Audio code
             audioEmitter = new AudioEmitterComponent(this);

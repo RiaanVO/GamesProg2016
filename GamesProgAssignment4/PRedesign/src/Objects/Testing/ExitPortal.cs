@@ -29,7 +29,7 @@ namespace PRedesign.src.Objects.Testing
         private float originalYPosition;
         private float hoverSpeed = 0.8f;
 
-        public ExitPortal(Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(startPosition, camera, model)
+        public ExitPortal(Vector3 startPosition, Model model, Player player) : base(startPosition, model)
         {
             this.player = player;
             isUnlocked = false; //false
@@ -40,8 +40,6 @@ namespace PRedesign.src.Objects.Testing
             //Collision code. Will the door tag work correctly? Should we start this off being an obstacle and then make it a door tag?
             collider = new SphereCollider(this, ObjectTag.exit, 3f);
             collider.DrawColour = Color.Yellow;
-
-            CollisionManager.ForceTreeConstruction();
 
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));

@@ -11,7 +11,6 @@ namespace PRedesign
     class BasicModel : GameObject
     {
         #region Fields
-        protected BasicCamera camera;
         protected Model model;
         protected Matrix worldMatrix, scaleMatrix, rotationMatrix, translationMatrix;
         protected bool hasLighting = false;
@@ -20,11 +19,6 @@ namespace PRedesign
         #endregion
 
         #region Properties
-        public BasicCamera Camera {
-            get { return camera; }
-            set { camera = value; }
-        }
-
         public Model Model {
             get { return model; }
             set { model = value; }
@@ -82,8 +76,7 @@ namespace PRedesign
         /// <param name="startPosition"></param>
         /// <param name="camera"></param>
         /// <param name="model"></param>
-        public BasicModel(Vector3 startPosition, BasicCamera camera, Model model) : base(startPosition) {
-            this.camera = camera;
+        public BasicModel(Vector3 startPosition, Model model) : base(startPosition) {
             this.model = model;
 
             translationMatrix = Matrix.CreateTranslation(position);
@@ -101,6 +94,7 @@ namespace PRedesign
         /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
+            BasicCamera camera = ObjectManager.Camera;
             if (model == null || camera == null)
                 return;
 

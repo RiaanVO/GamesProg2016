@@ -155,8 +155,7 @@ namespace PRedesign {
 
                 //Construct the objects for the level
                 LoadLevelData();
-                Console.WriteLine("Level loaded");
-                CollisionManager.constructQuadTree();
+                Console.WriteLine("Level loaded, ID: " + currentLevel.Id);
             }
         }
 
@@ -229,6 +228,10 @@ namespace PRedesign {
         /// Parses the data from the selected level and populates the level with objects
         /// </summary>
         private static void LoadLevelData() {
+            int floorandroof = 0;
+            int numwalls = 0;
+
+
             int currentLevelWidth = currentLevel.Data.GetUpperBound(0) * TILE_SIZE;
             int currentLevelHeight = currentLevel.Data.GetUpperBound(1) * TILE_SIZE;
             levelWidth = currentLevelWidth;
@@ -243,11 +246,16 @@ namespace PRedesign {
                             break;
                         case TILE_WALL:
                             //Adam - can replace the "wall" string here with a variable to allow for more detailed configuration. 
-                            ObjectManager.addGameObject(new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), ContentStore.loadedTextures["wall"], TILE_SIZE));
+                            new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), ContentStore.loadedTextures["wall"], TILE_SIZE);
+                            //ObjectManager.addGameObject(new Wall(new Vector3((TILE_SIZE * j), 0, (TILE_SIZE * i)), ContentStore.loadedTextures["wall"], TILE_SIZE));
+                            numwalls++;
                             break;
                         case TILE_PATH:
-                            ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2f, 0, (float)(TILE_SIZE * i) / 2f), ContentStore.loadedTextures["ground"], TILE_SIZE, 1));
-                            ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ContentStore.loadedTextures["ceiling"], TILE_SIZE, 1));
+                            new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2f, 0, (float)(TILE_SIZE * i) / 2f), ContentStore.loadedTextures["ground"], TILE_SIZE, 1);
+                            //ObjectManager.addGameObject(new GroundPrimitive(new Vector3((float)(TILE_SIZE * j) / 2f, 0, (float)(TILE_SIZE * i) / 2f), ContentStore.loadedTextures["ground"], TILE_SIZE, 1));
+                            new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ContentStore.loadedTextures["ceiling"], TILE_SIZE, 1);
+                            //ObjectManager.addGameObject(new CeilingPrimitive(new Vector3((float)(TILE_SIZE * j) / 2, TILE_SIZE / 2, (float)(TILE_SIZE * i) / 2), ContentStore.loadedTextures["ceiling"], TILE_SIZE, 1));
+                            floorandroof += 2;
                             break;
                     }
                 }
@@ -257,18 +265,20 @@ namespace PRedesign {
             player.Position = new Vector3(jsonPlayer.X * TileSize + (TileSize / 2), 0, jsonPlayer.Y * TileSize + (TileSize / 2));
 
             JSONGameObject jsonDoor = currentLevel.Door;
-            TetraDoor door = new TetraDoor(new Vector3(jsonDoor.X * TileSize, 0f, jsonDoor.Y * TileSize), ContentStore.loadedModels["tetraDoor"], ObjectManager.Camera, player);
-            ObjectManager.addGameObject(door);
+            TetraDoor door = new TetraDoor(new Vector3(jsonDoor.X * TileSize, 0f, jsonDoor.Y * TileSize), ContentStore.loadedModels["tetraDoor"], player);
+            //ObjectManager.addGameObject(door);
 
             JSONGameObject jsonKey = currentLevel.Key;
-            ObjectManager.addGameObject(new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], ObjectManager.Camera, player, door));
+            new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], player, door);
+            //ObjectManager.addGameObject(new TetraKey(new Vector3(jsonKey.X * TileSize + (TileSize / 2), 5f, jsonKey.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["tetraKey"], player, door));
 
             //Harry - Sound gun load below - There is a null check as I assumed that a level doens't have to have a gun
 
             /*
             JSONGameObject jsonGun = currentLevel.SoundGun;
             if (jsonGun.ID != null) {
-                ObjectManager.addGameObject(new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera));
+                new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera)
+                //ObjectManager.addGameObject(new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera));
             }
             */
 
@@ -282,19 +292,23 @@ namespace PRedesign {
                 }
                 newEnemy.PatrolPoints = patrolPoints;
                 newEnemy.AiFile = enemy.Behavior;
-                ObjectManager.addGameObject(newEnemy);                
+                //ObjectManager.addGameObject(newEnemy);                
             }
 
             foreach (JSONGameObject obj in currentLevel.Objects) {
                 switch(obj.ID) {
                     case "SPIKE":
-                        ObjectManager.addGameObject(new Spikes(new Vector3(obj.X * TileSize, 0, obj.Y * TileSize), ContentStore.loadedModels["spikes"]));
+                        new Spikes(new Vector3(obj.X * TileSize, 0, obj.Y * TileSize), ContentStore.loadedModels["spikes"]);
+                        //ObjectManager.addGameObject(new Spikes(new Vector3(obj.X * TileSize, 0, obj.Y * TileSize), ContentStore.loadedModels["spikes"]));
                         break;
                 }
             }
 
-            
-
+            CollisionManager.constructQuadTree();
+            CollisionManager.ForceTreeConstruction();
+            printStats("Level loaded");
+            Console.WriteLine("Number of floors and roofs: " + floorandroof);
+            Console.WriteLine("Number of walls: " + numwalls);
             isLevelLoaded = true;
         }
 
@@ -307,7 +321,14 @@ namespace PRedesign {
             CollisionManager.clearAll();
             WireShapeDrawer.clearAll();
             System.GC.Collect();
+            printStats("Level unloaded");
             isLevelLoaded = false;
+        }
+
+        private static void printStats(string message) {
+            Console.WriteLine(message);
+            Console.WriteLine(ObjectManager.Stats());
+            Console.WriteLine(CollisionManager.Stats());
         }
 
         public static void UnloadContent() {

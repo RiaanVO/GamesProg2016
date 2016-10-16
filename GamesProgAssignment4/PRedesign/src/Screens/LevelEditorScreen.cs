@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PRedesign {
 
-    class LevelEditorScreen : GameScreen {
+    class LevelEditorScreen : GameScreen, IDisposable {
 
         #region Fields
         ContentManager content;
@@ -22,7 +22,6 @@ namespace PRedesign {
         public override void LoadContent() {
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
-            
 
             backgroundTexture = content.Load<Texture2D>(@"Textures/MenuBackground");
             editorFont = content.Load<SpriteFont>(@"Fonts/GameFont");
@@ -33,9 +32,6 @@ namespace PRedesign {
             editorDoorTexture = content.Load<Texture2D>(@"Textures/editor_door");
             editorPlayerTexture = content.Load<Texture2D>(@"Textures/editor_player");
             editorGunTexture = content.Load<Texture2D>(@"Textures/editor_gun");
-
-
-
 
             InitialiseEditor();
         }
@@ -52,7 +48,6 @@ namespace PRedesign {
             LevelEditor.GunTexture = editorGunTexture;
             LevelEditor.GameScreen = this;
             LevelEditor.LoadEditor();
-
         }
         #endregion
 
@@ -75,6 +70,50 @@ namespace PRedesign {
             LevelEditor.Draw(spriteBatch);
 
             spriteBatch.End();
+        }
+        #endregion
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                    content.Dispose();
+                    backgroundTexture.Dispose();
+                    editorEnemyTexture.Dispose();
+                    editorNodeTexture.Dispose();
+                    editorSpikeTexture.Dispose();
+                    editorKeyTexture.Dispose();
+                    editorDoorTexture.Dispose();
+                    editorPlayerTexture.Dispose();
+                    editorGunTexture.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~LevelEditorScreen() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            GC.SuppressFinalize(this);
         }
         #endregion
     }

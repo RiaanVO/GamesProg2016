@@ -60,23 +60,7 @@ namespace PRedesign
         /// <param name="texture"></param>
         /// <param name="tileSize"></param>
         /// <param name="numTilesAcross"></param>
-        public CeilingPrimitive(Vector3 startPosition, Texture2D texture, int tileSize, int numTilesAcross) : base(startPosition, ObjectManager.Camera, ObjectManager.GraphicsDevice, texture) {
-            this.tileSize = tileSize;
-            this.numTilesAcross = numTilesAcross;
-        }
-
-        /// <summary>
-        /// Constructor where you must define the values
-        /// </summary>
-        /// <param name="startPosition"></param>
-        /// <param name="camera"></param>
-        /// <param name="graphicsDevice"></param>
-        /// <param name="texture"></param>
-        /// <param name="tileSize"></param>
-        /// <param name="numTilesAcross"></param>
-        public CeilingPrimitive(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Texture2D texture, int tileSize, int numTilesAcross) 
-            : base(startPosition, camera, graphicsDevice, texture)
-        {
+        public CeilingPrimitive(Vector3 startPosition, Texture2D texture, int tileSize, int numTilesAcross) : base(startPosition, texture) {
             this.tileSize = tileSize;
             this.numTilesAcross = numTilesAcross;
         }

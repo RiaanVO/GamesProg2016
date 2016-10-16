@@ -42,7 +42,7 @@ namespace PRedesign
         private float currentDoorDistance;
         private float doorOpenSpeed = 1f;
 
-        public TetraDoor(Vector3 startPosition, Model model, BasicCamera camera, Player player) : base(startPosition, camera, model)
+        public TetraDoor(Vector3 startPosition, Model model, Player player) : base(startPosition, model)
         {
             this.player = player;
             isUnlocked = false; //false
@@ -56,8 +56,6 @@ namespace PRedesign
             //collider = new SphereCollider(this, ObjectTag.obstacle, 3f);
             collider = new BoxCollider(this, ObjectTag.obstacle, new Vector3(LevelManager.TileSize, LevelManager.TileSize, LevelManager.TileSize * 0.5f));
             collider.DrawColour = Color.Yellow;
-
-            CollisionManager.ForceTreeConstruction();
 
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
@@ -125,8 +123,9 @@ namespace PRedesign
         /// </summary>
         public void unlockDoor()
         {
-            collider.Remove();
-            collider = new BoxCollider(this, ObjectTag.exit, new Vector3(LevelManager.TileSize, LevelManager.TileSize, LevelManager.TileSize * 0.5f));
+            collider.Tag = ObjectTag.exit;
+            //collider.Remove();
+            //collider = new BoxCollider(this, ObjectTag.exit, new Vector3(LevelManager.TileSize, LevelManager.TileSize, LevelManager.TileSize * 0.5f));
             isUnlocked = true;
         }
 

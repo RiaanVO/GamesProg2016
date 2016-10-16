@@ -32,6 +32,8 @@ namespace PRedesign
 
         static bool m_treeReady = false;       //the tree has a few objects which need to be inserted before it is complete
         static bool m_treeBuilt = false;       //there is no pre-existing tree yet.
+
+        private bool isRendered = false;
         #endregion
 
         #region Properties
@@ -40,8 +42,10 @@ namespace PRedesign
             get { return _parent == null; }
         }
 
-        public bool TreeBuilt {
-            set {
+        public bool TreeBuilt
+        {
+            set
+            {
                 m_treeBuilt = m_treeReady = value;
             }
         }
@@ -58,12 +62,16 @@ namespace PRedesign
         {
             m_region = region;
             m_objects = objList;
+
+            CollisionManager.quadTreeCount++;
         }
 
         public QuadTree()
         {
             m_objects = new List<Collider>();
             m_region = new BoundingBox(Vector3.Zero, Vector3.Zero);
+
+            CollisionManager.quadTreeCount++;
         }
 
         /// <summary>
@@ -75,6 +83,8 @@ namespace PRedesign
         {
             m_region = region;
             m_objects = new List<Collider>();
+
+            CollisionManager.quadTreeCount++;
         }
 
         #endregion
@@ -135,22 +145,7 @@ namespace PRedesign
             }
         }
 
-        /*
-        public void RemoveAll()
-        {
-            m_objects.Clear();
-            m_pendingInsertion.Clear();
-            foreach (QuadTree childNode in m_childNode)
-            {
-                if (childNode != null)
-                    RemoveAll();
-            }
-            //m_childNode = null;
-            //_parent = null;
-            //m_treeBuilt = false;
-            m_treeReady = false;
-        }
-        */
+
 
         /// <summary>
         /// A tree has already been created, so we're going to try to insert an item into the tree without rebuilding the whole thing
@@ -426,8 +421,11 @@ namespace PRedesign
 
         public void RenderTree(Color colour, bool showRegions, bool showColliders)
         {
-            if(showRegions && m_region.Min - m_region.Max != Vector3.Zero)
-                WireShapeDrawer.AddBoundingBox(m_region, colour);
+            if (showRegions && m_region.Min - m_region.Max != Vector3.Zero && !isRendered)
+            {
+                WireShapeDrawer.AddBoundingBox(m_region, colour, CollisionManager.renderTime);
+                isRendered = true;
+            }
             if (m_objects != null && showColliders)
                 foreach (Collider collider in m_objects)
                     collider.drawCollider();
@@ -435,6 +433,42 @@ namespace PRedesign
                 foreach (QuadTree childNode in m_childNode)
                     if (childNode != null)
                         childNode.RenderTree(colour, showRegions, showColliders);
+        }
+
+        public bool pruneDeadBranches()
+        {
+            bool prune = true;
+
+            foreach (QuadTree branch in m_childNode)
+            {
+                if (branch != null)
+                {
+                    bool currentBranch = branch.pruneDeadBranches();
+                    if (!currentBranch)
+                        prune = false;
+                }
+            }
+            if (prune)
+                prune = shouldPrune();
+            return prune;
+        }
+
+        private bool shouldPrune()
+        {
+            return m_objects.Count < MIN_COLLIDER_COUNT;
+        }
+
+        public int countActiveBranches()
+        {
+            int childrenCount = 1; //First one is the branch itself 
+            foreach (QuadTree branch in m_childNode)
+            {
+                if (branch != null)
+                {
+                    childrenCount += branch.countActiveBranches();
+                }
+            }
+            return childrenCount;
         }
     }
 }

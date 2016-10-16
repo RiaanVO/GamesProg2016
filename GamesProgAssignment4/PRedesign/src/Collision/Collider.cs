@@ -32,6 +32,9 @@ namespace PRedesign
         protected ObjectTag tag;
         protected Vector3 positionOffset = Vector3.Zero;
         protected QuadTree quadTreeNode;
+
+        //Debug fields
+        protected bool isRendered = false;
         #endregion
 
         #region properties

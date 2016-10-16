@@ -12,18 +12,12 @@ namespace PRedesign
     {
         #region Fields
         Player player;
-        GraphicsDevice graphicsDevice;
         #endregion
 
         #region Properties
         public Player Player {
             get { return player; }
             set { player = value; }
-        }
-        
-        public GraphicsDevice GraphicsDevice {
-            get { return graphicsDevice; }
-            set { graphicsDevice = value; }
         }
         #endregion
 
@@ -33,19 +27,7 @@ namespace PRedesign
         /// </summary>
         /// <param name="startPosition"></param>
         /// <param name="model"></param>
-        public Skybox(Vector3 startPosition, Model model) : base(startPosition, ObjectManager.Camera, model) {
-            scaleMatrix = Matrix.CreateScale(1000);
-            graphicsDevice = ObjectManager.GraphicsDevice;
-        }
-
-        /// <summary>
-        /// Constructor where you must provide all values
-        /// </summary>
-        /// <param name="startPosition"></param>
-        /// <param name="camera"></param>
-        /// <param name="model"></param>
-        public Skybox(Vector3 startPosition, BasicCamera camera, GraphicsDevice graphicsDevice, Model model) : base(startPosition, camera, model) {
-            this.graphicsDevice = graphicsDevice;
+        public Skybox(Vector3 startPosition, Model model) : base(startPosition,  model) {
             scaleMatrix = Matrix.CreateScale(1000);
         }
         #endregion
@@ -66,6 +48,7 @@ namespace PRedesign
 
         public override void Draw(GameTime gameTime)
         {
+            GraphicsDevice graphicsDevice = ObjectManager.GraphicsDevice;
             if (graphicsDevice == null)
                 return;
 

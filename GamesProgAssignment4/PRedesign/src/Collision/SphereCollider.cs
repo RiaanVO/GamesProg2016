@@ -66,8 +66,11 @@ namespace PRedesign
         /// </summary>
         public override void drawCollider()
         {
-            if(collider != null)
-                WireShapeDrawer.AddBoundingSphere(collider, drawColour);
+            if(!isRendered && collider != null)
+            {
+                WireShapeDrawer.AddBoundingSphere(collider, drawColour, CollisionManager.renderTime);
+                isRendered = true;
+            }
         }
 
         public override List<Collider> getCollisions()

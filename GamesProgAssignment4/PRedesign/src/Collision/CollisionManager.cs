@@ -12,21 +12,24 @@ namespace PRedesign
     {
         private static QuadTree quadTree;
         private static List<Collider> colliders = new List<Collider>();
+        public static int quadTreeCount;
+
+        //Debugging
+        public const float renderTime = 360;
 
         public static void addCollider(Collider collider)
         {
             if (quadTree != null)
-            {
-                //quadTree = new QuadTree(LevelManager.LevelEnclosure);
                 quadTree.Add(collider);
-            }
             colliders.Add(collider);
+
         }
 
-        public static void constructQuadTree() {
-            //quadTree = null;
+        public static void constructQuadTree()
+        {
+            Console.WriteLine("Quadtree size" + LevelManager.LevelEnclosure);
             quadTree = new QuadTree(LevelManager.LevelEnclosure);
-            foreach(Collider collider in colliders)
+            foreach (Collider collider in colliders)
             {
                 quadTree.Add(collider);
             }
@@ -38,7 +41,7 @@ namespace PRedesign
         /// <param name="gameObject"></param>
         public static void removeCollider(Collider collider)
         {
-            if(quadTree != null)
+            if (quadTree != null)
                 quadTree.Remove(collider);
             colliders.Remove(collider);
         }
@@ -48,7 +51,8 @@ namespace PRedesign
         /// </summary>
         public static void clearAll()
         {
-            if (quadTree != null) {
+            if (quadTree != null)
+            {
                 quadTree.UpdateTree();
                 foreach (Collider collider in colliders)
                 {
@@ -56,24 +60,38 @@ namespace PRedesign
                     quadTree.Remove(collider);
                 }
                 quadTree.TreeBuilt = false;
+                quadTree.pruneDeadBranches();
+
             }
+            quadTreeCount = 0;
             colliders.Clear();
+            Console.WriteLine(Stats());
+            Console.WriteLine("Current active branches: " + quadTree.countActiveBranches());
         }
 
-        public static void Render(Color colour, bool showRegions, bool showColliders) {
+        public static void Render(Color colour, bool showRegions, bool showColliders)
+        {
             if (quadTree != null)
                 quadTree.RenderTree(colour, showRegions, showColliders);
         }
 
-        public static void ForceTreeConstruction() {
+        public static void ForceTreeConstruction()
+        {
+            Console.WriteLine("QuadTree status: " + (quadTree != null));
             if (quadTree != null)
                 quadTree.UpdateTree();
         }
 
-        public static List<Collider> GetCollidingWith(Collider collider) {
+        public static List<Collider> GetCollidingWith(Collider collider)
+        {
             if (quadTree != null)
                 return quadTree.collidingWith(collider);
             return new List<Collider>();
+        }
+
+        public static string Stats()
+        {
+            return "Number of colliders: " + colliders.Count + "\nQuadtree count: " + quadTreeCount;
         }
     }
 }

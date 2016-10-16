@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace PRedesign
 {
-    class GamePlayScreen : GameScreen
+    class GamePlayScreen : GameScreen, IDisposable
     {
         #region Fields
         ContentManager content;
@@ -52,7 +52,7 @@ namespace PRedesign
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
             ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
-            MediaPlayer.Play(bgMusic);
+            //MediaPlayer.Play(bgMusic);
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
             
@@ -137,16 +137,19 @@ namespace PRedesign
             }
         }
 
-        private BoundingSphere testSphere = new BoundingSphere(Vector3.Zero, 5);
-
         public override void Draw(GameTime gameTime)
         {
             //ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //Place draw logic here for game play
-
             ObjectManager.Draw(gameTime);
+
+            //Debugging
+            //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
+            CollisionManager.Render(Color.Violet, true, true);
+            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
+            //===============
 
             if (IsActive)
             {
@@ -157,9 +160,7 @@ namespace PRedesign
                 spriteBatch.End();
             }
 
-            //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
-            //CollisionManager.Render(Color.Violet, false, true);
-            //WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
+            
 
             //////////////////////////////////////
 
@@ -169,6 +170,42 @@ namespace PRedesign
                 float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
+        }
+        #endregion
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                    content.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~GamePlayScreen() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            GC.SuppressFinalize(this);
         }
         #endregion
     }

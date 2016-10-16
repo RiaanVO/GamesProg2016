@@ -326,7 +326,7 @@ namespace PRedesign {
         }
 
         private static void printStats(string message) {
-            Console.WriteLine(message);
+            Console.WriteLine("\n" + message);
             Console.WriteLine(ObjectManager.Stats());
             Console.WriteLine(CollisionManager.Stats());
         }

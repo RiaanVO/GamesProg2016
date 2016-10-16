@@ -67,6 +67,10 @@ namespace PRedesign
             get { return quadTreeNode; }
             set { quadTreeNode = value; }
         }
+
+        public bool IsRendered {
+            set { isRendered = value; }
+        }
         #endregion
 
         public Collider(GameObject gameObject, ObjectTag tag) {

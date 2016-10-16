@@ -144,8 +144,6 @@ namespace PRedesign
                     }
                 }
 
-                collider.updateColliderPos(position);
-
                 foreach (Collider collido in collider.getCollisions())
                 {
                     if (collido.Tag == ObjectTag.pickup)
@@ -282,6 +280,7 @@ namespace PRedesign
 
             position += velocity * deltaTime;
 
+            collider.updateColliderPos(position);
         }
 
         private void checkMovementCollisions(float deltaTime)

@@ -97,7 +97,8 @@ namespace PRedesign
         public static void clearAll() {
             cachedShapes.Clear();
             activeShapes.Clear();
-
+            verts = new VertexPositionColor[0];
+            Console.WriteLine(activeShapes.Count + " A:C " + cachedShapes.Count);
         }
 
         /// <summary>
@@ -327,6 +328,7 @@ namespace PRedesign
 
             // Calculate the total number of vertices we're going to be rendering.
             int vertexCount = 0;
+
             foreach (var shape in activeShapes)
                 vertexCount += shape.LineCount * 2;
 

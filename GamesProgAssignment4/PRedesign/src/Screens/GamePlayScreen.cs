@@ -19,6 +19,9 @@ namespace PRedesign
         SpriteFont gameFont;
 
         float pauseAlpha;
+
+        private double cumulativeTime = 0;
+        private const double timeBeforeCollisionReset = 10;
         #endregion
 
         #region initialization
@@ -132,6 +135,15 @@ namespace PRedesign
                 //Stuff
 
                 ObjectManager.Update(gameTime);
+
+                cumulativeTime += gameTime.ElapsedGameTime.TotalSeconds;
+                if (cumulativeTime > timeBeforeCollisionReset) {
+                    CollisionManager.PruneQuadTree();
+                    CollisionManager.resetRender();
+                    cumulativeTime = 0;
+                    WireShapeDrawer.clearAll();
+                    Console.WriteLine("Collision and drawing reset");
+                }
 
                 ////////////////////////////
             }

@@ -25,7 +25,7 @@ namespace PRedesign
 
         QuadTree[] m_childNode = new QuadTree[4];
 
-        const int MIN_SIZE = 1;
+        const int MIN_SIZE = 10;
         const int MIN_COLLIDER_COUNT = 1;
 
         QuadTree _parent;
@@ -62,16 +62,12 @@ namespace PRedesign
         {
             m_region = region;
             m_objects = objList;
-
-            CollisionManager.quadTreeCount++;
         }
 
         public QuadTree()
         {
             m_objects = new List<Collider>();
             m_region = new BoundingBox(Vector3.Zero, Vector3.Zero);
-
-            CollisionManager.quadTreeCount++;
         }
 
         /// <summary>
@@ -83,8 +79,6 @@ namespace PRedesign
         {
             m_region = region;
             m_objects = new List<Collider>();
-
-            CollisionManager.quadTreeCount++;
         }
 
         #endregion
@@ -439,13 +433,17 @@ namespace PRedesign
         {
             bool prune = true;
 
-            foreach (QuadTree branch in m_childNode)
+            for(int i = 0; i < m_childNode.Length; i ++)
             {
+                QuadTree branch = m_childNode[i];
                 if (branch != null)
                 {
                     bool currentBranch = branch.pruneDeadBranches();
+
                     if (!currentBranch)
                         prune = false;
+                    else
+                        m_childNode[i] = null;
                 }
             }
             if (prune)
@@ -455,7 +453,7 @@ namespace PRedesign
 
         private bool shouldPrune()
         {
-            return m_objects.Count < MIN_COLLIDER_COUNT;
+            return m_objects.Count == 0;
         }
 
         public int countActiveBranches()
@@ -469,6 +467,13 @@ namespace PRedesign
                 }
             }
             return childrenCount;
+        }
+
+        public void resetRender() {
+            isRendered = false;
+            foreach (QuadTree childNode in m_childNode)
+                if (childNode != null)
+                    childNode.resetRender();
         }
     }
 }

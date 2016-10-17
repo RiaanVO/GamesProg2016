@@ -337,7 +337,7 @@ namespace PRedesign
                 if (distance == null)
                     distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
                 if (distance == null)
-                    distance = mouseRay.Intersects(new Plane(Vector3.Up, 20f));
+                    distance = mouseRay.Intersects(new Plane(Vector3.Down, LevelManager.TileSize));
                 if (distance != null)
                 {
                     //tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;

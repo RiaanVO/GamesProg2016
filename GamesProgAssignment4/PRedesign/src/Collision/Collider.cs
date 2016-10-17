@@ -81,6 +81,7 @@ namespace PRedesign
         public abstract List<Collider> getCollisions();
 
         public abstract bool isColliding(Collider otherCollider);
+        public abstract float? intersectsRay(Ray ray);
         public abstract void updateColliderPos(Vector3 newPosition);
         public void Remove() {
             CollisionManager.removeCollider(this);

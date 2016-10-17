@@ -330,7 +330,14 @@ namespace PRedesign
             {
                 Ray mouseRay = calculateRay(new Vector2(mouseState.X, mouseState.Y), camera.View, camera.Projection, game.GraphicsDevice.Viewport);
                 //Needs to interact with colliders, not just the floor:
-                float? distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
+                //float? distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
+                float? distance = CollisionManager.getRayCollision(mouseRay);
+                //This would not work if there were colliders beneath the floor (luckily there aren't)
+                //If didn't hit any colliders, check against the floor.
+                if (distance == null)
+                    distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
+                if (distance == null)
+                    distance = mouseRay.Intersects(new Plane(Vector3.Up, 20f));
                 if (distance != null)
                 {
                     //tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;

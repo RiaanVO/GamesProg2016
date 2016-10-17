@@ -374,6 +374,44 @@ namespace PRedesign
             m_treeReady = true;
         }
 
+        /// <summary>
+        /// Returns the distance of the closest ray collision
+        /// </summary>
+        /// <param name="romano"></param>
+        /// <returns></returns>
+        public float? getRayCollision(Ray romano)
+        {
+            if (!m_treeReady)
+                UpdateTree();
+
+            float? distance = null;
+            float? checkDistance = null;
+            foreach (Collider col in m_objects)
+            {
+                checkDistance = col.intersectsRay(romano);
+                if (checkDistance != null && (distance == null || checkDistance < distance))
+                    distance = checkDistance;
+            }
+
+            //Check all child quadtree nodes. 
+            if (m_childNode != null)
+            {
+                foreach (QuadTree childNode in m_childNode)
+                {
+                    if (childNode != null)
+                    {
+                        checkDistance = childNode.getRayCollision(romano);
+                        if (checkDistance != null && (distance == null || checkDistance < distance))
+                        {
+                            distance = checkDistance;
+                        }
+                    }
+                }
+            }
+            
+            return distance;
+        }
+
         public List<Collider> collidingWith(Collider collider)
         {
             if (!m_treeReady)

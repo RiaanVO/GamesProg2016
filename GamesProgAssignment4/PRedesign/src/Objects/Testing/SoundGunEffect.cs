@@ -19,12 +19,13 @@ namespace PRedesign
         //Animation variables
         private float deltaTime;
         private bool active;
-        private float maxAnimRadius = 30f;
+        private float maxAnimRadius = 60f; //Atm shoud be the double the soundRadius
         private float currentAnimRadius;
+        private float expansionSpeed = 50f;
 
         public SoundGunEffect(Vector3 startPosition, Model model) : base(startPosition, model)
         {
-            Scale = 0.08f;
+            Scale = 1f;
 
             //Game logic variables
             active = false;
@@ -83,23 +84,40 @@ namespace PRedesign
             //Expands outwards until it hits the max
             if (currentAnimRadius < maxAnimRadius)
             {
-                //currentAnimRadius += deltaTime;
-                Scale = currentAnimRadius;
+                currentAnimRadius += deltaTime * expansionSpeed;
+                //speeds it up as it goes
+                expansionSpeed += 2f;
             }
+            else
+            {
+                //Linked here
+                deactivateEffect();
+            }
+
+            scale = currentAnimRadius;
 
             //Advanced - fades out as it goes
 
-            
+
         }
 
         public override Matrix GetWorld()
         {
+            scaleMatrix = Matrix.CreateScale(scale);
             return scaleMatrix * rotationMatrix * translationMatrix;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (!active) base.Draw(gameTime);
+            RasterizerState rs = new RasterizerState();
+            rs.CullMode = CullMode.None;
+            ObjectManager.GraphicsDevice.RasterizerState = rs;
+
+            if (active) base.Draw(gameTime);
+
+            rs = new RasterizerState();
+            rs.CullMode = CullMode.CullCounterClockwiseFace;
+            ObjectManager.GraphicsDevice.RasterizerState = rs;
         }
         
     }

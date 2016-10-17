@@ -11,17 +11,21 @@ namespace PRedesign
 {
     class SoundGunEffect : BasicModel
     {
-        SphereCollider soundCollider;
-        private float soundRadius = 30f;
-        //BasicModel itemToPickUp //Holds the actual item that the pickup represents
+        SphereCollider collider;
+        private float soundRadius = 40f;
         AudioEmitterComponent audioEmitter;
 
         //Animation variables
         private float deltaTime;
         private bool active;
-        private float maxAnimRadius = 60f; //Atm shoud be the double the soundRadius
+        private float maxAnimRadius = 60f; //Should be the double the soundRadius
         private float currentAnimRadius;
-        private float expansionSpeed = 50f;
+        private float expansionSpeed;
+        private float minExpansionSpeed = 30f;
+
+        //Fading variables
+        private float maxAlpha = 0.5f;
+        private float alphaFadeSpeed = 0.02f;
 
         public SoundGunEffect(Vector3 startPosition, Model model) : base(startPosition, model)
         {
@@ -35,10 +39,11 @@ namespace PRedesign
             audioEmitter.addSoundEffect("pickup", ContentStore.loadedSounds["choir"]);
 
             //Animation code
-            currentAnimRadius = 0f;
+            currentAnimRadius = 0.5f;
 
-            //hasLighting = true;
-            //Alpha = 
+            hasLighting = true;
+            useAlpha = true;
+            alpha = 0.5f;
         }
 
         public override void Update(GameTime gameTime)
@@ -61,13 +66,14 @@ namespace PRedesign
         {
             //Colliders
             Position = effectPosition;
-            soundCollider = new SphereCollider(this, ObjectTag.sound, soundRadius);
-            soundCollider.updateColliderPos(effectPosition);
+            collider = new SphereCollider(this, ObjectTag.sound, soundRadius);
+            collider.updateColliderPos(effectPosition);
 
-            //Animation
+            //Reset Animation variables
             active = true;
-            currentAnimRadius = 5f;
-            //Enables collider
+            currentAnimRadius = 0.5f;
+            alpha = maxAlpha;
+            expansionSpeed = minExpansionSpeed;
             //Resets animation variables
             //Sets position?
             //etc
@@ -76,7 +82,7 @@ namespace PRedesign
         private void deactivateEffect()
         {
             active = false;
-            soundCollider.Remove();
+            collider.Remove();
         }
 
         private void expandAnimation()
@@ -93,12 +99,10 @@ namespace PRedesign
                 //Linked here
                 deactivateEffect();
             }
-
             scale = currentAnimRadius;
-
             //Advanced - fades out as it goes
-
-
+            //alpha -= maxAlpha * alphaFadeSpeed;
+            alpha =  maxAnimRadius / currentAnimRadius * alphaFadeSpeed;
         }
 
         public override Matrix GetWorld()

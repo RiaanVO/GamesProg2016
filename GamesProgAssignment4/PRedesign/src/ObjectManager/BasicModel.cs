@@ -16,6 +16,8 @@ namespace PRedesign
         protected bool hasLighting = false;
         protected float modelBaseOrientation;
         protected float scale = 1;
+        protected bool useAlpha = false;
+        protected float alpha = 1f;
         #endregion
 
         #region Properties
@@ -109,6 +111,13 @@ namespace PRedesign
                     effect.Projection = camera.Projection;
                     if (hasLighting)
                         effect.EnableDefaultLighting();
+
+                    if (useAlpha)
+                    {
+                        ObjectManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+                        //ObjectManager.GraphicsDevice.BlendState = BlendState.Additive;
+                        effect.Alpha = alpha;
+                    }
 
                     effect.World = transforms[mesh.ParentBone.Index] * GetWorld();
                 }

@@ -105,7 +105,7 @@ namespace PRedesign
             //Matrix pitchRotationMatrix = ;
             //return scaleMatrix * rotationMatrix * tiltMatrix * translationMatrix * yawMatrix;
             //Ned to reverse Y rotation orientation
-            return ObjectManager.Camera.View * translationMatrix;
+            return Matrix.Invert(ObjectManager.Camera.View) * translationMatrix;
         }
 
         public override void Draw(GameTime gameTime)

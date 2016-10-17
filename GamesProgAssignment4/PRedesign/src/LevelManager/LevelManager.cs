@@ -208,7 +208,7 @@ namespace PRedesign {
 
             //Player player = new Player(new Vector3(20, 3.5f, 20));
             Player player = new Player(new Vector3(-20, 3.5f, -20));
-            //SoundGun soundGun = new SoundGun(new Vector3(0, 0f, 0), ContentStore.loadedModels["soundGun"]);
+            //SoundGun soundGun = new SoundGun(new Vector3(-20f, 0f, -20f), ContentStore.loadedModels["soundGun"]);
             //player.soundGun = soundGun;
             Player = player;
             
@@ -255,6 +255,9 @@ namespace PRedesign {
 
             JSONGameObject jsonPlayer = currentLevel.Player;
             player.Position = new Vector3(jsonPlayer.X * TileSize + (TileSize / 2), 0, jsonPlayer.Y * TileSize + (TileSize / 2));
+            SoundGun sg = new SoundGun(new Vector3(jsonPlayer.X * TileSize + (TileSize / 2), 0, jsonPlayer.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
+            player.soundGun = sg;
+
 
             JSONGameObject jsonDoor = currentLevel.Door;
             TetraDoor door = new TetraDoor(new Vector3(jsonDoor.X * TileSize, 0f, jsonDoor.Y * TileSize), ContentStore.loadedModels["tetraDoor"], player);
@@ -268,7 +271,7 @@ namespace PRedesign {
             JSONGameObject jsonGun = currentLevel.SoundGun;
             if (jsonGun.ID != null) {
                 new GunPickup(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
-                new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 7f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
+                //new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 7f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"]);
                 //ObjectManager.addGameObject(new SoundGun(new Vector3(jsonGun.X * TileSize + (TileSize / 2), 5f, jsonGun.Y * TileSize + (TileSize / 2)), ContentStore.loadedModels["soundGun"], ObjectManager.Camera));
             }
 

@@ -34,8 +34,7 @@ namespace PRedesign
         public GunPickup(Vector3 startPosition, Model model) : base(startPosition, model)
         {
             hasBeenCollected = false; //false
-            scale = 0.08f;
-            scaleMatrix = Matrix.CreateScale(scale);
+            Scale = 0.08f;
 
             //Collision code
             collider = new SphereCollider(this, ObjectTag.gun, 3f);

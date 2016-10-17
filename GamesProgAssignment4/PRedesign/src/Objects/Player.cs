@@ -63,8 +63,6 @@ namespace PRedesign
         //SoundGun variables
         public SoundGun soundGun;
         private bool hasSoundGun;
-        private float maxSoundGunCooldown = 1f; //Should be in seconds?
-        private float currentSoundGunCooldown;
 
         public int Health
         {
@@ -112,7 +110,7 @@ namespace PRedesign
             camera = ObjectManager.Camera;
 
             camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
-            lookDirection = Vector3.Left;
+            lookDirection = Vector3.Backward;
 
             jumpHeight = startPosition.Y;
 
@@ -138,7 +136,6 @@ namespace PRedesign
             
             //Gameplay
             hasSoundGun = false;
-            currentSoundGunCooldown = 0f;
         }
         #endregion
 
@@ -165,7 +162,7 @@ namespace PRedesign
                 {
                     if (collido.Tag == ObjectTag.gun)
                     {
-                        //pickup key! yay!
+                        //Pick up gun
                         itemPickup();
                     }
                     if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
@@ -177,8 +174,8 @@ namespace PRedesign
 
                 handleInput();
                 handleMovement(gameTime);
-                //soundGun.updateMatrices(position, CurrentYaw);
-                //handleMouseSelection();
+                soundGun.updateMatrices(position, currentYaw, currentPitch);
+                handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
 
                 if (velocity.Length() > 0)
@@ -329,14 +326,16 @@ namespace PRedesign
         private void handleMouseSelection()
         {
             MouseState mouseState = Mouse.GetState();
-            if (hasSoundGun && currentSoundGunCooldown <= 0f && mouseState.LeftButton == ButtonState.Pressed)
+            if (hasSoundGun && mouseState.LeftButton == ButtonState.Pressed)
             {
                 Ray mouseRay = calculateRay(new Vector2(mouseState.X, mouseState.Y), camera.View, camera.Projection, game.GraphicsDevice.Viewport);
+                //Needs to interact with colliders, not just the floor:
                 float? distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
                 if (distance != null)
                 {
                     //tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;
                     //Shoot gun
+                    soundGun.Fire(mouseRay.Position + mouseRay.Direction * (float)distance);
                 }
             }
         }

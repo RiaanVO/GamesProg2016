@@ -48,6 +48,7 @@ namespace PRedesign
             ContentStore.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
             ContentStore.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRigged"));
             ContentStore.Add("soundGun", content.Load<Model>(@"Models/Soundgun Model/SoundGunV2"));
+            ContentStore.Add("sphere", content.Load<Model>(@"Models/Sphere model/sphere"));
 
             //Load sounds
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));

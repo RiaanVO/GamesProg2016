@@ -71,6 +71,7 @@
     <Compile Include="src\ObjectManager\BasicTexturePrimitive.cs" />
     <Compile Include="src\ObjectManager\GameObject.cs" />
     <Compile Include="src\ObjectManager\ObjectManager.cs" />
+    <Compile Include="src\Objects\Testing\SoundGunEffect.cs" />
     <Compile Include="src\Objects\CubePrimitive.cs" />
     <Compile Include="src\Objects\CeilingPrimitive.cs" />
     <Compile Include="src\Objects\GroundPrimitive.cs" />

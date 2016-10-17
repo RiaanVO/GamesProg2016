@@ -47,10 +47,9 @@ namespace PRedesign
             this.player = player;
             isUnlocked = false; //false
             orientation = 0f;
-            scale = 0.15f;
+            Scale = 0.15f;
             //translationMatrix = Matrix.CreateTranslation(startPosition) + Matrix.CreateTranslation(50f, 50f, 17f);
             //translationMatrix = Matrix.CreateTranslation(startPosition + new Vector3(LevelManager.TileSize / 2, LevelManager.TileSize / 2, LevelManager.TileSize / 4));
-            scaleMatrix = Matrix.CreateScale(scale);
 
             //Collision code. Will the door tag work correctly? Should we start this off being an obstacle and then make it a door tag?
             //collider = new SphereCollider(this, ObjectTag.obstacle, 3f);
@@ -60,7 +59,7 @@ namespace PRedesign
             audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
 
-            //Reset door model
+            //Reset door model (just in case)
             model.Bones["door_R_geo"].Transform = Matrix.Identity;
             model.Bones["disk_geo"].Transform = Matrix.Identity;
             model.Bones["diamond_top_geo"].Transform = Matrix.Identity;

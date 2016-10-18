@@ -34,6 +34,8 @@ namespace PRedesign
         private float currentFireAngle = 0f;
         private float animSpeed = 8f;
 
+        
+
         public SoundGun(Vector3 startPosition, Model model) : base(startPosition, model)
         {
             Scale = 0.045f;

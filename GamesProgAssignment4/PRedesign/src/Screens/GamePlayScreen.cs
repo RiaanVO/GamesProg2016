@@ -59,9 +59,11 @@ namespace PRedesign
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
             ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
             ContentStore.Add("choir", content.Load<SoundEffect>(@"Sounds/Effects/choir"));
+            ContentStore.Add("hover", content.Load<SoundEffect>(@"Sounds/hover"));
+            ContentStore.Add("laser", content.Load<SoundEffect>(@"Sounds/Effects/laser"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
             MediaPlayer.Play(bgMusic);
-            MediaPlayer.Volume = 0.1f;
+            MediaPlayer.Volume = 0.05f;
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
 
@@ -142,7 +144,7 @@ namespace PRedesign
                 //Stuff
 
                 ObjectManager.Update(gameTime);
-
+                AudioManager.Update(gameTime);
                 ////////////////////////////
             }
         }

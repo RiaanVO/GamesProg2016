@@ -174,7 +174,7 @@ namespace PRedesign
 
                 handleInput();
                 handleMovement(gameTime);
-                soundGun.updateMatrices(position, currentYaw, currentPitch);
+                soundGun.updateMatrices(position, lookDirection, currentYaw, currentPitch);
                 handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
 

@@ -67,7 +67,8 @@ namespace PRedesign
             //Colliders
             Position = effectPosition;
             collider = new SphereCollider(this, ObjectTag.sound, soundRadius);
-            collider.updateColliderPos(effectPosition);
+            collider.DrawColour = Color.Green;
+            //collider.updateColliderPos(effectPosition);
 
             //Reset Animation variables
             active = true;

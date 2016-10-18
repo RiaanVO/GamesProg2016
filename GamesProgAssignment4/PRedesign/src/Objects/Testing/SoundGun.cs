@@ -15,21 +15,24 @@ namespace PRedesign
         private float pitchOrientation;
         //Right, up, -forwards
         //private Vector3 offset = new Vector3(0f, 0.0f, -3.5f);
-        private Vector3 offset = new Vector3(0f, 0.0f, 0f);
-        private Matrix tiltMatrix = Matrix.CreateRotationY(0.2f) * Matrix.CreateRotationX(0.1f);
+        private Vector3 offset = new Vector3(0f, 1.0f, 0f); //Vector offset of the final gun position
+        private float xOffsetMod = -2f; //Multiplies the cross vector to move the gun to the side more
+        private float zOffsetMod = 5f; //Multiplies the look vector to move gun in and out more
+        private Vector3 playerLookDirection;
+        private Matrix tiltMatrix = Matrix.CreateRotationY(0.2f) * Matrix.CreateRotationX(-0.1f);
 
         //Firing variables
-        SphereCollider soundCollider;
-        private float maxSoundRadius = 10f;
         private float maxSoundGunCooldown = 1f; //Should be in seconds?
         private float currentSoundGunCooldown;
+        private SoundGunEffect soundGunEffect;
 
         //Fire animimation variables
-        private SoundGunEffect soundGunEffect;
-        private float maxOpacity = 0.5f;
-        private float currentOpacity;
-        private float currentSoundRadius;
         private float deltaTime;
+        private float startFireAnim = 0f;
+        private float endFireAnim = MathHelper.Pi;//private float endFireAnim = MathHelper.PiOver2 * 3f;
+        private float currentFireAnim = 0f;
+        private float currentFireAngle = 0f;
+        private float animSpeed = 8f;
 
         public SoundGun(Vector3 startPosition, Model model) : base(startPosition, model)
         {
@@ -55,6 +58,7 @@ namespace PRedesign
             {
                 currentSoundGunCooldown -= deltaTime;
             }
+            fireAnimation();
             base.Update(gameTime);
         }
 
@@ -78,34 +82,45 @@ namespace PRedesign
                 soundGunEffect.activateEffect(target);
                 //Update cooldown
                 currentSoundGunCooldown = maxSoundGunCooldown;
+                currentFireAnim = startFireAnim; //Starts the firing animation
+                currentFireAngle = startFireAnim;
             }
         }
 
+        private void fireAnimation()
+        {
+            if (currentFireAnim < endFireAnim)
+            {
+                currentFireAnim += deltaTime * animSpeed;
+            }
+            //Have to move the thing according to sine
+            currentFireAngle = -(float)Math.Sin(currentFireAnim) / 2f;
+        }
+        
         /// <summary>
         /// Updates the gun with the correct position and orientation so it can display correctly.
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="orientation"></param>
-        public void updateMatrices(Vector3 pos, float yaw, float pitch)
+        public void updateMatrices(Vector3 pos, Vector3 lookDirection, float yaw, float pitch)
         {
-            Position = pos + offset;
+            lookDirection.Normalize();
+            //Position = pos;
+            Position = pos + (lookDirection * (zOffsetMod + currentFireAngle*2)) + (Vector3.Cross(Vector3.Up, lookDirection) * xOffsetMod);
             Orientation = yaw;
             pitchOrientation = pitch;
+            //playerLookDirection = lookDirection;
+            playerLookDirection.Normalize();
         }
 
         public override Matrix GetWorld()
         {
             //Rotates/tilts on the spot to make it look good
-            //Then translates out on the 
-            //THEN rotates around the player into the correct position. Should add the offset here instead of to the translate?
-            translationMatrix = Matrix.CreateTranslation(position);
-            rotationMatrix = Matrix.CreateRotationX(pitchOrientation)* Matrix.CreateRotationY(orientation);
-            Matrix yawMatrix = Matrix.CreateRotationY(-orientation * 0.01f);
-            Matrix pitchMatrix = Matrix.CreateRotationX(pitchOrientation * 0.01f) ;
-            //Matrix pitchRotationMatrix = ;
-            //return scaleMatrix * rotationMatrix * tiltMatrix * translationMatrix * yawMatrix;
-            //Ned to reverse Y rotation orientation
-            return Matrix.Invert(ObjectManager.Camera.View) * translationMatrix;
+            //Then translates out along the player's look direction, 
+            //and sideways relative to the look vector.
+            //translationMatrix = Matrix.CreateTranslation(position + (playerLookDirection * zOffsetMod) - (Vector3.Cross(Vector3.Up, playerLookDirection) * xOffsetMod) + offset);
+            rotationMatrix = Matrix.CreateRotationX(pitchOrientation + currentFireAngle) * Matrix.CreateRotationY(orientation);
+            return scaleMatrix * tiltMatrix * rotationMatrix * translationMatrix;
         }
 
         public override void Draw(GameTime gameTime)
@@ -113,60 +128,5 @@ namespace PRedesign
             if (isVisible)
                 base.Draw(gameTime);
         }
-
-
-        //Fields
-        //
-        /*
-        private Vector3 offset = new Vector3(-2f,0f,-2f);
-        private Matrix tiltMatrix = Matrix.CreateRotationY(0.2f) * Matrix.CreateRotationX(0.2f);
-
-        public SoundGun (Vector3 startPosition, Model model) : base(startPosition, model)
-        {
-            //isVisible = false;
-            //isVisible = true;
-
-            scale = 0.08f;
-            scaleMatrix = Matrix.CreateScale(scale);
-
-            //hasLighting = true;
-        }
-
-
-        /// <summary>
-        /// Updates the gun with the correct position and orientation so it can display correctly.
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="orientation"></param>
-        public void updateMatrices(Vector3 pos, float orientation)
-        {
-            //Position = pos + offset;
-            Orientation = orientation;
-        }
-
-
-        
-        public override Matrix GetWorld()
-        {
-            //Rotate around the Y axis with the player
-            //Possibly also tilt up in a good direction sort of thing
-            //Then translate out by offset
-            //Then rotate around the player, should be same angle as previous rotation
-            //return scaleMatrix * rotationMatrix * translationMatrix;
-            //rotationMatrix = Matrix.CreateRotationY(orientation);
-            //tiltMatrix = Matrix.CreateRotation(x,y,z);
-            //translationMatrix = Matrix.CreateTranslation(position + offset);
-
-            return scaleMatrix * rotationMatrix * tiltMatrix * translationMatrix * rotationMatrix;
-        }
-    
-
-        public override void Draw(GameTime gameTime)
-        {
-            //if (isVisible)
-                base.Draw(gameTime);
-        }
-        
-        */
     }
 }

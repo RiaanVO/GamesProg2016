@@ -15,7 +15,7 @@ namespace PRedesign
         private float pitchOrientation;
         //Right, up, -forwards
         //private Vector3 offset = new Vector3(0f, 0.0f, -3.5f);
-        private Vector3 offset = new Vector3(0f, 1.0f, 0f); //Vector offset of the final gun position
+        private Vector3 offset = new Vector3(0f, 1.5f, 0f); //Vector offset of the final gun position
         private float xOffsetMod = -2f; //Multiplies the cross vector to move the gun to the side more
         private float zOffsetMod = 5f; //Multiplies the look vector to move gun in and out more
         private Vector3 playerLookDirection;
@@ -40,7 +40,7 @@ namespace PRedesign
             pitchOrientation = 0f;
             hasLighting = true;
 
-            isVisible = true;
+            isVisible = false;
 
             //Gameplay variables
             currentSoundGunCooldown = 0f;
@@ -58,7 +58,7 @@ namespace PRedesign
             {
                 currentSoundGunCooldown -= deltaTime;
             }
-            fireAnimation();
+            updateFireAnimation();
             base.Update(gameTime);
         }
 
@@ -68,6 +68,7 @@ namespace PRedesign
         public void Enable()
         {
             isVisible = true;
+            startFireAnimation();
         }
 
         /// <summary>
@@ -82,12 +83,17 @@ namespace PRedesign
                 soundGunEffect.activateEffect(target);
                 //Update cooldown
                 currentSoundGunCooldown = maxSoundGunCooldown;
-                currentFireAnim = startFireAnim; //Starts the firing animation
-                currentFireAngle = startFireAnim;
+                startFireAnimation();
             }
         }
 
-        private void fireAnimation()
+        private void startFireAnimation()
+        {
+            currentFireAnim = startFireAnim; //Starts the firing animation
+            currentFireAngle = startFireAnim;
+        }
+
+        private void updateFireAnimation()
         {
             if (currentFireAnim < endFireAnim)
             {

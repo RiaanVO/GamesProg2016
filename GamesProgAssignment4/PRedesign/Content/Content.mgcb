@@ -509,3 +509,15 @@
 /processorParam:TextureFormat=DxtCompressed
 /build:Models/Sphere model/hp_sphere.fbx
 
+#begin Textures/crosshair_large.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/crosshair_large.png
+

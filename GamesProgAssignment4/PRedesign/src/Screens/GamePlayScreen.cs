@@ -17,6 +17,8 @@ namespace PRedesign
         #region Fields
         ContentManager content;
         SpriteFont gameFont;
+        Texture2D crosshair;
+        Rectangle crosshairBounds;
 
         float pauseAlpha;
         #endregion
@@ -40,6 +42,9 @@ namespace PRedesign
             ContentStore.Add("ground", content.Load<Texture2D>(@"Textures/white floor"));
             ContentStore.Add("ceiling", content.Load<Texture2D>(@"Textures/ceiling v3"));
             ContentStore.Add("wall", content.Load<Texture2D>(@"Textures/blue stripe wall"));
+            ContentStore.Add("crosshair", content.Load<Texture2D>(@"Textures/crosshair_large"));
+            crosshair = ContentStore.loadedTextures["crosshair"];
+            crosshairBounds = new Rectangle(ObjectManager.Game.Window.ClientBounds.Width / 2 - 15, ObjectManager.Game.Window.ClientBounds.Height / 2 - 15, 30, 30);
 
             //Load models
             ContentStore.Add("skybox", content.Load<Model>(@"Models/TechnoSkybox Model/technobox"));
@@ -162,6 +167,7 @@ namespace PRedesign
                 spriteBatch.Begin();
                 spriteBatch.DrawString(gameFont, "Time Taken: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"), Vector2.Zero, Color.Black);
                 spriteBatch.DrawString(gameFont, "HP: " + LevelManager.PlayerHealth + " / 10", new Vector2(0f, 20f), Color.Red);
+                spriteBatch.Draw(crosshair, crosshairBounds, Color.White);
                 spriteBatch.End();
             }
 

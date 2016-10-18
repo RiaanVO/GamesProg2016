@@ -36,7 +36,7 @@ namespace PRedesign
 
             //Audio code
             audioEmitter = new AudioEmitterComponent(this);
-            audioEmitter.addSoundEffect("pickup", ContentStore.loadedSounds["choir"]);
+            audioEmitter.createSoundEffectInstance("laser", ContentStore.loadedSounds["laser"], true, false, false, 1f);
 
             //Animation code
             currentAnimRadius = 0.5f;
@@ -78,6 +78,9 @@ namespace PRedesign
             //Resets animation variables
             //Sets position?
             //etc
+            audioEmitter.playSoundEffect("laser", 1f);
+
+
         }
 
         private void deactivateEffect()

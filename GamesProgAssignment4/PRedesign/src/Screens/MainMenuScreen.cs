@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-
+using Microsoft.Xna.Framework.Media;
 namespace PRedesign
 {
     class MainMenuScreen : MenuScreen
@@ -34,7 +34,7 @@ namespace PRedesign
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(openLevelEditorEntry);
             MenuEntries.Add(quitMenuEntry);
-
+            
             ObjectManager.Game.IsMouseVisible = false;
         }
 

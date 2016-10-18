@@ -57,6 +57,9 @@ namespace PRedesign
         //Animation fields
         private float deltaTime;
         private float rotationalSpeed = 1f;
+
+        //Audio
+        public AudioEmitterComponent audioEmitterComponent;
         #endregion
 
 
@@ -183,6 +186,11 @@ namespace PRedesign
             collider = new SphereCollider(this, ObjectTag.enemy, colliderRadius);
             collider.PositionOffset = new Vector3(0, -1.5f, 0);
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
+
+            audioEmitterComponent = new AudioEmitterComponent(this);
+            //audioEmitterComponent.addSoundEffect("hover", ContentStore.loadedSounds["hover"]);
+            audioEmitterComponent.createSoundEffectInstance("hover", ContentStore.loadedSounds["hover"], true, true, true, 1f);
+            //audioEmitterComponent.playSoundEffect("hover", 1f);
         }
         #endregion
 

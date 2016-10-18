@@ -42,8 +42,9 @@ namespace PRedesign
             
             //Audio code
             audioEmitter = new AudioEmitterComponent(this);
-            audioEmitter.addSoundEffect("pickup", ContentStore.loadedSounds["choir"]);
-
+            //audioEmitter.addSoundEffect("pickup", ContentStore.loadedSounds["choir"]);
+            audioEmitter.createSoundEffectInstance("pickup", ContentStore.loadedSounds["choir"], true, true, true, 1f);
+            audioEmitter.setVolume("pickup", 1f);
             //Animation code
             orientation = 0f;
             hoverHeight = 0f;
@@ -86,6 +87,7 @@ namespace PRedesign
         {
             orientation += rotationalSpeed * deltaTime;
             rotationMatrix = tiltMatrix * Matrix.CreateRotationY(orientation);
+            audioEmitter.stopAll();
         }
 
         private void hoverAnimation()

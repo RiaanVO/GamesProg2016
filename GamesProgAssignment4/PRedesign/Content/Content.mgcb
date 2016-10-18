@@ -521,3 +521,9 @@
 /processorParam:TextureFormat=Color
 /build:Textures/crosshair_large.png
 
+#begin Sounds/Effects/laser.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Effects/laser.wav
+

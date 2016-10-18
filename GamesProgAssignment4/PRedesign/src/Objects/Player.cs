@@ -132,8 +132,8 @@ namespace PRedesign
             //Audio
             audioListenerComponent = new AudioListenerComponent(this);
             audioEmitterComponent = new AudioEmitterComponent(this);
-            audioEmitterComponent.createSoundEffectInstance("footsteps", ContentStore.loadedSounds["footsteps"], false, true, false, 1f);
-            
+            audioEmitterComponent.createSoundEffectInstance("footsteps", ContentStore.loadedSounds["footsteps"], false, true, false, 0.5f);
+            audioEmitterComponent.createSoundEffectInstance("shootGun", ContentStore.loadedSounds["laser"], false, false, false, 1f);
             //Gameplay
             hasSoundGun = false;
         }
@@ -142,6 +142,7 @@ namespace PRedesign
         #region Update and Draw
         public override void Update(GameTime gameTime)
         {
+            audioListenerComponent.UpdatePosition();
             if (health > 0)
             {
                 if (isInvulnerable)
@@ -177,7 +178,7 @@ namespace PRedesign
                 soundGun.updateMatrices(position, lookDirection, currentYaw, currentPitch);
                 handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
-
+                
                 if (velocity.Length() > 0)
                 {
                     audioEmitterComponent.setInstancePlayback("footsteps", true);
@@ -342,6 +343,7 @@ namespace PRedesign
                 {
                     //tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;
                     //Shoot gun
+                    audioEmitterComponent.playSoundEffect("laser", 1f);
                     soundGun.Fire(mouseRay.Position + mouseRay.Direction * (float)distance);
                 }
             }

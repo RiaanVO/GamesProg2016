@@ -18,7 +18,7 @@ namespace PRedesign.src.Objects.Testing
         SphereCollider collider;
         //bool keyRelocated = false;
         //Key needs  to have a door related with it
-        AudioEmitterComponent audioEmitter;
+        //AudioEmitterComponent audioEmitter;
 
         // animation variables
         private float deltaTime;
@@ -41,7 +41,7 @@ namespace PRedesign.src.Objects.Testing
             collider = new SphereCollider(this, ObjectTag.exit, 3f);
             collider.DrawColour = Color.Yellow;
 
-            audioEmitter = new AudioEmitterComponent(this);
+            //audioEmitter = new AudioEmitterComponent(this);
             //audioEmitter.addSoundEffect("pickup", game.Content.Load<SoundEffect>(@"Sounds/key"));
 
             hoverHeight = 0f;

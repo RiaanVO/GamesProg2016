@@ -157,8 +157,8 @@ namespace PRedesign
 
             //Debugging
             //ObjectMetaDrawer.RenderNavigationMap(Color.Violet);
-            CollisionManager.Render(Color.Violet, true, true);
-            WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
+            //CollisionManager.Render(Color.Violet, true, true);
+            //WireShapeDrawer.Draw(gameTime, ObjectManager.Camera.View, ObjectManager.Camera.Projection);
             //===============
 
             if (IsActive)

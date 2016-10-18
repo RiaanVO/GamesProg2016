@@ -54,7 +54,12 @@ namespace PRedesign {
 
         #region Update and Draw
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen) {
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);        
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            if (!ObjectManager.Game.IsMouseVisible) {
+                ObjectManager.Game.IsMouseVisible = true;
+            }
+
 
             LevelEditor.Update(gameTime);
         }

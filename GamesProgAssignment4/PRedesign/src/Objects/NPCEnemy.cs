@@ -451,11 +451,19 @@ namespace PRedesign
             endPointExact = false;
             if (!previousState.Equals(brain.CurrentState))
             {
-                CurrentTarget = patrolPoints[patrolIndex];
+                try
+                {
+                    CurrentTarget = patrolPoints[patrolIndex];
+                }
+                catch (Exception e) {
+                    CurrentTarget = position;
+                }
             }
 
-            if (NavigationMap.isPositionObstructed(patrolPoints[patrolIndex]))
-                patrolIndex++;
+            if (patrolPoints.Count() <= patrolIndex)
+                return;
+             if (NavigationMap.isPositionObstructed(patrolPoints[patrolIndex]))
+                 patrolIndex++;
 
             if (Vector3.Distance(position, patrolPoints[patrolIndex] + tileDimenstions) < patrolChangeRadius)
             {

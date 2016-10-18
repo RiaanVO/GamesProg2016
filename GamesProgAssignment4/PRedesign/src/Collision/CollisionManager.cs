@@ -12,7 +12,8 @@ namespace PRedesign
     {
         private static QuadTree quadTree;
         private static List<Collider> colliders = new List<Collider>();
-        public static int quadTreeCount;
+        public static int nextID = 0;
+        
 
         //Debugging
         public const float renderTime = 360;
@@ -22,7 +23,7 @@ namespace PRedesign
             if (quadTree != null)
                 quadTree.Add(collider);
             colliders.Add(collider);
-
+            collider.ID = nextID++;
         }
 
         public static void constructQuadTree()
@@ -60,13 +61,13 @@ namespace PRedesign
                     quadTree.Remove(collider);
                 }
                 quadTree.TreeBuilt = false;
-                quadTree.pruneDeadBranches();
+                PruneQuadTree();
 
             }
-            quadTreeCount = 0;
             colliders.Clear();
-            Console.WriteLine(Stats());
-            Console.WriteLine("Current active branches: " + quadTree.countActiveBranches());
+            quadTree = null;
+            nextID = 0;
+
         }
 
         public static void Render(Color colour, bool showRegions, bool showColliders)
@@ -98,7 +99,22 @@ namespace PRedesign
 
         public static string Stats()
         {
-            return "Number of colliders: " + colliders.Count + "\nQuadtree count: " + quadTreeCount;
+            string s = "Number of colliders: " + colliders.Count;
+            if (quadTree != null)
+                s += "\nCurrent active branches: " + quadTree.countActiveBranches();
+            else
+                s += "\n The quadtree is null";
+            return s;
+        }
+
+        public static void PruneQuadTree()
+        {
+            if (quadTree != null)
+            {
+                quadTree.UpdateTree();
+                quadTree.pruneDeadBranches();
+            }
+            Console.WriteLine("\n" + Stats());
         }
     }
 }

@@ -63,7 +63,6 @@ namespace PRedesign
             m_region = region;
             m_objects = objList;
 
-            CollisionManager.quadTreeCount++;
         }
 
         public QuadTree()
@@ -71,7 +70,6 @@ namespace PRedesign
             m_objects = new List<Collider>();
             m_region = new BoundingBox(Vector3.Zero, Vector3.Zero);
 
-            CollisionManager.quadTreeCount++;
         }
 
         /// <summary>
@@ -84,7 +82,6 @@ namespace PRedesign
             m_region = region;
             m_objects = new List<Collider>();
 
-            CollisionManager.quadTreeCount++;
         }
 
         #endregion
@@ -111,7 +108,7 @@ namespace PRedesign
             }
 
             //now, remove the object from the current node and insert it into the current containing node.
-            m_objects.Remove(collider);
+            Remove(collider);
             current.Insert(collider);   //this will try to insert the object as deep into the tree as we can go.
         }
 
@@ -120,8 +117,7 @@ namespace PRedesign
         {
             foreach (Collider collider in colliders)
             {
-                m_pendingInsertion.Enqueue(collider);
-                m_treeReady = false;
+                Add(collider);
             }
         }
 
@@ -134,6 +130,21 @@ namespace PRedesign
 
         public void Remove(Collider collider)
         {
+            //UpdateTree();
+            for (int i = m_objects.Count - 1; i >= 0; i--)
+            {
+                if (m_objects[i].ID == collider.ID)
+                {
+                    m_objects.RemoveAt(i);
+                    return;
+                }
+            }
+
+            foreach (QuadTree childNode in m_childNode)
+                if (childNode != null)
+                    childNode.Remove(collider);
+
+            /*
             if (m_objects.Contains(collider))
                 m_objects.Remove(collider);
             else
@@ -142,7 +153,7 @@ namespace PRedesign
                     foreach (QuadTree childNode in m_childNode)
                         if (childNode != null)
                             childNode.Remove(collider);
-            }
+            }*/
         }
 
 
@@ -235,6 +246,7 @@ namespace PRedesign
 
             if (notContained)
                 BuildTree();
+            //UpdateTree();
         }
         #endregion
 
@@ -408,7 +420,7 @@ namespace PRedesign
                     }
                 }
             }
-            
+
             return distance;
         }
 

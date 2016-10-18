@@ -35,6 +35,7 @@ namespace PRedesign
         protected Vector3 positionOffset = Vector3.Zero;
         protected QuadTree quadTreeNode;
 
+        protected int id;
         //Debug fields
         protected bool isRendered = false;
         #endregion
@@ -68,6 +69,12 @@ namespace PRedesign
         public QuadTree QuadTreeNode {
             get { return quadTreeNode; }
             set { quadTreeNode = value; }
+        }
+
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
         }
         #endregion
 

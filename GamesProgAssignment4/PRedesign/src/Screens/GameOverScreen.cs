@@ -32,6 +32,7 @@ namespace PRedesign
             MenuEntries.Add(restartGameEntry);
             MenuEntries.Add(returnToMainMenuEntry);
             MenuEntries.Add(quitGameMenuEntry);
+            ObjectManager.Game.IsMouseVisible = false;
         }
 
         public override void Draw(GameTime gameTime)

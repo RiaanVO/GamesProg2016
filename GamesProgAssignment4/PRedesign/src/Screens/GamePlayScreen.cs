@@ -17,6 +17,8 @@ namespace PRedesign
         #region Fields
         ContentManager content;
         SpriteFont gameFont;
+        Texture2D crosshair;
+        Rectangle crosshairBounds;
 
         float pauseAlpha;
         #endregion
@@ -40,6 +42,9 @@ namespace PRedesign
             ContentStore.Add("ground", content.Load<Texture2D>(@"Textures/white floor"));
             ContentStore.Add("ceiling", content.Load<Texture2D>(@"Textures/ceiling v3"));
             ContentStore.Add("wall", content.Load<Texture2D>(@"Textures/blue stripe wall"));
+            ContentStore.Add("crosshair", content.Load<Texture2D>(@"Textures/crosshair_large"));
+            crosshair = ContentStore.loadedTextures["crosshair"];
+            crosshairBounds = new Rectangle(ObjectManager.Game.Window.ClientBounds.Width / 2 - 15, ObjectManager.Game.Window.ClientBounds.Height / 2 - 15, 30, 30);
 
             //Load models
             ContentStore.Add("skybox", content.Load<Model>(@"Models/TechnoSkybox Model/technobox"));
@@ -47,15 +52,19 @@ namespace PRedesign
             ContentStore.Add("tetraEnemy", content.Load<Model>(@"Models/Enemy Model/TetraEnemyRed"));
             ContentStore.Add("spikes", content.Load<Model>(@"Models/Spikes Model/red_spikes_v15_shorter"));
             ContentStore.Add("tetraDoor", content.Load<Model>(@"Models/TetraDoor Model/TetraDoorRigged"));
+            ContentStore.Add("soundGun", content.Load<Model>(@"Models/Soundgun Model/SoundGunV2"));
+            ContentStore.Add("sphere", content.Load<Model>(@"Models/Sphere model/hp_sphere"));
 
             //Load sounds
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
             ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
+            ContentStore.Add("choir", content.Load<SoundEffect>(@"Sounds/Effects/choir"));
             Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
-            //MediaPlayer.Play(bgMusic);
+            MediaPlayer.Play(bgMusic);
+            MediaPlayer.Volume = 0.1f;
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
-            
+
             /* //Moved to LevelManager.LoadGameObjects()
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;
@@ -87,6 +96,7 @@ namespace PRedesign
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();
+            ObjectManager.Game.IsMouseVisible = false;
         }
 
         public override void UnloadContent()
@@ -157,6 +167,7 @@ namespace PRedesign
                 spriteBatch.Begin();
                 spriteBatch.DrawString(gameFont, "Time Taken: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"), Vector2.Zero, Color.Black);
                 spriteBatch.DrawString(gameFont, "HP: " + LevelManager.PlayerHealth + " / 10", new Vector2(0f, 20f), Color.Red);
+                spriteBatch.Draw(crosshair, crosshairBounds, Color.White);
                 spriteBatch.End();
             }
 

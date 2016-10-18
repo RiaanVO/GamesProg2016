@@ -6,12 +6,14 @@ Allowed states: General, You can name them what you want
 - SEEK
 - RANDOMWANDER
 - RETURNTOBASE
+- INVESTIGATE
 
 Allowed conditions:
 - playerNear
 - PLAYER_FAR
 - idleTimeUp
 - atHomeBase
+- heardSound
 
 Allowed Update Functions
 - updatePatrol
@@ -19,6 +21,7 @@ Allowed Update Functions
 - updateIdle
 - updateRandomWander
 - updateReturnToBase
+- updateInvestigate
 
 Allowed variables and their types, examples of use shown below
 - patrolChangeRadius (float)
@@ -83,6 +86,12 @@ Any values not set will we set to the defauts in the code
 
   <state state="IDLE" updateFunction="updateIdle">
     <transition condition="playerNear" toState="SEEK" />
+	 <transition condition="heardSound" toState="INVESTIGATE" />
+  </state>
+  
+  <state state="INVESTIGATE" updateFunction="updateInvestigate">
+	  <transition condition="reachedInvestigatePosition" toState="IDLEO" />
+	  <transition condition="playerNear" toState="SEEK" />
   </state>
 
 </fsm>

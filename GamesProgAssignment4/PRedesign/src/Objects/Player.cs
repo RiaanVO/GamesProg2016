@@ -15,7 +15,7 @@ namespace PRedesign
     {
         #region Fields
         SphereCollider collider;
-        Vector3 colliderPositionOffset = new Vector3(0, 4.5f, 0);
+        Vector3 colliderPositionOffset = new Vector3(0, 0f, 0); //Vector3 colliderPositionOffset = new Vector3(0, 4.5f, 0);
         float colliderRadius = 1f;
         SphereMovementChecker movementCollider;
         List<ObjectTag> tagsToCheck = new List<ObjectTag> { ObjectTag.wall, ObjectTag.obstacle };
@@ -33,6 +33,8 @@ namespace PRedesign
         MouseState prevMouseState;
         float pitchRotationRate = MathHelper.PiOver4 / 150;
         float currentPitch = 0;// = MathHelper.PiOver2;
+        float yawAngle = 0;
+        float currentYaw = 0;
         float maxPitch = MathHelper.PiOver2 * (19 / 20f);
 
         Game game;
@@ -58,7 +60,9 @@ namespace PRedesign
         AudioEmitterComponent audioEmitterComponent;
 
         //Gameplay Variables
-        //public bool hasKey = false;
+        //SoundGun variables
+        public SoundGun soundGun;
+        private bool hasSoundGun;
 
         public int Health
         {
@@ -91,6 +95,12 @@ namespace PRedesign
             get { return invulnerabilitySeconds;  }
             set { invulnerabilitySeconds = value;  }
         }
+
+        public float CurrentYaw
+        {
+            get { return currentYaw; }
+            set { }
+        }
         #endregion
 
         #region Initialization
@@ -100,7 +110,7 @@ namespace PRedesign
             camera = ObjectManager.Camera;
 
             camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
-            lookDirection = Vector3.Left;
+            lookDirection = Vector3.Backward;
 
             jumpHeight = startPosition.Y;
 
@@ -124,6 +134,8 @@ namespace PRedesign
             audioEmitterComponent = new AudioEmitterComponent(this);
             audioEmitterComponent.createSoundEffectInstance("footsteps", ContentStore.loadedSounds["footsteps"], false, true, false, 1f);
             
+            //Gameplay
+            hasSoundGun = false;
         }
         #endregion
 
@@ -148,9 +160,10 @@ namespace PRedesign
 
                 foreach (Collider collido in collider.getCollisions())
                 {
-                    if (collido.Tag == ObjectTag.pickup)
+                    if (collido.Tag == ObjectTag.gun)
                     {
-                        //pickup key! yay!
+                        //Pick up gun
+                        itemPickup();
                     }
                     if ((collido.Tag.Equals(ObjectTag.hazard) || collido.Tag.Equals(ObjectTag.enemy)) && !isInvulnerable)
                     {
@@ -161,8 +174,8 @@ namespace PRedesign
 
                 handleInput();
                 handleMovement(gameTime);
-
-                //handleMouseSelection();
+                soundGun.updateMatrices(position, lookDirection, currentYaw, currentPitch);
+                handleMouseSelection();
                 camera.setPositionAndDirection(position + headHeightOffset, lookDirection);
 
                 if (velocity.Length() > 0)
@@ -193,7 +206,9 @@ namespace PRedesign
                 lookDirection.Normalize();
 
             //Sets the yaw rotation of the cameras' look direction
-            lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X)));
+            float yawAngle = (-MathHelper.PiOver4 / 150) * (mouseState.X - prevMouseState.X);
+            currentYaw += yawAngle;
+            lookDirection = Vector3.Transform(lookDirection, Matrix.CreateFromAxisAngle(Vector3.Up, yawAngle));
 
             //Sets the pitch rotation of the cameras look direction, maxes out so that the player cant look directly up or down
             float pitchAngle = (pitchRotationRate) * (mouseState.Y - prevMouseState.Y);
@@ -298,19 +313,39 @@ namespace PRedesign
 
 
         #region Helper Methods
-        /*private void handleMouseSelection()
+        /// <summary>
+        /// Currently only works for the gun
+        /// </summary>
+        private void itemPickup()
+        {
+            //Now has the soundGun
+            hasSoundGun = true;
+            soundGun.Enable();
+        }
+
+        private void handleMouseSelection()
         {
             MouseState mouseState = Mouse.GetState();
-            if (tank != null && mouseState.LeftButton == ButtonState.Pressed)
+            if (hasSoundGun && mouseState.LeftButton == ButtonState.Pressed)
             {
                 Ray mouseRay = calculateRay(new Vector2(mouseState.X, mouseState.Y), camera.View, camera.Projection, game.GraphicsDevice.Viewport);
-                float? distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
+                //Needs to interact with colliders, not just the floor:
+                //float? distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
+                float? distance = CollisionManager.getRayCollision(mouseRay);
+                //This would not work if there were colliders beneath the floor (luckily there aren't)
+                //If didn't hit any colliders, check against the floor.
+                if (distance == null)
+                    distance = mouseRay.Intersects(new Plane(Vector3.Up, 0));
+                if (distance == null)
+                    distance = mouseRay.Intersects(new Plane(Vector3.Down, LevelManager.TileSize));
                 if (distance != null)
                 {
-                    tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;
+                    //tank.Target = mouseRay.Position + mouseRay.Direction * (float)distance;
+                    //Shoot gun
+                    soundGun.Fire(mouseRay.Position + mouseRay.Direction * (float)distance);
                 }
             }
-        } */
+        }
 
         public Ray calculateRay(Vector2 mouseLocation, Matrix view, Matrix projection, Viewport viewport)
         {

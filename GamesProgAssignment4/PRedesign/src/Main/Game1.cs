@@ -19,9 +19,10 @@ namespace PRedesign
             graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
 
-            IsMouseVisible = true;
+            IsMouseVisible = false;
 
             screenManager = new ScreenManager(this);
+            ObjectManager.Game = this; //Had to force this to enable mouse visibility properly
             Components.Add(screenManager);
 
             //Add the base screens

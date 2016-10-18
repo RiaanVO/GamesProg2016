@@ -58,6 +58,11 @@ namespace PRedesign
             return false;
         }
 
+        public override float? intersectsRay(Ray ray)
+        {
+            return collider.Intersects(ray);
+        }
+
         public override void updateColliderPos(Vector3 newPosition)
         {
             if (position == newPosition)

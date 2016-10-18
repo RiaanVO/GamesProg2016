@@ -52,6 +52,8 @@ namespace PRedesign
 
             //The menus are placed on top of other screens
             IsPopup = true;
+
+            ObjectManager.Game.IsMouseVisible = false;
         }
         #endregion
 

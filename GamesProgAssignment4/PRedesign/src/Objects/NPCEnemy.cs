@@ -50,6 +50,9 @@ namespace PRedesign
         Vector3 homeBase = Vector3.Zero;
         double minDistanceToHome = 10;
 
+        //Sound detection
+        Vector3 investigatePosition;
+        bool investigatingSound;
 
         //Animation fields
         private float deltaTime;
@@ -190,6 +193,17 @@ namespace PRedesign
                 previousState = brain.CurrentState;
             brain.update(gameTime);
 
+            foreach (Collider col in collider.getCollisions())
+            {
+                //Detects sounds, does not detect more if already detected one.
+                if (!investigatingSound && col.Tag == ObjectTag.sound)
+                {
+                    //Sound heard
+                    investigatePosition = col.GameObject.Position;
+                    investigatingSound = true;
+                }
+            }
+
             //Animation
             deltaTime = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
             animateRotation(gameTime);
@@ -284,6 +298,7 @@ namespace PRedesign
                 case "idleTimeUp": return idleTimeUp;
                 case "playerFar": return playerFar;
                 case "atHomeBase": return atHomeBase;
+                case "heardSound": return heardSound;
                 default: return idleTimeUp;
             }
         }
@@ -302,6 +317,7 @@ namespace PRedesign
                 case "updateIdle": return updateIdle;
                 case "updateRandomWander": return updateRandomWander;
                 case "updateReturnToBase": return updateReturnToBase;
+                case "updateInvestigate": return updateInvestigate;
                 default: return updateIdle;
             }
         }
@@ -412,6 +428,16 @@ namespace PRedesign
         {
             return Vector3.Distance(position, homeBase) < minDistanceToHome;
         }
+
+        public bool heardSound()
+        {
+            return investigatingSound;
+        }
+
+        public bool reachedInvestigatePosition()
+        {
+            return Vector3.Distance(position, investigatePosition) < minDistanceToHome;
+        }
         #endregion
 
         #region FSM update functions
@@ -451,10 +477,28 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updateSeek(GameTime gameTime)
         {
-            rotationalSpeed = -3f;
+            rotationalSpeed = -8f;
             endPointExact = true;
             if (CurrentTarget != player.Position)
                 CurrentTarget = player.Position;
+            if (pathSteering != null)
+            {
+                update(pathSteering.getSteering(), deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Gets a sound's position and navigates to it
+        /// </summary>
+        /// <param name="deltaTime"></param>
+        private void updateInvestigate(GameTime gameTime)
+        {
+            rotationalSpeed = -2f;
+            endPointExact = true;
+            if (CurrentTarget != investigatePosition)
+            {
+                CurrentTarget = investigatePosition;
+            }
             if (pathSteering != null)
             {
                 update(pathSteering.getSteering(), deltaTime);

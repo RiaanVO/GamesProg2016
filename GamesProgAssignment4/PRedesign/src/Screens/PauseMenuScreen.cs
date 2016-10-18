@@ -28,6 +28,8 @@ namespace PRedesign
             MenuEntries.Add(resumeGameMenuEntry);
             MenuEntries.Add(returnToMainMenu);
             MenuEntries.Add(quitGameMenuEntry);
+
+            ObjectManager.Game.IsMouseVisible = false;
         }
         #endregion
 

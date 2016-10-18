@@ -34,6 +34,8 @@ namespace PRedesign
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(openLevelEditorEntry);
             MenuEntries.Add(quitMenuEntry);
+
+            ObjectManager.Game.IsMouseVisible = false;
         }
 
         #endregion

@@ -48,6 +48,7 @@ namespace PRedesign {
             LevelEditor.GunTexture = editorGunTexture;
             LevelEditor.GameScreen = this;
             LevelEditor.LoadEditor();
+            ObjectManager.Game.IsMouseVisible = true;
         }
         #endregion
 

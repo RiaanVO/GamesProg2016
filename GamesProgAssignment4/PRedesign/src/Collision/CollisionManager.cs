@@ -89,6 +89,13 @@ namespace PRedesign
             return new List<Collider>();
         }
 
+        public static float? getRayCollision(Ray romano)
+        {
+            if (quadTree != null)
+                return quadTree.getRayCollision(romano);
+            return null;
+        }
+
         public static string Stats()
         {
             return "Number of colliders: " + colliders.Count + "\nQuadtree count: " + quadTreeCount;

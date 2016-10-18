@@ -133,7 +133,7 @@ namespace PRedesign
             audioListenerComponent = new AudioListenerComponent(this);
             audioEmitterComponent = new AudioEmitterComponent(this);
             audioEmitterComponent.createSoundEffectInstance("footsteps", ContentStore.loadedSounds["footsteps"], false, true, false, 0.5f);
-            audioEmitterComponent.createSoundEffectInstance("shootGun", ContentStore.loadedSounds["laser"], false, false, false, 1f);
+            audioEmitterComponent.createSoundEffectInstance("shootGun", ContentStore.loadedSounds["laser"], false, false, false, 0.5f);
             //Gameplay
             hasSoundGun = false;
         }

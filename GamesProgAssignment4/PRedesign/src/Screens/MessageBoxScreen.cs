@@ -44,6 +44,8 @@ namespace PRedesign
             IsPopup = true;
             TransitionOnTime = TimeSpan.FromSeconds(0.2);
             TransitionOffTime = TimeSpan.FromSeconds(0.2);
+
+            ObjectManager.Game.IsMouseVisible = false;
         }
 
         /// <summary>

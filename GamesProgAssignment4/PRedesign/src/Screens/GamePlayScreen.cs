@@ -59,7 +59,7 @@ namespace PRedesign
             MediaPlayer.Volume = 0.1f;
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
-            
+
             /* //Moved to LevelManager.LoadGameObjects()
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;
@@ -91,6 +91,7 @@ namespace PRedesign
 
             //Once load has been completed, tell the game to not try and catch up frames - mainly for long loads
             ScreenManager.Game.ResetElapsedTime();
+            ObjectManager.Game.IsMouseVisible = false;
         }
 
         public override void UnloadContent()

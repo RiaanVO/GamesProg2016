@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace PRedesign {
 
@@ -52,7 +53,7 @@ namespace PRedesign {
         private static IList<UIButton> levelSelectbuttons = new List<UIButton>();
         private static IList<UIButton> enemySelectButtons = new List<UIButton>();
         private static Texture2D buttonTexture, buttonSelectedTexture;
-        private static UIButton newButton, loadButton, saveButton, newEnemyButton, browseEnemiesButton, doneEnemyButton, removeEnemyButton;
+        private static UIButton newButton, loadButton, saveButton, removeButton, newEnemyButton, browseEnemiesButton, doneEnemyButton, removeEnemyButton;
         private static EditorButtonGroup optionButtonGroup;
         private static EditorOptionButton emptyButton, wallButton, pathButton;
         private static int editorButtonPadding = 5;
@@ -187,9 +188,8 @@ namespace PRedesign {
 
             levels = LevelManager.Levels;
 
-
-            InitialiseGrid();
             InitialiseEditorButtons();
+            InitialiseGrid();
 
             mouseState = Mouse.GetState();
 
@@ -228,8 +228,9 @@ namespace PRedesign {
 
             // Menu Buttons
             float gridToEdge = GraphicsDevice.Viewport.Width - gridWidthEnd;
-            float buttonspacing = gridToEdge / 3;
+            float buttonspacing = gridToEdge / 5;
 
+            // Level buttons
             newButton = new UIButton("editor_newButton", new Vector2(gridWidthEnd + (gridToEdge / 10), 20), Vector2.Zero, editorFont, "New Level", Color.White, buttonTexture);
             newButton.Visible = true;
             newButton.Padding = editorButtonPadding;
@@ -248,6 +249,13 @@ namespace PRedesign {
             saveButton.Clicked += new UIButton.ClickHandler(EditorButtonOnClick);
             editorButtons.Add(saveButton);
 
+            removeButton = new UIButton("editor_saveButton", new Vector2(saveButton.Position.X + buttonspacing, 20), Vector2.Zero, editorFont, "Remove Level", Color.White, buttonTexture);
+            removeButton.Visible = true;
+            removeButton.Padding = editorButtonPadding;
+            removeButton.Clicked += new UIButton.ClickHandler(EditorButtonOnClick);
+            editorButtons.Add(removeButton);
+
+            // Enemy / Node Buttons
             newEnemyButton = new UIButton("editor_newEnemyButton", new Vector2(newButton.Position.X, GraphicsDevice.Viewport.Height - 40), Vector2.Zero, editorFont, "New Enemy", Color.White, buttonTexture);
             newEnemyButton.Visible = true;
             newEnemyButton.Padding = editorButtonPadding;
@@ -440,6 +448,10 @@ namespace PRedesign {
                 return;
             }
 
+            if (sender == removeButton) {
+                TryRemoveLevel();
+            }
+
             if (sender == newEnemyButton) {
                 CreateNewEnemyProcess();
                 return;
@@ -550,6 +562,7 @@ namespace PRedesign {
         /// </summary>
         private static void GenerateNewGrid() {
             isNewLevel = true;
+            removeButton.Visible = false;
             selectedEnemy = null;
             enemyList.Clear();
             currentEditLevel = new JSONLevel();
@@ -575,6 +588,7 @@ namespace PRedesign {
         /// <param name="id">The number of the level</param>
         private static void LoadLevelGrid(int id) {
             isNewLevel = false;
+            removeButton.Visible = true;
             currentEditLevel = levels[id - 1];
 
             for (int i = 0; i < gridSize; i++) {
@@ -782,6 +796,7 @@ namespace PRedesign {
                 levels.Add(currentEditLevel);
                 levelSelectbuttons.Clear();
                 isNewLevel = false;
+                removeButton.Visible = true;
             }
             LevelManager.WriteLevelsToFile();
         }
@@ -987,6 +1002,29 @@ namespace PRedesign {
 
             if (gunObject != null && (gunObject.XData == element.XData && gunObject.YData == element.YData)) {
                 gunObject = null;
+            }
+        }
+
+        private static void RemoveLevel() {
+            levels.Remove(currentEditLevel);
+
+            foreach (JSONLevel level in levels) {
+                level.Id = levels.IndexOf(level);
+            }
+            LevelManager.WriteLevelsToFile();
+
+            UnloadLevelGrid();
+            GenerateNewGrid();
+        }
+
+        private static void TryRemoveLevel() {
+            if (levels.Count == 1) {
+                const string errorMessage = "Error - cannot delete last level! MUST have one level present \n ENTER to continue";
+                MessageBoxScreen errorSaveMessageBox = new MessageBoxScreen(errorMessage, false);
+                errorSaveMessageBox.Accepted += dummyErrorReceiver;
+                screenReference.ScreenManager.AddScreen(errorSaveMessageBox);                
+            } else {
+                RemoveLevel();
             }
         }
         #endregion

@@ -22,6 +22,7 @@ namespace PRedesign
 
         private double cumulativeTime = 0;
         private const double timeBeforeCollisionReset = 10;
+        Song bgMusic;
         #endregion
 
         #region initialization
@@ -54,8 +55,8 @@ namespace PRedesign
             //Load sounds
             ContentStore.Add("footsteps", content.Load<SoundEffect>(@"Sounds/Effects/footsteps"));
             ContentStore.Add("key", content.Load<SoundEffect>(@"Sounds/Effects/key"));
-            Song bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
-            //MediaPlayer.Play(bgMusic);
+            bgMusic = content.Load<Song>(@"Sounds/Music/The Lift");
+            MediaPlayer.Play(bgMusic);
 
             BasicEffect basicEffect = new BasicEffect(ScreenManager.GraphicsDevice); //Not needed?
             
@@ -142,7 +143,9 @@ namespace PRedesign
                     CollisionManager.resetRender();
                     cumulativeTime = 0;
                     WireShapeDrawer.clearAll();
-                    Console.WriteLine("Collision and drawing reset");
+                    
+                    //Console.WriteLine("Collision and drawing reset");
+                    //CollisionManager.MapTree();
                 }
 
                 ////////////////////////////
@@ -196,6 +199,7 @@ namespace PRedesign
                 {
                     // TODO: dispose managed state (managed objects).
                     content.Dispose();
+                    bgMusic.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

@@ -12,7 +12,7 @@ namespace PRedesign
     {
         private static QuadTree quadTree;
         private static List<Collider> colliders = new List<Collider>();
-
+        private static int nextID = 0;
         //Debugging
         public const float renderTime = 360;
 
@@ -21,7 +21,7 @@ namespace PRedesign
             if (quadTree != null)
                 quadTree.Add(collider);
             colliders.Add(collider);
-
+            collider.ID = nextID++;
         }
 
         public static void constructQuadTree()
@@ -32,6 +32,7 @@ namespace PRedesign
             {
                 quadTree.Add(collider);
             }
+            MapTree();
         }
 
         /// <summary>
@@ -63,7 +64,9 @@ namespace PRedesign
 
             }
             colliders.Clear();
-            
+            quadTree = null;
+            nextID = 0;
+            QuadTree.NextID = 0;
         }
 
         public static void Render(Color colour, bool showRegions, bool showColliders)
@@ -88,10 +91,16 @@ namespace PRedesign
 
         public static string Stats()
         {
-            return "Number of colliders: " + colliders.Count + "\nCurrent active branches: " + quadTree.countActiveBranches();
+            string s = "Number of colliders: " + colliders.Count;
+            if (quadTree != null)
+                s += "\nCurrent active branches: " + quadTree.countActiveBranches();
+            else
+                s += "\n The quadtree is null";
+            return s;
         }
 
-        public static void PruneQuadTree() {
+        public static void PruneQuadTree()
+        {
             if (quadTree != null)
             {
                 quadTree.UpdateTree();
@@ -100,11 +109,17 @@ namespace PRedesign
             Console.WriteLine("\n" + Stats());
         }
 
-        public static void resetRender() {
+        public static void resetRender()
+        {
             foreach (Collider collider in colliders)
                 collider.IsRendered = false;
             if (quadTree != null)
                 quadTree.resetRender();
+        }
+
+        public static void MapTree() {
+            if (quadTree != null)
+                Console.WriteLine(quadTree.MapTree());
         }
     }
 }

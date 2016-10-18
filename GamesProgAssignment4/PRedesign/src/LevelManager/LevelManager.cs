@@ -199,6 +199,13 @@ namespace PRedesign {
         /// </summary>
         private static void LoadGameObjects()
         {
+            ObjectManager.Camera = null;
+            ObjectManager.GraphicsDevice = null;
+            ObjectManager.Game = null;
+            Player = null;
+            ScreenManager.Game.ResetElapsedTime();
+            UnloadLevel();
+
             //Create camera and set up object manager
             BasicCamera camera = new BasicCamera(new Vector3(0, 10, 0), new Vector3(-1, 10, 0), Vector3.Up, ScreenManager.GraphicsDevice.Viewport.AspectRatio);
             camera.FarClip = 3000;

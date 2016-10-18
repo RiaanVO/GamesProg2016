@@ -26,7 +26,7 @@ namespace PRedesign
         QuadTree[] m_childNode = new QuadTree[4];
 
         const int MIN_SIZE = 10;
-        const int MIN_COLLIDER_COUNT = 1;
+        const int MIN_COLLIDER_COUNT = 2;
 
         QuadTree _parent;
 
@@ -34,6 +34,9 @@ namespace PRedesign
         static bool m_treeBuilt = false;       //there is no pre-existing tree yet.
 
         private bool isRendered = false;
+
+        private int id;
+        static int nextId = 0;
         #endregion
 
         #region Properties
@@ -49,6 +52,14 @@ namespace PRedesign
                 m_treeBuilt = m_treeReady = value;
             }
         }
+
+        public int ID {
+            get { return id; }
+        }
+
+        public static int NextID {
+            set { nextId = value; }
+        }
         #endregion
 
         #region Initialization
@@ -62,12 +73,14 @@ namespace PRedesign
         {
             m_region = region;
             m_objects = objList;
+            id = nextId++;
         }
 
         public QuadTree()
         {
             m_objects = new List<Collider>();
             m_region = new BoundingBox(Vector3.Zero, Vector3.Zero);
+            id = nextId++;
         }
 
         /// <summary>
@@ -79,6 +92,7 @@ namespace PRedesign
         {
             m_region = region;
             m_objects = new List<Collider>();
+            id = nextId++;
         }
 
         #endregion
@@ -87,6 +101,8 @@ namespace PRedesign
         {
             if (!m_treeBuilt)
                 return;
+
+            //Console.WriteLine("Moving: " + collider.Tag);
 
             QuadTree current = this;
             BoxCollider boxCol = collider as BoxCollider;
@@ -105,7 +121,7 @@ namespace PRedesign
             }
 
             //now, remove the object from the current node and insert it into the current containing node.
-            m_objects.Remove(collider);
+            Remove(collider);
             current.Insert(collider);   //this will try to insert the object as deep into the tree as we can go.
         }
 
@@ -114,29 +130,36 @@ namespace PRedesign
         {
             foreach (Collider collider in colliders)
             {
-                m_pendingInsertion.Enqueue(collider);
-                m_treeReady = false;
+                Add(collider);
             }
         }
 
         public void Add(Collider collider)
         {
-            m_pendingInsertion.Enqueue(collider);
+            //m_pendingInsertion.Enqueue(collider);
+            m_objects.Add(collider);
             m_treeReady = false;
             collider.QuadTreeNode = this;
         }
 
         public void Remove(Collider collider)
         {
-            if (m_objects.Contains(collider))
-                m_objects.Remove(collider);
-            else
+            UpdateTree();
+            for (int i = m_objects.Count - 1; i >= 0; i--)
             {
-                if (m_childNode != null)
-                    foreach (QuadTree childNode in m_childNode)
-                        if (childNode != null)
-                            childNode.Remove(collider);
+                if (m_objects[i].ID == collider.ID)
+                {
+                    m_objects.RemoveAt(i);
+                    return;
+                }
             }
+
+
+            if (m_childNode != null)
+                foreach (QuadTree childNode in m_childNode)
+                    if (childNode != null)
+                        childNode.Remove(collider);
+
         }
 
 
@@ -152,7 +175,7 @@ namespace PRedesign
                 -if the current node is an empty leaf node, just insert and leave it.*/
             if (m_objects.Count <= MIN_COLLIDER_COUNT)
             {
-                m_objects.Add(collider);
+                Add(collider);
                 return;
             }
 
@@ -160,7 +183,8 @@ namespace PRedesign
             //Check to see if the dimensions of the box are greater than the minimum dimensions
             if (dimensions.X <= MIN_SIZE && dimensions.Z <= MIN_SIZE)
             {
-                m_objects.Add(collider);
+                Add(collider);
+
                 return;
             }
             Vector3 half = dimensions / 2.0f;
@@ -200,7 +224,7 @@ namespace PRedesign
                             found = true;
                         }
                     }
-                    if (!found) m_objects.Add(collider);
+                    if (!found) Add(collider);
                 }
             }
             else if (sphereCol != null)
@@ -223,7 +247,7 @@ namespace PRedesign
                             found = true;
                         }
                     }
-                    if (!found) m_objects.Add(collider);
+                    if (!found) Add(collider);
                 }
             }
 
@@ -431,9 +455,9 @@ namespace PRedesign
 
         public bool pruneDeadBranches()
         {
-            bool prune = true;
+            bool prune = shouldPrune();
 
-            for(int i = 0; i < m_childNode.Length; i ++)
+            for (int i = 0; i < m_childNode.Length; i++)
             {
                 QuadTree branch = m_childNode[i];
                 if (branch != null)
@@ -446,8 +470,6 @@ namespace PRedesign
                         m_childNode[i] = null;
                 }
             }
-            if (prune)
-                prune = shouldPrune();
             return prune;
         }
 
@@ -458,7 +480,7 @@ namespace PRedesign
 
         public int countActiveBranches()
         {
-            int childrenCount = 1; //First one is the branch itself 
+            int childrenCount = 1;
             foreach (QuadTree branch in m_childNode)
             {
                 if (branch != null)
@@ -469,11 +491,20 @@ namespace PRedesign
             return childrenCount;
         }
 
-        public void resetRender() {
+        public void resetRender()
+        {
             isRendered = false;
             foreach (QuadTree childNode in m_childNode)
                 if (childNode != null)
                     childNode.resetRender();
+        }
+
+        public string MapTree() {
+            string s = "Quadtree " + id + ": " + m_objects.Count + " colliders";
+            foreach (QuadTree quadtree in m_childNode)
+                if (quadtree != null)
+                    s += "\n" + quadtree.MapTree();
+            return s;
         }
     }
 }

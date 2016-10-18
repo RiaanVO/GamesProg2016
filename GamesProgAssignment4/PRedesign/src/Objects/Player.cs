@@ -123,7 +123,7 @@ namespace PRedesign
             remainingDelay = invulnerabilitySeconds;
             isInvulnerable = false;
 
-            health = 10;
+            health = 3;
 
             if (game != null)
                 if (game.Window != null)
@@ -192,7 +192,8 @@ namespace PRedesign
             }
             else
             {
-                LevelManager.ShowGameOverScreen(gameTime.TotalGameTime.TotalSeconds);
+                //LevelManager.ShowGameOverScreen(gameTime.TotalGameTime.TotalSeconds);
+                LevelManager.ReloadLevel();
             }
         }
 

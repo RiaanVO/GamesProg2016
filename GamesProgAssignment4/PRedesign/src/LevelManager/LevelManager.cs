@@ -156,13 +156,14 @@ namespace PRedesign {
                 //Construct the objects for the level
                 LoadLevelData();
                 Console.WriteLine("Level loaded, ID: " + currentLevel.Id);
+                //ScreenManager.Game.ResetElapsedTime();
             }
         }
 
 
         public static void ReloadLevel()
         {
-            //UnloadLevel();
+            UnloadLevel();
             LoadLevel(currentLevel.Id);
         }
 

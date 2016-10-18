@@ -62,7 +62,6 @@ namespace PRedesign
         public AudioEmitterComponent audioEmitterComponent;
         #endregion
 
-
         #region Properties
         public Vector3[] PathPoints
         {

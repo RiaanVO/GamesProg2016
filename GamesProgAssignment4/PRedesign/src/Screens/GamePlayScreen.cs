@@ -168,7 +168,7 @@ namespace PRedesign
                 SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
                 spriteBatch.Begin();
                 spriteBatch.DrawString(gameFont, "Time Taken: " + gameTime.TotalGameTime.TotalSeconds.ToString("0.00"), Vector2.Zero, Color.Black);
-                spriteBatch.DrawString(gameFont, "HP: " + LevelManager.PlayerHealth + " / 10", new Vector2(0f, 20f), Color.Red);
+                spriteBatch.DrawString(gameFont, "HP: " + LevelManager.PlayerHealth + " / 3", new Vector2(0f, 20f), Color.Red);
                 spriteBatch.Draw(crosshair, crosshairBounds, Color.White);
                 spriteBatch.End();
             }

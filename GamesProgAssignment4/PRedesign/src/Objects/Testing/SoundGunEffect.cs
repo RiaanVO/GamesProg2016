@@ -18,14 +18,14 @@ namespace PRedesign
         //Animation variables
         private float deltaTime;
         private bool active;
-        private float maxAnimRadius = 60f; //Should be the double the soundRadius
+        private float maxAnimRadius = 70f; //Should be roughly double the soundRadius
         private float currentAnimRadius;
         private float expansionSpeed;
-        private float minExpansionSpeed = 30f;
+        private float minExpansionSpeed = 60f;
 
         //Fading variables
         private float maxAlpha = 0.5f;
-        private float alphaFadeSpeed = 0.02f;
+        private float alphaFadeSpeed = 0.04f;
 
         public SoundGunEffect(Vector3 startPosition, Model model) : base(startPosition, model)
         {
@@ -36,7 +36,7 @@ namespace PRedesign
 
             //Audio code
             audioEmitter = new AudioEmitterComponent(this);
-            audioEmitter.createSoundEffectInstance("laser", ContentStore.loadedSounds["laser"], true, false, false, 1f);
+            audioEmitter.createSoundEffectInstance("laser", ContentStore.loadedSounds["laser"], true, false, false, 0.5f);
 
             //Animation code
             currentAnimRadius = 0.5f;

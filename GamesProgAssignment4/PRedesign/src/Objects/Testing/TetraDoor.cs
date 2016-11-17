@@ -26,7 +26,7 @@ namespace PRedesign
         //Unlock animation variables
         private float diamondMaxDistance = 2.5f; //how far the diamond parts can move
         private float currentDistance; //how far the diamond parts are currently
-        private float diamondMovementSpeed = 3f; //how quickly the diamond parts move
+        private float diamondMovementSpeed = 6f; //how quickly the diamond parts move
         private bool opening;
         private bool unlockComplete;
 
@@ -34,13 +34,13 @@ namespace PRedesign
         private float activateDistance = 40f; //distance between player and object to animate open
         private bool discRotated;
         private float discRotation;
-        private float rotationalSpeed = 2f; //speed of rotation
+        private float rotationalSpeed = 4f; //speed of rotation
 
         //Door open animation variables
         private bool doorsOpen;
         private float doorMaxDistance;
         private float currentDoorDistance;
-        private float doorOpenSpeed = 1f;
+        private float doorOpenSpeed = 2f;
 
         public TetraDoor(Vector3 startPosition, Model model, Player player) : base(startPosition, model)
         {

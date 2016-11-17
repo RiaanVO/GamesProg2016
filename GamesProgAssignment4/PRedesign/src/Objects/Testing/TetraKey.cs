@@ -25,16 +25,16 @@ namespace PRedesign
         // animation variables
         private bool isSplit;
         private float deltaTime;
-        private float rotationalSpeed = 1f; //speed of rotation
+        private float rotationalSpeed = 2f; //speed of rotation
         private float activateDistance = 35f; //distance between player and object to activate
         private float outerMaxDistance = 25f; //how far the outer parts can move
         private float currentDistance; //how far the outers are currently
-        private float outerMovementSpeed = 90f; //how quickly the outer parts move
+        private float outerMovementSpeed = 180f; //how quickly the outer parts move
         
         // hover animation variables
         private float hoverHeight;
         private float originalYPosition;
-        private float hoverSpeed = 0.8f;
+        private float hoverSpeed = 1.6f;
 
         public TetraKey(Vector3 startPosition, Model model, Player player, TetraDoor door) : base(startPosition, model)
         {

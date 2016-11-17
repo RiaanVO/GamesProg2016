@@ -32,7 +32,7 @@ namespace PRedesign
         private float endFireAnim = MathHelper.Pi;//private float endFireAnim = MathHelper.PiOver2 * 3f;
         private float currentFireAnim = 0f;
         private float currentFireAngle = 0f;
-        private float animSpeed = 8f;
+        private float animSpeed = 16f;
 
         
 

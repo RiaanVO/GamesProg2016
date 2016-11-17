@@ -21,12 +21,12 @@ namespace PRedesign
 
         //Animation variables
         float deltaTime;
-        float rotationalSpeed = 1f;
+        float rotationalSpeed = 2f;
 
         // hover animation variables
         private float hoverHeight;
         private float originalYPosition;
-        private float hoverSpeed = 1f;
+        private float hoverSpeed = 2f;
 
         //Tilt effect variables
         private Matrix tiltMatrix = Matrix.CreateRotationX(-0.5f);

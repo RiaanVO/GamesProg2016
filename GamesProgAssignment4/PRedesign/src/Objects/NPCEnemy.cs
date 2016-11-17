@@ -56,7 +56,9 @@ namespace PRedesign
 
         //Animation fields
         private float deltaTime;
-        private float rotationalSpeed = 1f;
+        private float rotationalSpeed = 2f;
+        private float animOrientation = 0f;
+        private float spikesScale = 1.25f;
 
         //Audio
         public AudioEmitterComponent audioEmitterComponent;
@@ -218,15 +220,15 @@ namespace PRedesign
 
         private void animateRotation(GameTime gameTime)
         {
-            orientation += rotationalSpeed * deltaTime;
+            animOrientation += rotationalSpeed * deltaTime;
             //resets to zero + overlap
-            if (Math.Abs(orientation) > MathHelper.TwoPi)
+            if (Math.Abs(animOrientation) > MathHelper.TwoPi)
             {
-                float overlap = orientation - MathHelper.TwoPi;
-                orientation = 0f + overlap;
+                float overlap = animOrientation - MathHelper.TwoPi;
+                animOrientation = 0f + overlap;
             }
-            rotationMatrix = Matrix.CreateRotationY(orientation);
-            model.Bones["spikes_geo"].Transform = Matrix.CreateRotationY(-orientation * 2);
+            rotationMatrix = Matrix.CreateRotationY(animOrientation);
+            model.Bones["spikes_geo"].Transform = Matrix.CreateScale(spikesScale) * Matrix.CreateRotationY(-animOrientation * 2) * Matrix.CreateTranslation(0f, -10f, 0f);
         }
 
         public override void Draw(GameTime gameTime)
@@ -454,7 +456,7 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updatePatrol(GameTime gameTime)
         {
-            rotationalSpeed = 1f;
+            rotationalSpeed = 2f;
             endPointExact = false;
             if (!previousState.Equals(brain.CurrentState))
             {
@@ -508,7 +510,7 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updateInvestigate(GameTime gameTime)
         {
-            rotationalSpeed = -2f;
+            rotationalSpeed = -4f;
             endPointExact = true;
             if (CurrentTarget != investigatePosition)
             {
@@ -526,7 +528,7 @@ namespace PRedesign
         /// <param name="deltaTime"></param>
         private void updateIdle(GameTime gameTime)
         {
-            rotationalSpeed = -0.3f;
+            rotationalSpeed = -0.6f;
             if (!previousState.Equals(brain.CurrentState))
             {
                 currentIdleTime = 0;
@@ -537,7 +539,7 @@ namespace PRedesign
 
         private void updateRandomWander(GameTime gameTime)
         {
-            rotationalSpeed = 1f;
+            rotationalSpeed = 2f;
             endPointExact = false;
             if (!previousState.Equals(brain.CurrentState))
             {
@@ -557,6 +559,7 @@ namespace PRedesign
 
         private Vector3 randomPathablePosition()
         {
+            rotationalSpeed = 2f;
             Random rand = new Random();
             Vector3 testPosition;
             bool positionFound = false;
@@ -578,6 +581,7 @@ namespace PRedesign
 
         private void updateReturnToBase(GameTime gameTIme)
         {
+            rotationalSpeed = 1f;
             if (!previousState.Equals(brain.CurrentState))
             {
                 if (homeBase != Vector3.Zero)

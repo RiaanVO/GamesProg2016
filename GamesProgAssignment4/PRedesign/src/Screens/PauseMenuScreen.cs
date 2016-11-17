@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
+
 
 namespace PRedesign
 {
@@ -14,6 +16,9 @@ namespace PRedesign
         #region Initialization
         public PauseMenuScreen() : base("Paused")
         {
+            MenuStartingYPosition = 300f;
+            TitleYPosition = 220f;
+
             //Create the menu entries
             MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");
             MenuEntry returnToMainMenu = new MenuEntry("Main Menu");
@@ -23,6 +28,11 @@ namespace PRedesign
             resumeGameMenuEntry.Selected += OnCancel;
             returnToMainMenu.Selected += OnMainMenuSelected;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
+
+            TitleScale = 3f;
+            resumeGameMenuEntry.BaseTextScale = 1;
+            returnToMainMenu.BaseTextScale = 1;
+            quitGameMenuEntry.BaseTextScale = 1;
 
             //Add them to the list of options
             MenuEntries.Add(resumeGameMenuEntry);
@@ -82,7 +92,8 @@ namespace PRedesign
         void ConfirmMainMenuMessageBoxAccepted(object sender, EventArgs e) {
             LevelManager.UnloadLevel();
             ContentStore.Unload();
-            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+            MediaPlayer.Stop();
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen("Textures/MainMenuBG"), new MainMenuScreen());
         }
         #endregion
     }

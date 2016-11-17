@@ -106,6 +106,7 @@
     <Compile Include="src\Screens\GameOverScreen.cs" />
     <Compile Include="src\Screens\GamePlayScreen.cs" />
     <Compile Include="src\Screens\LevelEditorScreen.cs" />
+    <Compile Include="src\Screens\LevelSelectScreen.cs" />
     <Compile Include="src\Screens\LoadingScreen.cs" />
     <Compile Include="src\Screens\MainMenuScreen.cs" />
     <Compile Include="src\Screens\MenuScreen.cs" />

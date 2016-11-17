@@ -70,6 +70,13 @@ namespace PRedesign {
             get { return isLevelLoaded; }
         }
 
+        public static int NumberOfLevels {
+            get {
+
+                return levels.Count;
+            }
+        }
+
         public static BoundingBox LevelEnclosure {
             get {
                 if (levelEnclosure == null)
@@ -180,7 +187,7 @@ namespace PRedesign {
             } else {
                 UnloadLevel();
                 ContentStore.Unload();
-                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen("Textures/MainMenuBG"), new MainMenuScreen());
             }
         }
 

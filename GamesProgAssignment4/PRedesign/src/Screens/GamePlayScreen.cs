@@ -20,14 +20,17 @@ namespace PRedesign
         Texture2D crosshair;
         Rectangle crosshairBounds;
 
+        int startingLevel;
+
         float pauseAlpha;
         #endregion
 
         #region initialization
-        public GamePlayScreen()
+        public GamePlayScreen(int startingLevel)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.startingLevel = startingLevel;
         }
 
         public override void LoadContent()
@@ -81,7 +84,7 @@ namespace PRedesign
             skybox.Player = player;
             */
             LevelManager.ScreenManager = ScreenManager;
-            LevelManager.LoadLevel(1);
+            LevelManager.LoadLevel(startingLevel);
 
             //ObjectManager.addGameObject(new TetraKey(new Vector3(7f,5f, 20f), ContentStore.loadedModels["tetraKey"], camera, player));
 

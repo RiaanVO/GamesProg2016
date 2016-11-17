@@ -12,8 +12,11 @@ namespace PRedesign
 
         #region initialization
 
-        public MainMenuScreen() : base("Main Menu")
+        public MainMenuScreen() : base("nodeHack()")
         {
+            MenuStartingYPosition = 300f;
+            TitleYPosition = 220f;
+
             //Create the entries
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
             MenuEntry openLevelEditorEntry = new MenuEntry("Level Editor");
@@ -25,16 +28,24 @@ namespace PRedesign
             quitMenuEntry.Selected += OnCancel;
 
             //Resize the text
-            TitleScale = 5f;
-            playGameMenuEntry.BaseTextScale = 2;
-            openLevelEditorEntry.BaseTextScale = 2;
-            quitMenuEntry.BaseTextScale = 2;
+            TitleScale = 3f;
+            playGameMenuEntry.BaseTextScale = 1;
+            openLevelEditorEntry.BaseTextScale = 1;
+            quitMenuEntry.BaseTextScale = 1;
+
+            //Level select - experimental
+            MenuEntry openLevelSelectEntry = new MenuEntry("Level Select");
+            openLevelSelectEntry.Selected += LevelSelectEntrySelected;
+            openLevelSelectEntry.BaseTextScale = 1;
 
             //Add them to the list of entries
             MenuEntries.Add(playGameMenuEntry);
+            //=======================
+            MenuEntries.Add(openLevelSelectEntry);
+            //========================
             MenuEntries.Add(openLevelEditorEntry);
             MenuEntries.Add(quitMenuEntry);
-            
+
             ObjectManager.Game.IsMouseVisible = false;
         }
 
@@ -47,7 +58,7 @@ namespace PRedesign
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void PlayGameMenuEntrySelected(object sender, EventArgs e) {
-            LoadingScreen.Load(ScreenManager, true, new GamePlayScreen());
+            LoadingScreen.Load(ScreenManager, true, new GamePlayScreen(1));
         }
 
         void OpenLevelEditorEntrySelected(object sender, EventArgs e) {
@@ -64,6 +75,12 @@ namespace PRedesign
 
         void ConfirmQuitMessageBoxAccepted(object sender, EventArgs e) {
             ScreenManager.Game.Exit();
+        }
+
+        void LevelSelectEntrySelected(object sender, EventArgs e)
+        {
+            Console.WriteLine("Level Select selected");
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen("Textures/MainMenuBG"), new LevelSelectScreen());
         }
         #endregion
 

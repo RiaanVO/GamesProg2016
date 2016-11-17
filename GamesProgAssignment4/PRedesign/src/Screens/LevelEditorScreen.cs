@@ -23,7 +23,7 @@ namespace PRedesign {
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>(@"Textures/MenuBackground");
+            backgroundTexture = content.Load<Texture2D>(@"Textures/LevelEditorBG");
             editorFont = content.Load<SpriteFont>(@"Fonts/GameFont");
             editorEnemyTexture = content.Load<Texture2D>(@"Textures/editor_enemy");
             editorNodeTexture = content.Load<Texture2D>(@"Textures/editor_node");

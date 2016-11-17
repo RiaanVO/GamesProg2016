@@ -1060,7 +1060,7 @@ namespace PRedesign {
         private static void EscapeCheck() {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
                 UnloadLevelGrid();
-                LoadingScreen.Load(screenReference.ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+                LoadingScreen.Load(screenReference.ScreenManager, false, null, new BackgroundScreen("Textures/MainMenuBG"), new MainMenuScreen());
             }
         }
 

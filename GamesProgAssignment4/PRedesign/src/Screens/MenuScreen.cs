@@ -18,6 +18,9 @@ namespace PRedesign
         string menuTitle;
         string menuSubtitle;
         float titleScale;
+
+        float titleYPosition = 80f;
+        float menuStartingYPosition = 175f;
         #endregion
 
         #region Properties
@@ -37,6 +40,14 @@ namespace PRedesign
         {
             get { return menuSubtitle; }
             set { menuSubtitle = value; }
+        }
+
+        protected float TitleYPosition {
+            set { titleYPosition = value; }
+        }
+        protected float MenuStartingYPosition
+        {
+            set { menuStartingYPosition = value; }
         }
         #endregion
 
@@ -113,7 +124,7 @@ namespace PRedesign
         /// </summary>
         protected virtual void UpdateMenuEntryLocations() {
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
-            Vector2 position = new Vector2(0f, 175f);
+            Vector2 position = new Vector2(0f, menuStartingYPosition);
 
             for (int i = 0; i < menuEntries.Count; i++) {
                 MenuEntry menuEntry = menuEntries[i];
@@ -168,7 +179,7 @@ namespace PRedesign
 
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, titleYPosition);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
             Color titleColour = new Color(192, 192, 192) * TransitionAlpha;
 

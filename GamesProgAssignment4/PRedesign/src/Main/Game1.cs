@@ -26,7 +26,7 @@ namespace PRedesign
             Components.Add(screenManager);
 
             //Add the base screens
-            screenManager.AddScreen(new BackgroundScreen());
+            screenManager.AddScreen(new BackgroundScreen("Textures/MainMenuBG"));
             screenManager.AddScreen(new MainMenuScreen());
             //LoadingScreen.Load(screenManager, true, new GamePlayScreen());
             LevelManager.LoadLevelsFromFile();

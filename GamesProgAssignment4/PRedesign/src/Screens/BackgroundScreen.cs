@@ -23,6 +23,8 @@ namespace PRedesign
 
         ContentManager content;
         Texture2D backgroundTexture;
+        string textureLocation;
+        bool differentTexture = false;
 
         #endregion
 
@@ -33,6 +35,14 @@ namespace PRedesign
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
+        public BackgroundScreen(string textureLocation)
+        {
+            TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.textureLocation = textureLocation;
+            differentTexture = true;
+        }
+
         /// <summary>
         /// Used because the background texture can be quite big and this way we can unload the texture when the game starts
         /// </summary>
@@ -41,7 +51,10 @@ namespace PRedesign
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            backgroundTexture = content.Load<Texture2D>(@"Textures/MenuBackground");
+            if(differentTexture)
+                backgroundTexture = content.Load<Texture2D>(textureLocation);
+            else
+                backgroundTexture = content.Load<Texture2D>(@"Textures/MenuBackground");
         }
 
         public override void UnloadContent()

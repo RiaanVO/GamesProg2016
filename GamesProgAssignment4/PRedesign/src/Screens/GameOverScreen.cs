@@ -91,7 +91,7 @@ namespace PRedesign
         void ConfirmMainMenuMessageBoxAccepted(object sender, EventArgs e)
         {
             ObjectManager.clearAll();
-            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen("Textures/MainMenuBG"), new MainMenuScreen());
         }
     }
 }

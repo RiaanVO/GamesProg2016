@@ -67,12 +67,14 @@ Any values not set will we set to the defauts in the code
     <variable name="randomPositionMinDistance" value="50" />
     <variable name="randomWanderChangeRadius" value="3" />
     <variable name="minDistanceToHome" value="10" />
-    <variable name="maxSpeed" value="14" />
+    <variable name="maxSpeed" value="25" />
     <variable name="dragPercentage" value="0.2" />
   </variables>
   
   <state state="RETURNTOBASE" updateFunction="updateReturnToBase">
     <transition condition="atHomeBase" toState="IDLE" />
+    <transition condition="playerNear" toState="SEEK" />
+    <transition condition="heardSound" toState="INVESTIGATE" />
   </state>
 
   <state state="SEEK" updateFunction="updateSeek">
@@ -82,6 +84,7 @@ Any values not set will we set to the defauts in the code
   <state state="IDLEO" updateFunction="updateIdle">
     <transition condition="idleTimeUp" toState="RETURNTOBASE" />
     <transition condition="playerNear" toState="SEEK" />
+    <transition condition="heardSound" toState="INVESTIGATE" />
   </state>
 
   <state state="IDLE" updateFunction="updateIdle">

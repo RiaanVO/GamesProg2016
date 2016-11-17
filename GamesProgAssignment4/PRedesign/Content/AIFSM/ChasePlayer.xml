@@ -60,11 +60,11 @@ Any values not set will we set to the defauts in the code
     <variable name="patrolChangeRadius" value="2" />
     <variable name="playerNearDistance" value="30" />
     <variable name="playerFarDistance" value="60" />
-    <variable name="idleDelayTime" value="2" />
+    <variable name="idleDelayTime" value="1" />
     <variable name="randomPositionMinDistance" value="50" />
     <variable name="randomWanderChangeRadius" value="3" />
     <variable name="minDistanceToHome" value="10" />
-    <variable name="maxSpeed" value="10" />
+    <variable name="maxSpeed" value="25" />
     <variable name="dragPercentage" value="0.2" />
   </variables>
 

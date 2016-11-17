@@ -119,7 +119,7 @@ namespace PRedesign
             collider.DrawColour = Color.Magenta;
             movementCollider = new SphereMovementChecker(collider, tagsToCheck);
   
-            invulnerabilitySeconds = 5;
+            invulnerabilitySeconds = 3;
             remainingDelay = invulnerabilitySeconds;
             isInvulnerable = false;
 

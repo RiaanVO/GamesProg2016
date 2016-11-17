@@ -60,16 +60,17 @@ Any values not set will we set to the defauts in the code
     <variable name="patrolChangeRadius" value="2" />
     <variable name="playerNearDistance" value="30" />
     <variable name="playerFarDistance" value="60" />
-    <variable name="idleDelayTime" value="3" />
+    <variable name="idleDelayTime" value="1" />
     <variable name="randomPositionMinDistance" value="50" />
     <variable name="randomWanderChangeRadius" value="3" />
     <variable name="minDistanceToHome" value="10" />
-    <variable name="maxSpeed" value="14" />
+    <variable name="maxSpeed" value="50" />
     <variable name="dragPercentage" value="0.2" />
   </variables>
   
   <state state="PATROL" updateFunction="updatePatrol">
     <transition condition="playerNear" toState="SEEK" />
+    <transition condition="heardSound" toState="INVESTIGATE" />
   </state>
 
   <state state="SEEK" updateFunction="updateSeek">
@@ -79,6 +80,11 @@ Any values not set will we set to the defauts in the code
   <state state="IDLE" updateFunction="updateIdle">
     <transition condition="playerNear" toState="SEEK" />
     <transition condition="idleTimeUp" toState="PATROL" />
+    <transition condition="heardSound" toState="INVESTIGATE" />
   </state>
 
+  <state state="INVESTIGATE" updateFunction="updateInvestigate">
+    <transition condition="reachedInvestigatePosition" toState="IDLE" />
+    <transition condition="playerNear" toState="SEEK" />
+  </state>
 </fsm>

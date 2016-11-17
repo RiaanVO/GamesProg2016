@@ -185,6 +185,7 @@ namespace PRedesign {
                 LoadLevel(currentLevel.Id + 1);
 
             } else {
+                MediaPlayer.Stop();
                 UnloadLevel();
                 ContentStore.Unload();
                 LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen("Textures/MainMenuBG"), new MainMenuScreen());

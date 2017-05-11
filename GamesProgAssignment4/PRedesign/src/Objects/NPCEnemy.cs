@@ -473,7 +473,8 @@ namespace PRedesign
                 return;
              if (NavigationMap.isPositionObstructed(patrolPoints[patrolIndex]))
                  patrolIndex++;
-
+            if (patrolIndex >= patrolPoints.Length)
+                patrolIndex = 0;
             if (Vector3.Distance(position, patrolPoints[patrolIndex] + tileDimenstions) < patrolChangeRadius)
             {
                 patrolIndex++;
